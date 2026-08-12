@@ -3,579 +3,419 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Race Overlay</title>
+<title>YOU VS YOU — 6H ULTRA</title>
+<meta name="description" content="6-Stunden-Ultralauf live. You vs You.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   FARBSCHEMA — Broadcast-Vorlage: Violett + Gold
+   YOU VS YOU — Website
+   Gleiche Designsprache wie das Stream-Overlay: Violett + Gold
    ============================================================ */
+
 :root{
   --violet-hi: #3A1E63;
   --violet-lo: #170B2C;
+  --ink:       #0D0620;
   --accent:    #FFD400;
   --white:     #FFFFFF;
-  --alert:     #FF4D4D;
-  --dim:       rgba(255,255,255,.48);
-
-  --panel:     linear-gradient(180deg, rgba(58,30,99,.94) 0%, rgba(23,11,44,.95) 100%);
-  --hairline:  rgba(255,212,0,.28);
-  --chamfer:   1.5rem;
+  --dim:       rgba(255,255,255,.55);
+  --panel:     linear-gradient(180deg, rgba(58,30,99,.92) 0%, rgba(23,11,44,.95) 100%);
+  --hairline:  rgba(255,212,0,.30);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
-html{ font-size: min(calc(100vw / 192), calc(100vh / 108)); }
+html{ scroll-behavior:smooth }
 
 body{
-  background: transparent;                 /* PFLICHT für Overlay-Nutzung */
+  background:var(--ink); color:var(--white);
   font-family:'Rajdhani','Arial Narrow',Arial,sans-serif;
-  color:var(--white); overflow:hidden; width:100vw; height:100vh;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
 }
-.stage{position:fixed; inset:0}
-
-/* ---------- Typo-Bausteine ---------- */
 
 .label{
   font-family:'Oswald','Arial Narrow',sans-serif;
   font-weight:600; text-transform:uppercase;
-  letter-spacing:.07em; color:var(--accent); line-height:1;
+  letter-spacing:.22em; color:var(--accent); line-height:1;
 }
-.value{
+
+/* ============================================================
+   1 · HERO — Bild mit Countdown zwischen den beiden Personen
+   ============================================================ */
+
+.hero{
+  position:relative;
+  width:100%;
+  aspect-ratio: 1792 / 1008;          /* exaktes Seitenverhaeltnis von start.jpg */
+  background:#0D0620 center/cover no-repeat;
+  overflow:hidden;
+}
+
+/* Sanfte Abdunklung oben und unten, damit Text lesbar bleibt */
+.hero::after{
+  content:''; position:absolute; inset:0;
+  background:
+    linear-gradient(180deg, rgba(13,6,32,.55) 0%, rgba(13,6,32,0) 32%),
+    linear-gradient(0deg,  rgba(13,6,32,.85) 0%, rgba(13,6,32,0) 34%);
+  pointer-events:none;
+}
+
+/* Der Countdown sitzt mittig zwischen den beiden Personen,
+   in der Himmelsflaeche oberhalb der Buchstaben. */
+.cd-box{
+  position:absolute; z-index:2;
+  left:50%; top:31%; transform:translate(-50%,-50%);
+  text-align:center;
+  padding: 1.5% 2% 1.8%;
+  background:var(--panel);
+  border:.16vw solid var(--accent);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  clip-path: polygon(1.6vw 0, 100% 0, 100% calc(100% - 1.6vw), calc(100% - 1.6vw) 100%, 0 100%, 0 1.6vw);
+  min-width: 23%;
+}
+.cd-box .label{ font-size:clamp(.5rem, .8vw, .85rem); margin-bottom:.55em }
+.cd-box .days{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.8rem, 1.7vw, 1.7rem); letter-spacing:.08em;
+  color:var(--accent); line-height:1; margin-bottom:.3em;
+}
+.cd-box .cd{
   font-weight:700; font-variant-numeric:tabular-nums;
-  letter-spacing:.005em; line-height:1; white-space:nowrap;
+  font-size:clamp(1.3rem, 3.1vw, 3.2rem); line-height:1; letter-spacing:.01em;
 }
-.sub{ color:var(--dim); font-weight:600; font-variant-numeric:tabular-nums }
-body:not(.imperial) .imp{ display:none }
-
-.panel{ background:var(--panel); border:.1rem solid var(--hairline) }
-.chamfer-tl{ clip-path: polygon(var(--chamfer) 0, 100% 0, 100% 100%, 0 100%, 0 var(--chamfer)) }
-
-/* ---------- 1 · Stapel oben links: Zeit + Temperatur ---------- */
-
-.stack{ position:absolute; top:1.8rem; left:1.8rem; width:24rem }
-
-.timer{ padding:.75rem 1.6rem 1.05rem; border-color:var(--accent); border-width:.2rem }
-.timer .label{ font-size:1.2rem; letter-spacing:.16em; margin-bottom:.4rem }
-.timer .value{ font-size:4.3rem; letter-spacing:.01em }
-.timer.final{ border-color:var(--alert) }
-.timer.final .value{ color:var(--alert) }
-
-.temp{
-  margin-top:.65rem; padding:.75rem 1.6rem .95rem;
-  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+.cd-box .cd-units{
+  display:flex; justify-content:center; gap:clamp(.5rem, 1.5vw, 1.5rem);
+  margin-top:.5em;
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.42rem, .7vw, .78rem); letter-spacing:.2em; color:var(--dim);
 }
-.temp .label{ font-size:1.2rem; letter-spacing:.16em; margin-bottom:.4rem }
-.temp .value{ font-size:1.85rem }
-.temp .value + .value{ margin-top:.2rem }
-.temp .icon{ width:4rem; height:4rem; flex:none }
-.temp .icon svg{ width:100%; height:100%; display:block }
-.temp .icon path, .temp .icon circle, .temp .icon line{
-  stroke:var(--accent); stroke-width:1.8; fill:none;
+.cd-box.live{ border-color:#4ADE80 }
+.cd-box.live .cd{ color:#4ADE80; font-size:clamp(1.2rem, 2.6vw, 2.6rem) }
+
+/* Titelzeile unten im Bild */
+.hero-title{
+  position:absolute; z-index:2; left:0; right:0; bottom:4%;
+  text-align:center; padding:0 4%;
+}
+.hero-title .kicker{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.55rem, 1vw, 1.05rem); letter-spacing:.44em; color:var(--accent);
+  margin-bottom:.6em;
+}
+.hero-title .date{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.85rem, 1.9vw, 2rem); letter-spacing:.06em; line-height:1.15;
+}
+
+/* ============================================================
+   2 · STREAM — eigener Bereich, erst zum Start freigeschaltet
+   ============================================================ */
+
+.wrap{ max-width:120rem; margin:0 auto; padding:clamp(2rem,5vw,4.5rem) clamp(1rem,4vw,3rem) }
+
+.section-head{ text-align:center; margin-bottom:clamp(1.4rem,3vw,2.4rem) }
+.section-head .label{ font-size:clamp(.7rem,1.1vw,.95rem); margin-bottom:.8em }
+.section-head h2{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1.6rem,4vw,3rem); letter-spacing:.03em; line-height:1;
+}
+
+/* Der Rahmen ist immer da — Inhalt wechselt je nach Zustand */
+.stream-frame{
+  position:relative;
+  width:100%; aspect-ratio:16/9;
+  background:linear-gradient(180deg, rgba(58,30,99,.55) 0%, rgba(23,11,44,.75) 100%);
+  border:.2rem solid var(--hairline);
+  overflow:hidden;
+}
+.stream-frame iframe{ width:100%; height:100%; border:0; display:block }
+
+/* Gesperrter Zustand */
+.locked{
+  position:absolute; inset:0; z-index:2;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:clamp(.8rem,2vw,1.6rem); text-align:center; padding:2rem;
+}
+.locked .lock-icon{
+  width:clamp(2.6rem,5vw,4rem); height:clamp(2.6rem,5vw,4rem);
+}
+.locked .lock-icon svg{ width:100%; height:100%; display:block }
+.locked .lock-icon path, .locked .lock-icon rect{
+  stroke:var(--accent); stroke-width:1.6; fill:none;
   stroke-linecap:round; stroke-linejoin:round;
 }
-
-.accent-bar{ height:.5rem; width:60%; background:var(--accent); margin-top:.65rem }
-
-/* ---------- 2 · Strecken-Daten oben rechts ---------- */
-
-.course{
-  position:absolute; top:0; right:0; bottom:0; width:28rem;
-  padding:4.3rem 2.2rem 15rem 2.6rem;
-  background: linear-gradient(90deg, rgba(23,11,44,0) 0%, rgba(23,11,44,.88) 24%, rgba(58,30,99,.94) 100%);
-}
-.course h1{
+.locked .head{
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:3.05rem; letter-spacing:.02em; line-height:1; margin-bottom:2.3rem;
+  font-size:clamp(1.1rem,2.6vw,2rem); letter-spacing:.06em;
 }
-.course .block{ margin-bottom:2.15rem }
-.course .label{ font-size:1.55rem; margin-bottom:.5rem }
-.course .value{ font-size:2.15rem }
-.course .value + .value{ margin-top:.15rem }
-
-/* ---------- 3 · Leistungs-Leiste unten ---------- */
-
-.perf{
-  position:absolute; left:0; right:0; bottom:0; height:12.4rem;
-  padding:1.25rem 2.4rem 0 2.2rem;
-  background: linear-gradient(180deg, rgba(58,30,99,.92) 0%, rgba(23,11,44,.96) 100%);
-  border-top:.2rem solid var(--accent);
+.locked .sub{
+  font-size:clamp(.9rem,1.5vw,1.2rem); color:var(--dim); max-width:34rem; line-height:1.5;
 }
-.perf h2{
-  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:2.45rem; letter-spacing:.02em; line-height:1; margin-bottom:1rem;
-}
-.metrics{ display:flex; align-items:flex-start; position:relative; z-index:2 }
-.metric{ padding:0 2.3rem; border-left:.1rem solid rgba(255,255,255,.18) }
-.metric:first-child{ padding-left:0; border-left:0 }
-.metric .label{ font-size:1.55rem; margin-bottom:.6rem }
-.metric .row{ display:flex; align-items:baseline; gap:.65rem }
-.metric .value{ font-size:2.15rem }
-.metric .unit{ font-family:'Oswald',sans-serif; font-size:1.4rem; color:var(--dim); font-weight:600; letter-spacing:.09em }
-.metric .row + .row{ margin-top:.2rem }
-
-/* ---------- 4 · Signet unten rechts ---------- */
-
-.crest{
-  position:absolute; right:0; bottom:0; width:42rem; height:12.4rem;
-  pointer-events:none; z-index:1;
-}
-.crest svg{ width:100%; height:100%; display:block }
-.crest .wave{ fill:none; stroke:var(--accent); stroke-width:1.4; opacity:.32 }
-
-.badge{
-  position:absolute; right:2.6rem; bottom:1.6rem;
-  width:11.5rem; padding:1rem .8rem 1.1rem; text-align:center;
-  font-family:'Oswald',sans-serif; text-transform:uppercase;
-  border:.2rem solid var(--accent); background:var(--panel);
-  clip-path: polygon(1.2rem 0, 100% 0, 100% calc(100% - 1.2rem), calc(100% - 1.2rem) 100%, 0 100%, 0 1.2rem);
-  z-index:2;
-}
-.badge .top{ font-size:1.75rem; font-weight:700; color:var(--accent); letter-spacing:.04em; line-height:1 }
-.badge .rule{ height:.15rem; background:var(--accent); margin:.55rem auto; width:58% }
-.badge .bot{ font-size:1rem; font-weight:600; color:var(--white); letter-spacing:.28em }
-
-/* ---------- Hochformat / schmale Fenster ---------- */
-
-@media (max-aspect-ratio: 4/5){
-  html{ font-size: calc(100vw / 62); }
-  .stack{ top:1.4rem; left:1.4rem; width:20rem }
-  .timer .value{ font-size:3.6rem }
-  .course{ display:none }               /* Strecken-Spalte weicht am Handy der Leiste */
-  .perf{ height:auto; padding-bottom:1.4rem }
-  .metrics{ flex-wrap:wrap }
-  .metric{ width:50%; padding:1rem 1.2rem; border-left:0; border-top:.1rem solid rgba(255,255,255,.14) }
-  .badge{ position:static; margin:1rem auto 0 }
-  .crest{ display:none }
-}
-
-/* ---------- 5 · Intro: Standbild mit Countdown ---------- */
-
-.intro{
-  position:fixed; inset:0; z-index:50;
-  background:#0D0620 center/cover no-repeat;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  transition:opacity .9s ease;
-}
-.intro.hide{ opacity:0; pointer-events:none }
-.intro.gone{ display:none }
-.intro::after{
-  content:''; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(13,6,32,.55) 0%, rgba(13,6,32,.82) 100%);
-}
-.intro > *{ position:relative; z-index:1 }
-
-.intro .kicker{
-  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:2.1rem; letter-spacing:.5em; color:var(--accent); margin-bottom:1.5rem;
-}
-.intro .title{
-  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:6.6rem; line-height:.95; letter-spacing:.02em; text-align:center;
-}
-.intro .cd-label{
-  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:1.7rem; letter-spacing:.32em; color:var(--accent);
-  margin:4.2rem 0 1.1rem;
-}
-.intro .cd{
+.locked .mini-cd{
   font-weight:700; font-variant-numeric:tabular-nums;
-  font-size:10.5rem; line-height:1; letter-spacing:.01em;
+  font-size:clamp(1.4rem,3.2vw,2.6rem); color:var(--accent); letter-spacing:.02em;
 }
-.intro .rule{ height:.4rem; width:25rem; background:var(--accent); margin-top:2.8rem }
 
-.sound-hint{
-  position:absolute; left:50%; bottom:8%; transform:translateX(-50%);
+/* Live-Hinweis über dem Player */
+.live-tag{
+  display:inline-flex; align-items:center; gap:.55em;
+  margin-top:clamp(1rem,2vw,1.4rem);
   font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
-  font-size:1.45rem; letter-spacing:.1em; color:var(--white);
-  background:rgba(0,0,0,.55); border:.1rem solid var(--accent);
-  padding:.75rem 1.9rem; border-radius:3rem; opacity:0; pointer-events:none;
-  transition:opacity .4s ease; z-index:70; white-space:nowrap;
+  font-size:clamp(.75rem,1.2vw,.95rem); letter-spacing:.2em;
+  color:var(--dim);
 }
-.sound-hint.show{ opacity:1 }
+.live-tag i{
+  width:.6em; height:.6em; border-radius:50%; background:#4ADE80;
+  box-shadow:0 0 .8em rgba(74,222,128,.85);
+  animation:pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.35} }
 
-@media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+.hidden{ display:none !important }
+
+/* ============================================================
+   3 · INFO-KACHELN
+   ============================================================ */
+
+.facts{
+  display:grid; gap:clamp(.8rem,1.6vw,1.4rem);
+  grid-template-columns:repeat(auto-fit, minmax(15rem,1fr));
+  margin-top:clamp(2rem,4vw,3.4rem);
+}
+.fact{
+  background:var(--panel);
+  border:.1rem solid var(--hairline);
+  border-left:.35rem solid var(--accent);
+  padding:clamp(1.1rem,2.2vw,1.7rem) clamp(1.2rem,2.4vw,1.9rem);
+}
+.fact .label{ font-size:clamp(.65rem,1vw,.82rem); margin-bottom:.8em }
+.fact .val{
+  font-weight:700; font-variant-numeric:tabular-nums;
+  font-size:clamp(1.4rem,2.8vw,2.1rem); line-height:1;
+}
+.fact .note{
+  font-family:'Oswald',sans-serif; font-weight:500;
+  font-size:clamp(.7rem,1.05vw,.85rem); color:var(--dim);
+  letter-spacing:.12em; text-transform:uppercase; margin-top:.7em;
+}
+
+/* ============================================================
+   4 · FUSS
+   ============================================================ */
+
+footer{
+  border-top:.1rem solid rgba(255,255,255,.12);
+  padding:clamp(1.6rem,3vw,2.4rem) 1rem;
+  text-align:center;
+}
+footer .name{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.9rem,1.6vw,1.2rem); letter-spacing:.3em; color:var(--accent);
+}
+footer .sub{
+  font-family:'Oswald',sans-serif; font-size:clamp(.7rem,1vw,.82rem);
+  color:var(--dim); letter-spacing:.16em; margin-top:.7em; text-transform:uppercase;
+}
+footer a{ color:var(--dim); text-decoration:none }
+footer a:hover{ color:var(--accent) }
+
+/* ---------- Handy hochkant: Bild darf hoeher werden ---------- */
+@media (max-aspect-ratio: 4/5){
+  .hero{ aspect-ratio:4/5; background-position:center }
+  .cd-box{ top:24%; min-width:62%; padding:3% 4% 3.4% }
+  .cd-box .days{ font-size:clamp(.9rem,4vw,1.4rem) }
+  .cd-box .cd{ font-size:clamp(1.7rem,8.5vw,3rem) }
+  .cd-box .cd-units{ gap:clamp(.6rem,4vw,1.6rem); font-size:clamp(.5rem,2vw,.75rem) }
+  .hero-title .kicker{ font-size:clamp(.5rem,2.4vw,.8rem) }
+  .hero-title .date{ font-size:clamp(.85rem,4.4vw,1.4rem) }
+}
+
+@media (prefers-reduced-motion: reduce){ *{animation:none !important} }
 </style>
 </head>
 <body>
-<div class="stage">
 
-  <!-- 1 · Zeit + Temperatur -->
-  <div class="stack">
-    <div class="timer panel chamfer-tl" id="hero">
-      <div class="label" id="hero-label">Restzeit</div>
-      <div class="value" id="hero-timer">00:00:00</div>
+<!-- ============ 1 · HERO ============ -->
+<section class="hero" id="hero">
+  <div class="cd-box" id="cd-box">
+    <div class="label" id="cd-label">Start in</div>
+    <div class="days" id="cd-days">-- Tage</div>
+    <div class="cd" id="cd">--:--:--</div>
+    <div class="cd-units" id="cd-units">
+      <span>Std</span><span>Min</span><span>Sek</span>
     </div>
-
-    <div class="temp panel" id="blk-temp">
-      <div>
-        <div class="label">Temperatur</div>
-        <div class="value" id="temp-c">--.- &deg;C</div>
-        <div class="value sub imp" id="temp-f">--.- &deg;F</div>
-      </div>
-      <div class="icon" id="wx-icon"></div>
-    </div>
-
-    <div class="accent-bar"></div>
   </div>
 
-  <!-- 2 · Strecken-Daten -->
-  <aside class="course">
-    <h1>Strecken-<br>Daten</h1>
+  <div class="hero-title">
+    <div class="kicker">6 Stunden · 52,5 km Ziel</div>
+    <div class="date" id="hero-date">Samstag, 12. September 2026 · 10:15 Uhr</div>
+  </div>
+</section>
 
-    <div class="block">
-      <div class="label">Uhrzeit</div>
-      <div class="value" id="clock">--:--</div>
-    </div>
-
-    <div class="block" id="blk-weather">
-      <div class="label">Wetter</div>
-      <div class="value" id="temp-c2">--.- &deg;C</div>
-      <div class="value sub imp" id="temp-f2">--.- &deg;F</div>
-    </div>
-
-    <div class="block">
-      <div class="label">Gelaufen</div>
-      <div class="value" id="dist-km">0.0 KM</div>
-      <div class="value sub imp" id="dist-mi">0.0 MI</div>
-    </div>
-
-    <div class="block" id="blk-remaining">
-      <div class="label">Rest-Distanz</div>
-      <div class="value" id="rem-km">0.0 KM</div>
-      <div class="value sub imp" id="rem-mi">0.0 MI</div>
-    </div>
-  </aside>
-
-  <!-- 3 · Leistungs-Daten -->
-  <section class="perf">
-    <h2>Leistungs-Daten</h2>
-
-    <div class="crest">
-      <svg viewBox="0 0 420 124" preserveAspectRatio="none" aria-hidden="true">
-        <path class="wave" d="M0,116 C80,116 108,78 186,78 C264,78 292,116 420,116"/>
-        <path class="wave" d="M0,104 C80,104 116,60 200,60 C284,60 304,104 420,104" opacity=".26"/>
-        <path class="wave" d="M0,92 C86,92 124,42 214,42 C304,42 320,92 420,92" opacity=".17"/>
-        <path class="wave" d="M0,80 C92,80 132,24 228,24 C324,24 336,80 420,80" opacity=".1"/>
-      </svg>
-    </div>
-    <div class="badge">
-      <div class="top" id="badge-title">Ultra</div>
-      <div class="rule"></div>
-      <div class="bot" id="badge-sub">Live</div>
-    </div>
-
-    <div class="metrics">
-
-      <div class="metric">
-        <div class="label">Akt. Pace</div>
-        <div class="row"><span class="value" id="pace-km">--:--</span><span class="unit">/ KM</span></div>
-        <div class="row imp"><span class="value sub" id="pace-mi">--:--</span><span class="unit">/ MI</span></div>
-      </div>
-
-      <div class="metric">
-        <div class="label">&Oslash; Pace</div>
-        <div class="row"><span class="value" id="apace-km">--:--</span><span class="unit">/ KM</span></div>
-        <div class="row imp"><span class="value sub" id="apace-mi">--:--</span><span class="unit">/ MI</span></div>
-      </div>
-
-      <div class="metric">
-        <div class="label">H&ouml;henmeter</div>
-        <div class="row"><span class="value" id="ele-m">0</span><span class="unit">M</span></div>
-        <div class="row imp"><span class="value sub" id="ele-ft">0</span><span class="unit">FT</span></div>
-      </div>
-
-      <div class="metric">
-        <div class="label">Laufzeit</div>
-        <div class="row"><span class="value" id="perf-timer">00:00</span></div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- 5 · Intro -->
-  <div class="intro" id="intro">
-    <div class="kicker" id="intro-kicker">Live</div>
-    <div class="title" id="intro-title">Ultra</div>
-    <div class="cd-label">Start in</div>
-    <div class="cd" id="intro-cd">--:--:--</div>
-    <div class="rule"></div>
+<!-- ============ 2 · STREAM ============ -->
+<div class="wrap">
+  <div class="section-head">
+    <div class="label">Live aus dem Rennen</div>
+    <h2>Der Stream</h2>
   </div>
 
-  <audio id="intro-audio" loop preload="auto"></audio>
-  <div class="sound-hint" id="sound-hint">Zum Aktivieren des Tons antippen</div>
+  <div class="stream-frame" id="stream-frame">
+    <!-- Gesperrt bis zum Start -->
+    <div class="locked" id="locked">
+      <div class="lock-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4.5" y="10.5" width="15" height="10.5" rx="1.6"/>
+          <path d="M8 10.5V7.2a4 4 0 0 1 8 0v3.3"/>
+          <path d="M12 15v2.4"/>
+        </svg>
+      </div>
+      <div class="head">Noch nicht live</div>
+      <div class="sub">Der Stream schaltet sich automatisch frei, sobald es losgeht. Diese Seite bleibt einfach offen.</div>
+      <div class="mini-cd" id="mini-cd">--:--:--</div>
+    </div>
 
+    <!-- Player wird erst zum Start eingesetzt -->
+  </div>
+
+  <div class="live-tag hidden" id="live-tag"><i></i>Übertragung läuft</div>
+
+  <!-- ============ 3 · INFO ============ -->
+  <div class="facts">
+    <div class="fact">
+      <div class="label">Format</div>
+      <div class="val">6 Stunden</div>
+      <div class="note">Zeitlauf auf Rundkurs</div>
+    </div>
+    <div class="fact">
+      <div class="label">Zieldistanz</div>
+      <div class="val">52,5 km</div>
+      <div class="note">Persönliches Ziel</div>
+    </div>
+    <div class="fact">
+      <div class="label">Start</div>
+      <div class="val">10:15 Uhr</div>
+      <div class="note">12. September 2026</div>
+    </div>
+    <div class="fact">
+      <div class="label">Übertragung</div>
+      <div class="val">Ab 10:00</div>
+      <div class="note">Mit Live-Daten im Bild</div>
+    </div>
+  </div>
 </div>
+
+<footer>
+  <div class="name">You vs You</div>
+  <div class="sub">you-vs-you.online</div>
+</footer>
 
 <script>
 /* ================================================================
-   KONFIGURATION — auch per URL-Parameter setzbar.
-   start      = wann Foto/Countdown endet und die Kamera erscheint
-   racestart  = wann die Renn-Uhr und Streckendaten zu zaehlen beginnen
-   Beispiel:
-   overlay.html?target=52.5&duration=6&title=6H%20ULTRA
-     &start=2026-09-12T10:00:00%2B02:00
-     &racestart=2026-09-12T10:15:00%2B02:00
-     &image=start.jpg&audio=musik.mp3
+   KONFIGURATION — hier alles einstellen
    ================================================================ */
 const CONFIG = {
-  targetKm:    0,
-  durationH:   0,
-  startAt:     null,
-  raceStartAt: null,
-  title:       "Ultra",
-  subtitle:    "Live",
-  weather:     true,
-  imperial:    false,
-  demo:        false,
+  // Twitch-Kanalname (nur der Name, ohne twitch.tv/)
+  twitchChannel: "DEINKANALNAME",
 
-  introImage:  "",
-  introAudio:  "",
-  introKicker: "Live"
+  // Wann der Stream startet -> ab hier wird der Player freigeschaltet
+  streamStart: "2026-09-12T10:00:00+02:00",
+
+  // Hintergrundbild im selben Repo
+  heroImage: "start.jpg",
+
+  // Wie lange der Player nach dem Start freigeschaltet bleibt (Stunden)
+  streamHours: 8
 };
-
-(function(){
-  const q = new URLSearchParams(location.search);
-  const map = { target:'targetKm', start:'startAt', racestart:'raceStartAt',
-                title:'title', sub:'subtitle',
-                image:'introImage', audio:'introAudio', kicker:'introKicker' };
-  for (const [k,v] of Object.entries(map)) if (q.has(k)) CONFIG[v] = q.get(k);
-  if (q.has('target'))   CONFIG.targetKm  = parseFloat(String(q.get('target')).replace(',','.')) || 0;
-  if (q.has('duration')) CONFIG.durationH = parseFloat(String(q.get('duration')).replace(',','.')) || 0;
-  if (q.has('demo'))     CONFIG.demo     = q.get('demo') !== '0';
-  if (q.has('weather'))  CONFIG.weather  = q.get('weather') !== '0';
-  if (q.has('imperial')) CONFIG.imperial = q.get('imperial') !== '0';
-})();
 
 const $ = id => document.getElementById(id);
 
-const revealMs = CONFIG.startAt ? new Date(CONFIG.startAt).getTime() : 0;
-const raceStartMs = CONFIG.raceStartAt ? new Date(CONFIG.raceStartAt).getTime() : (revealMs || Date.now());
+/* ---- Hintergrundbild setzen ---- */
+$('hero').style.backgroundImage = 'url("' + CONFIG.heroImage + '")';
 
-const state = { meters:0, gain:0, last:null, baseAlt:null, trail:[], fix:0 };
+/* ---- Zeitrechnung ---- */
+const startMs = new Date(CONFIG.streamStart).getTime();
+const endMs   = startMs + CONFIG.streamHours * 3600000;
 
-$('badge-title').textContent = CONFIG.title;
-$('badge-sub').textContent   = CONFIG.subtitle;
-$('hero-label').textContent  = CONFIG.durationH > 0 ? 'Restzeit' : 'Laufzeit';
-if (!CONFIG.targetKm) $('blk-remaining').style.display = 'none';
-if (!CONFIG.weather){ $('blk-weather').style.display='none'; $('blk-temp').style.display='none'; }
-if (CONFIG.imperial) document.body.classList.add('imperial');
-
-/* ---- Wettersymbole ---- */
-const ICONS = {
-  sun:   '<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="8"/><line x1="20" y1="3" x2="20" y2="8"/><line x1="20" y1="32" x2="20" y2="37"/><line x1="3" y1="20" x2="8" y2="20"/><line x1="32" y1="20" x2="37" y2="20"/><line x1="8" y1="8" x2="11.5" y2="11.5"/><line x1="28.5" y1="28.5" x2="32" y2="32"/><line x1="32" y1="8" x2="28.5" y2="11.5"/><line x1="11.5" y1="28.5" x2="8" y2="32"/></svg>',
-  cloud: '<svg viewBox="0 0 40 40"><path d="M11 29h18a6 6 0 0 0 .4-12 9 9 0 0 0-17.3 2.2A5.5 5.5 0 0 0 11 29z"/></svg>',
-  rain:  '<svg viewBox="0 0 40 40"><path d="M11 24h18a6 6 0 0 0 .4-12 9 9 0 0 0-17.3 2.2A5.5 5.5 0 0 0 11 24z"/><line x1="14" y1="29" x2="12" y2="35"/><line x1="21" y1="29" x2="19" y2="35"/><line x1="28" y1="29" x2="26" y2="35"/></svg>',
-  snow:  '<svg viewBox="0 0 40 40"><path d="M11 24h18a6 6 0 0 0 .4-12 9 9 0 0 0-17.3 2.2A5.5 5.5 0 0 0 11 24z"/><line x1="13" y1="31" x2="17" y2="31"/><line x1="15" y1="29" x2="15" y2="33"/><line x1="23" y1="31" x2="27" y2="31"/><line x1="25" y1="29" x2="25" y2="33"/></svg>',
-  storm: '<svg viewBox="0 0 40 40"><path d="M11 24h18a6 6 0 0 0 .4-12 9 9 0 0 0-17.3 2.2A5.5 5.5 0 0 0 11 24z"/><path d="M21 27l-5 6h5l-3 5"/></svg>'
-};
-function setIcon(code){
-  let k;
-  if (code <= 1) k = 'sun';
-  else if (code <= 48) k = 'cloud';
-  else if ((code >= 71 && code <= 77) || code === 85 || code === 86) k = 'snow';
-  else if (code >= 95) k = 'storm';
-  else k = 'rain';
-  $('wx-icon').innerHTML = ICONS[k];
-}
-setIcon(3);
-
-/* ---- Formatierung ---- */
 const pad = n => String(n).padStart(2,'0');
-function hms(ms){
+
+function splitTime(ms){
   const s = Math.max(0, Math.floor(ms/1000));
-  return pad(Math.floor(s/3600)) + ':' + pad(Math.floor(s%3600/60)) + ':' + pad(s%60);
-}
-function hm(ms){
-  const s = Math.max(0, Math.floor(ms/1000));
-  return pad(Math.floor(s/3600)) + ':' + pad(Math.floor(s%3600/60));
-}
-function pace(secPerUnit){
-  if (!isFinite(secPerUnit) || secPerUnit <= 0 || secPerUnit > 5999) return '--:--';
-  return pad(Math.floor(secPerUnit/60)) + ':' + pad(Math.round(secPerUnit%60));
+  return {
+    d: Math.floor(s/86400),
+    h: Math.floor(s%86400/3600),
+    m: Math.floor(s%3600/60),
+    s: s%60
+  };
 }
 
-/* ---- Haversine ---- */
-function distM(a, b){
-  const R = 6371000, rad = Math.PI/180;
-  const dLat = (b.lat-a.lat)*rad, dLon = (b.lon-a.lon)*rad;
-  const s = Math.sin(dLat/2)**2 +
-            Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin(dLon/2)**2;
-  return 2*R*Math.asin(Math.min(1, Math.sqrt(s)));
+/* ---- Player einsetzen (nur einmal) ---- */
+let playerInserted = false;
+function insertPlayer(){
+  if (playerInserted) return;
+  playerInserted = true;
+
+  const host = location.hostname || 'localhost';
+  const parents = [host];
+  // Beide Schreibweisen mitgeben, damit Twitch nicht blockiert
+  if (host.startsWith('www.')) parents.push(host.slice(4));
+  else parents.push('www.' + host);
+
+  const src = 'https://player.twitch.tv/?channel=' + encodeURIComponent(CONFIG.twitchChannel)
+            + parents.map(p => '&parent=' + encodeURIComponent(p)).join('')
+            + '&autoplay=true&muted=false';
+
+  const frame = document.createElement('iframe');
+  frame.src = src;
+  frame.allowFullscreen = true;
+  frame.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
+  frame.title = 'Live-Stream';
+
+  $('stream-frame').appendChild(frame);
+  $('locked').classList.add('hidden');
+  $('live-tag').classList.remove('hidden');
 }
 
-/* ---- Standort ---- */
-function onFix(p){
-  if (Date.now() < raceStartMs) return;               // vor dem Rennstart zaehlt nichts
-  const c = p.coords;
-  if (c.accuracy > 30) return;
-  const now = p.timestamp || Date.now();
-  const pt = { lat:c.latitude, lon:c.longitude, t:now, alt:c.altitude };
-
-  if (state.last){
-    const d = distM(state.last, pt);
-    const dt = (now - state.last.t)/1000;
-    if (d >= 4 && dt > 0 && d/dt < 12){
-      state.meters += d;
-      state.trail.push({ t: now, m: state.meters });
-      state.last = pt;
-    }
-  } else {
-    state.last = pt;
-  }
-
-  if (typeof pt.alt === 'number' && !isNaN(pt.alt)){
-    if (state.baseAlt === null) state.baseAlt = pt.alt;
-    const d = pt.alt - state.baseAlt;
-    if (d > 4){ state.gain += d; state.baseAlt = pt.alt; }
-    else if (d < -4){ state.baseAlt = pt.alt; }
-  }
-  state.fix = Date.now();
-}
-
-if (!CONFIG.demo && 'geolocation' in navigator){
-  navigator.geolocation.watchPosition(onFix, () => {},
-    { enableHighAccuracy:true, maximumAge:2000, timeout:15000 });
-}
-
-/* ---- Wetter ---- */
-let weatherAt = 0;
-async function updateWeather(){
-  if (!CONFIG.weather || !state.last) return;
-  if (Date.now() - weatherAt < 600000) return;
-  weatherAt = Date.now();
-  try{
-    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' +
-      state.last.lat.toFixed(3) + '&longitude=' + state.last.lon.toFixed(3) +
-      '&current=temperature_2m,weather_code');
-    const j = await r.json();
-    const c = j.current.temperature_2m;
-    const cs = c.toFixed(1) + ' \u00B0C', fs = (c*9/5+32).toFixed(1) + ' \u00B0F';
-    $('temp-c').textContent = cs;  $('temp-c2').textContent = cs;
-    $('temp-f').textContent = fs;  $('temp-f2').textContent = fs;
-    setIcon(j.current.weather_code);
-  }catch(_){ weatherAt = Date.now() - 540000; }
-}
-
-/* ---- Demo ---- */
-if (CONFIG.demo){
-  const cs = '15.8 \u00B0C', fs = '60.4 \u00B0F';
-  $('temp-c').textContent = cs; $('temp-c2').textContent = cs;
-  $('temp-f').textContent = fs; $('temp-f2').textContent = fs;
-  setIcon(0);
-  setInterval(() => {
-    if (Date.now() < raceStartMs) return;
-    state.meters += 2.5 + Math.random();
-    state.gain   += Math.random() * .6;
-    state.fix     = Date.now();
-    state.trail.push({ t: Date.now(), m: state.meters });
-  }, 1000);
-}
-
-/* ---- Render ---- */
-function render(){
+/* ---- Sekundentakt ---- */
+function tick(){
   const now = Date.now();
-  const elapsed = Math.max(0, now - raceStartMs);
+  const left = startMs - now;
 
-  if (CONFIG.durationH > 0){
-    const left = Math.max(0, CONFIG.durationH*3600000 - elapsed);
-    $('hero-timer').textContent = hms(left);
-    $('hero').classList.toggle('final', elapsed > 0 && left <= 600000);
-  } else {
-    $('hero-timer').textContent = hms(elapsed);
+  if (left > 0){
+    /* --- Vor dem Start: Countdown --- */
+    const t = splitTime(left);
+    $('cd-days').textContent = t.d > 0 ? (t.d === 1 ? '1 Tag' : t.d + ' Tage') : '';
+    $('cd-days').style.display = t.d > 0 ? '' : 'none';
+    $('cd').textContent = pad(t.h) + ':' + pad(t.m) + ':' + pad(t.s);
+    $('mini-cd').textContent = (t.d > 0 ? t.d + ' Tage · ' : '') + pad(t.h) + ':' + pad(t.m) + ':' + pad(t.s);
   }
-  $('perf-timer').textContent = hm(elapsed);
-
-  const t = new Date();
-  $('clock').textContent = pad(t.getHours()) + ':' + pad(t.getMinutes());
-
-  const km = state.meters/1000;
-  $('dist-km').textContent = km.toFixed(1) + ' KM';
-  $('dist-mi').textContent = (km/1.609344).toFixed(1) + ' MI';
-
-  if (CONFIG.targetKm){
-    const rk = Math.max(0, CONFIG.targetKm - km);
-    $('rem-km').textContent = rk.toFixed(1) + ' KM';
-    $('rem-mi').textContent = (rk/1.609344).toFixed(1) + ' MI';
+  else if (now < endMs){
+    /* --- Läuft: Player freischalten --- */
+    $('cd-box').classList.add('live');
+    $('cd-label').textContent = 'Jetzt';
+    $('cd-days').classList.add('hidden');
+    $('cd').textContent = 'LIVE';
+    $('cd-units').classList.add('hidden');
+    insertPlayer();
+  }
+  else {
+    /* --- Danach --- */
+    $('cd-label').textContent = 'Beendet';
+    $('cd-days').classList.add('hidden');
+    $('cd').textContent = 'Danke!';
+    $('cd-units').classList.add('hidden');
+    $('locked').classList.remove('hidden');
+    $('locked').querySelector('.head').textContent = 'Übertragung beendet';
+    $('locked').querySelector('.sub').textContent = 'Danke fürs Zuschauen. Die Aufzeichnung folgt.';
+    $('mini-cd').textContent = '';
   }
 
-  const aSec = km > .05 ? (elapsed/1000)/km : 0;
-  $('apace-km').textContent = pace(aSec);
-  $('apace-mi').textContent = pace(aSec*1.609344);
-
-  while (state.trail.length && now - state.trail[0].t > 90000) state.trail.shift();
-  let cSec = 0;
-  if (state.trail.length > 1){
-    const a = state.trail[0], b = state.trail[state.trail.length-1];
-    const dKm = (b.m - a.m)/1000, dS = (b.t - a.t)/1000;
-    if (dKm > .02) cSec = dS/dKm;
-  }
-  $('pace-km').textContent = pace(cSec);
-  $('pace-mi').textContent = pace(cSec*1.609344);
-
-  $('ele-m').textContent  = Math.round(state.gain).toLocaleString('de-DE');
-  $('ele-ft').textContent = Math.round(state.gain*3.28084).toLocaleString('de-DE');
-
-  updateWeather();
-  requestAnimationFrame(render);
+  requestAnimationFrame(tick);
 }
-render();
-
-/* ================================================================
-   INTRO: Standbild + Musik -> Countdown -> Kamerabild
-   ================================================================ */
-(function(){
-  const intro = $('intro'), music = $('intro-audio'), hint = $('sound-hint');
-
-  $('intro-title').textContent  = CONFIG.title;
-  $('intro-kicker').textContent = CONFIG.introKicker;
-  if (CONFIG.introImage) intro.style.backgroundImage = 'url("' + CONFIG.introImage + '")';
-
-  if (!revealMs || Date.now() >= revealMs){ intro.classList.add('gone'); return; }
-
-  let unlocked = false;
-  function unlock(){
-    if (unlocked) return;
-    unlocked = true;
-    hint.classList.remove('show');
-    if (CONFIG.introAudio){
-      music.src = CONFIG.introAudio;
-      music.volume = .55;
-      music.play().catch(() => {});
-    }
-  }
-  document.addEventListener('pointerdown', unlock, { once:true, capture:true });
-
-  if (CONFIG.introAudio){
-    setTimeout(() => { if (!unlocked) hint.classList.add('show'); }, 1200);
-  }
-
-  function reveal(){
-    music.pause();
-    hint.classList.remove('show');
-    intro.classList.add('hide');
-    setTimeout(() => intro.classList.add('gone'), 1000);
-  }
-
-  const tick = setInterval(() => {
-    const left = revealMs - Date.now();
-    if (left <= 0){
-      clearInterval(tick);
-      $('intro-cd').textContent = '00:00:00';
-      reveal();
-      return;
-    }
-    $('intro-cd').textContent = hms(left);
-  }, 250);
-})();
-
-/* ---- Display wach halten ---- */
-if ('wakeLock' in navigator){
-  const hold = () => navigator.wakeLock.request('screen').catch(()=>{});
-  hold();
-  document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && hold());
-}
+tick();
 </script>
+
 </body>
 </html>
