@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>YOU VS YOU — 6H ULTRA</title>
-<meta name="description" content="6-Stunden-Ultralauf live. You vs You.">
+<title>YOU VS YOU</title>
+<meta name="description" content="Ultralauf live. Events, Streams, Training. You vs You.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   YOU VS YOU — Website
-   Aufbau: Eintrittsseite -> Start -> Stream / Infos
-   Farbschema wie das Stream-Overlay: Violett + Gold
+   YOU VS YOU
+   Aufbau:  Eintritt -> Start (Countdown) -> Menue mit Kategorien
+   Farben wie das Stream-Overlay: Violett + Gold
    ============================================================ */
 
 :root{
@@ -30,8 +30,7 @@
 body{
   background:var(--ink); color:var(--white);
   font-family:'Rajdhani','Arial Narrow',Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
 }
 
 .label{
@@ -41,11 +40,7 @@ body{
 }
 .hidden{ display:none !important }
 
-/* Gemeinsamer Bildhintergrund für Eintritt und Startansicht */
-.bg-photo{
-  background:#0D0620 center/cover no-repeat;
-  position:relative;
-}
+.bg-photo{ background:var(--ink) center/cover no-repeat; position:relative }
 .bg-photo::before{
   content:''; position:absolute; inset:0;
   background:linear-gradient(180deg, rgba(13,6,32,.62) 0%, rgba(13,6,32,.42) 42%, rgba(13,6,32,.92) 100%);
@@ -63,7 +58,6 @@ body{
   transition:opacity .7s ease;
 }
 #entry.fade{ opacity:0; pointer-events:none }
-
 #entry .kicker{
   font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
   font-size:clamp(.6rem,1.3vw,1rem); letter-spacing:.5em; color:var(--accent);
@@ -76,7 +70,6 @@ body{
   font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
   font-size:clamp(.75rem,1.6vw,1.15rem); letter-spacing:.2em; color:var(--dim);
 }
-
 .enter-btn{
   margin-top:clamp(.6rem,2vw,1.4rem);
   display:inline-flex; align-items:center; gap:.8em;
@@ -90,12 +83,88 @@ body{
 .enter-btn:hover{ transform:translateY(-3px); box-shadow:0 .8rem 2.4rem rgba(255,212,0,.32) }
 .enter-btn svg{ width:1.1em; height:1.1em; flex:none }
 .enter-btn svg path{ stroke:#170B2C; stroke-width:2.4; fill:none; stroke-linecap:round; stroke-linejoin:round }
-
 #entry .hint{
   font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
-  font-size:clamp(.6rem,1vw,.78rem); letter-spacing:.18em; color:var(--dim);
-  margin-top:.4rem;
+  font-size:clamp(.6rem,1vw,.78rem); letter-spacing:.18em; color:var(--dim); margin-top:.4rem;
 }
+
+/* ============================================================
+   MENUE
+   ============================================================ */
+
+.menu-btn{
+  position:fixed; top:clamp(.9rem,2.2vw,1.6rem); left:clamp(.9rem,2.2vw,1.6rem);
+  z-index:70; display:flex; align-items:center; gap:.55em;
+  padding:.7em 1.1em .75em;
+  background:var(--panel); border:.12rem solid var(--hairline);
+  color:var(--white); cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.65rem,1vw,.8rem); letter-spacing:.14em;
+  clip-path: polygon(.75rem 0, 100% 0, 100% calc(100% - .75rem), calc(100% - .75rem) 100%, 0 100%, 0 .75rem);
+  transition:border-color .2s ease;
+}
+.menu-btn:hover{ border-color:var(--accent) }
+.menu-btn .bars{ width:1.15em; height:1.15em; flex:none; display:block }
+.menu-btn .bars line{ stroke:var(--accent); stroke-width:2.2; stroke-linecap:round }
+
+#menu{
+  position:fixed; inset:0; z-index:90;
+  background:rgba(13,6,32,.97);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  display:flex; flex-direction:column;
+  opacity:0; pointer-events:none; transition:opacity .3s ease;
+  overflow-y:auto;
+}
+#menu.open{ opacity:1; pointer-events:auto }
+
+.menu-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:clamp(1rem,2.4vw,1.8rem) clamp(1rem,4vw,3rem);
+  border-bottom:.1rem solid rgba(255,255,255,.12);
+}
+.menu-head .brand{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.9rem,1.8vw,1.3rem); letter-spacing:.28em; color:var(--accent);
+}
+.close-btn{
+  background:transparent; border:.12rem solid var(--hairline); cursor:pointer;
+  width:2.6em; height:2.6em; display:flex; align-items:center; justify-content:center;
+  transition:border-color .2s ease, transform .2s ease;
+}
+.close-btn:hover{ border-color:var(--accent); transform:rotate(90deg) }
+.close-btn svg{ width:1.1em; height:1.1em }
+.close-btn svg line{ stroke:var(--accent); stroke-width:2.4; stroke-linecap:round }
+
+.menu-list{
+  flex:1; padding:clamp(1.2rem,3vw,2.4rem) clamp(1rem,4vw,3rem) clamp(2rem,5vw,4rem);
+  display:grid; gap:clamp(.6rem,1.4vw,1rem);
+  grid-template-columns:repeat(auto-fit,minmax(20rem,1fr));
+  align-content:start; max-width:100rem; margin:0 auto; width:100%;
+}
+.menu-item{
+  display:flex; align-items:center; gap:clamp(.9rem,2vw,1.3rem);
+  padding:clamp(1rem,2vw,1.4rem) clamp(1.1rem,2.4vw,1.7rem);
+  background:var(--panel); border:.12rem solid var(--hairline);
+  border-left:.4rem solid var(--accent);
+  color:var(--white); text-decoration:none; cursor:pointer;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.menu-item:hover{ transform:translateX(5px); box-shadow:0 .5rem 1.6rem rgba(0,0,0,.45) }
+.menu-item .ico{ width:clamp(1.8rem,3vw,2.4rem); height:clamp(1.8rem,3vw,2.4rem); flex:none }
+.menu-item .ico svg{ width:100%; height:100%; display:block }
+.menu-item .ico path, .menu-item .ico rect, .menu-item .ico circle,
+.menu-item .ico line, .menu-item .ico polyline{
+  stroke:var(--accent); stroke-width:1.7; fill:none; stroke-linecap:round; stroke-linejoin:round;
+}
+.menu-item .m-head{
+  display:block; font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.95rem,1.7vw,1.25rem); letter-spacing:.05em; line-height:1.15;
+}
+.menu-item .m-sub{
+  display:block; font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.58rem,.95vw,.75rem); letter-spacing:.14em; color:var(--dim); margin-top:.6em;
+}
+.menu-item .txt{ flex:1; min-width:0 }
 
 /* ============================================================
    ANSICHTEN
@@ -104,50 +173,46 @@ body{
 .view{ display:none; min-height:100vh; min-height:100dvh; flex-direction:column }
 .view.on{ display:flex }
 
-/* ---------- Ansicht START ---------- */
+/* ---------- START ---------- */
 
 #view-home{ justify-content:space-between; padding:clamp(1.2rem,3vw,2.4rem) }
 
-.home-top{ text-align:center; padding-top:clamp(.4rem,2vw,1.4rem) }
+.home-top{ text-align:center; padding-top:clamp(3rem,7vw,4.4rem) }
 .home-top .kicker{
   font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
   font-size:clamp(.55rem,1.1vw,.9rem); letter-spacing:.42em; color:var(--accent);
 }
 .home-top h2{
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:clamp(1.5rem,4.5vw,3.2rem); line-height:1; letter-spacing:.02em;
-  margin-top:.4em;
+  font-size:clamp(1.5rem,4.5vw,3.2rem); line-height:1; letter-spacing:.02em; margin-top:.4em;
+}
+.home-top .place{
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.62rem,1.15vw,.9rem); letter-spacing:.2em; color:var(--dim); margin-top:.9em;
 }
 
-/* Countdown mittig */
 .cd-box{
   align-self:center; text-align:center;
   padding:clamp(1rem,2vw,1.6rem) clamp(1.6rem,3.4vw,2.8rem) clamp(1.1rem,2.2vw,1.8rem);
-  background:var(--panel);
-  border:.15rem solid var(--accent);
+  background:var(--panel); border:.15rem solid var(--accent);
   backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
   clip-path: polygon(1.4rem 0, 100% 0, 100% calc(100% - 1.4rem), calc(100% - 1.4rem) 100%, 0 100%, 0 1.4rem);
 }
 .cd-box .label{ font-size:clamp(.58rem,1vw,.85rem); margin-bottom:.7em }
 .cd-box .days{
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:clamp(1rem,2.4vw,1.9rem); letter-spacing:.08em;
-  color:var(--accent); line-height:1; margin-bottom:.35em;
+  font-size:clamp(1rem,2.4vw,1.9rem); letter-spacing:.08em; color:var(--accent);
+  line-height:1; margin-bottom:.35em;
 }
-.cd-box .cd{
-  font-weight:700; font-variant-numeric:tabular-nums;
-  font-size:clamp(2.2rem,6.5vw,4.6rem); line-height:1;
-}
+.cd-box .cd{ font-weight:700; font-variant-numeric:tabular-nums; font-size:clamp(2.2rem,6.5vw,4.6rem); line-height:1 }
 .cd-box .cd-units{
-  display:flex; justify-content:center; gap:clamp(1.1rem,3.4vw,3.2rem);
-  margin-top:.55em;
+  display:flex; justify-content:center; gap:clamp(1.1rem,3.4vw,3.2rem); margin-top:.55em;
   font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
   font-size:clamp(.5rem,.85vw,.75rem); letter-spacing:.22em; color:var(--dim);
 }
 .cd-box.live{ border-color:var(--green) }
 .cd-box.live .cd{ color:var(--green); font-size:clamp(1.8rem,5vw,3.6rem) }
 
-/* Zwei grosse Felder unten */
 .nav-tiles{
   display:grid; gap:clamp(.7rem,1.6vw,1.2rem);
   grid-template-columns:repeat(auto-fit, minmax(17rem,1fr));
@@ -156,12 +221,10 @@ body{
 .tile{
   display:flex; align-items:center; gap:clamp(.9rem,2vw,1.4rem);
   padding:clamp(1.1rem,2.2vw,1.6rem) clamp(1.2rem,2.6vw,1.9rem);
-  background:var(--panel);
-  border:.12rem solid var(--hairline);
+  background:var(--panel); border:.12rem solid var(--hairline);
   border-left:.4rem solid var(--accent);
-  color:var(--white); text-align:left; cursor:pointer;
-  text-decoration:none;
-  transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  color:var(--white); text-decoration:none; cursor:pointer;
+  transition:transform .2s ease, box-shadow .2s ease;
 }
 .tile:hover{ transform:translateY(-3px); box-shadow:0 .6rem 1.8rem rgba(0,0,0,.45) }
 .tile .ico{ width:clamp(2rem,3.4vw,2.7rem); height:clamp(2rem,3.4vw,2.7rem); flex:none }
@@ -171,26 +234,21 @@ body{
 }
 .tile .txt{ flex:1; min-width:0; display:block }
 .tile .t-head{
-  display:block;
-  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  display:block; font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
   font-size:clamp(1rem,1.9vw,1.4rem); letter-spacing:.05em; line-height:1.1;
 }
 .tile .t-sub{
-  display:block;
-  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  display:block; font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
   font-size:clamp(.6rem,1vw,.8rem); letter-spacing:.14em; color:var(--dim);
   margin-top:.7em; line-height:1.45;
 }
 .tile .arrow{ width:1.4em; height:1.4em; flex:none; opacity:.7 }
 .tile .arrow svg{ width:100%; height:100% }
 .tile .arrow path{ stroke:var(--accent); stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round }
-
-/* Zustandspunkt am Stream-Feld */
 .tile .state{
   display:flex; align-items:center; gap:.45em;
   font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
-  font-size:clamp(.58rem,.95vw,.75rem); letter-spacing:.16em;
-  margin-top:.65em; color:var(--dim);
+  font-size:clamp(.58rem,.95vw,.75rem); letter-spacing:.16em; margin-top:.65em; color:var(--dim);
 }
 .tile .state i{ width:.55em; height:.55em; border-radius:50%; background:var(--dim); display:block }
 .tile.is-live{ border-left-color:var(--green) }
@@ -198,10 +256,11 @@ body{
 .tile.is-live .state i{ background:var(--green); box-shadow:0 0 .7em rgba(74,222,128,.9); animation:pulse 1.6s ease-in-out infinite }
 @keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.3} }
 
-/* ---------- Unterseiten: Kopf mit Zurück ---------- */
+/* ---------- Unterseiten ---------- */
 
 .sub-head{
   display:flex; align-items:center; gap:clamp(.8rem,2vw,1.4rem);
+  justify-content:flex-start;
   padding:clamp(1rem,2.2vw,1.6rem) clamp(1rem,4vw,3rem);
   border-bottom:.1rem solid rgba(255,255,255,.12);
   position:sticky; top:0; z-index:20;
@@ -209,8 +268,7 @@ body{
   backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
 }
 .back-btn{
-  display:inline-flex; align-items:center; gap:.6em;
-  padding:.6em 1.1em .65em;
+  display:inline-flex; align-items:center; gap:.6em; padding:.6em 1.1em .65em;
   background:transparent; border:.12rem solid var(--hairline);
   color:var(--white); cursor:pointer;
   font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
@@ -220,16 +278,130 @@ body{
 .back-btn:hover{ border-color:var(--accent); transform:translateX(-3px) }
 .back-btn svg{ width:1.1em; height:1.1em; flex:none }
 .back-btn svg path{ stroke:var(--accent); stroke-width:2.3; fill:none; stroke-linecap:round; stroke-linejoin:round }
-
 .sub-head h2{
+  flex:1; min-width:0;
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
   font-size:clamp(1rem,2.2vw,1.7rem); letter-spacing:.04em; line-height:1;
 }
 
+/* Menue-Knopf in der Kopfzeile der Unterseiten */
+.head-menu{
+  display:inline-flex; align-items:center; gap:.5em; padding:.6em 1em .65em;
+  background:transparent; border:.12rem solid var(--hairline);
+  color:var(--white); cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.66rem,1.05vw,.8rem); letter-spacing:.14em;
+  transition:border-color .2s ease;
+}
+.head-menu:hover{ border-color:var(--accent) }
+.head-menu svg{ width:1.05em; height:1.05em; flex:none }
+.head-menu svg line{ stroke:var(--accent); stroke-width:2.2; stroke-linecap:round }
 .sub-body{ flex:1; padding:clamp(1.4rem,3.5vw,3rem) clamp(1rem,4vw,3rem) clamp(3rem,6vw,5rem) }
 .inner{ max-width:110rem; margin:0 auto }
 
-/* ---------- Ansicht STREAM ---------- */
+.sec-title{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1.1rem,2.2vw,1.6rem); letter-spacing:.05em;
+  margin:clamp(1.8rem,3.4vw,2.8rem) 0 clamp(.9rem,1.8vw,1.4rem);
+  padding-bottom:.5em; border-bottom:.15rem solid var(--hairline);
+}
+.sec-title:first-child{ margin-top:0 }
+
+.empty{
+  padding:clamp(1.6rem,3vw,2.4rem); text-align:center;
+  border:.12rem dashed rgba(255,255,255,.2);
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.75rem,1.1vw,.9rem); letter-spacing:.14em; color:var(--dim);
+}
+
+/* ---------- Karten allgemein ---------- */
+
+.cards{
+  display:grid; gap:clamp(.9rem,1.8vw,1.4rem);
+  grid-template-columns:repeat(auto-fit, minmax(23rem,1fr)); align-items:start;
+}
+.card{
+  background:var(--panel); border:.1rem solid var(--hairline);
+  border-top:.35rem solid var(--accent);
+  padding:clamp(1.2rem,2.3vw,1.8rem) clamp(1.2rem,2.5vw,1.9rem) clamp(1.3rem,2.5vw,1.9rem);
+}
+.card.past{ border-top-color:rgba(255,255,255,.25); opacity:.72 }
+.card.next{ border-top-color:var(--green) }
+.card h3{
+  display:flex; align-items:center; gap:.7em;
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1.05rem,1.9vw,1.4rem); letter-spacing:.05em; line-height:1.15;
+  margin-bottom:clamp(.7rem,1.4vw,1rem);
+}
+.card .meta{
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.66rem,1vw,.8rem); letter-spacing:.14em; color:var(--accent);
+  margin-bottom:clamp(.8rem,1.6vw,1.1rem);
+}
+.card p{ font-size:clamp(.95rem,1.3vw,1.08rem); line-height:1.6; color:rgba(255,255,255,.86) }
+.card p + p{ margin-top:.8em }
+.card ul{ list-style:none }
+.card li{
+  position:relative; padding-left:1.5em;
+  font-size:clamp(.95rem,1.3vw,1.08rem); line-height:1.55; color:rgba(255,255,255,.86);
+}
+.card li + li{ margin-top:.7em }
+.card li::before{
+  content:''; position:absolute; left:0; top:.62em; width:.5em; height:.5em;
+  background:var(--accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+.card li strong, .card p strong{ color:var(--white); font-weight:700 }
+
+.badge{
+  display:inline-block; padding:.35em .9em .4em; margin-bottom:1em;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.6rem,.95vw,.75rem); letter-spacing:.16em;
+  border:.1rem solid var(--accent); color:var(--accent);
+}
+.badge.g{ border-color:var(--green); color:var(--green) }
+.badge.d{ border-color:rgba(255,255,255,.3); color:var(--dim) }
+
+.stat-row{
+  display:grid; gap:clamp(.6rem,1.2vw,1rem);
+  grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));
+  margin-top:clamp(.9rem,1.8vw,1.3rem);
+  padding-top:clamp(.9rem,1.8vw,1.3rem);
+  border-top:.1rem solid rgba(255,255,255,.14);
+}
+.stat .k{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.58rem,.9vw,.72rem); letter-spacing:.14em; color:var(--dim);
+}
+.stat .v{
+  font-weight:700; font-variant-numeric:tabular-nums;
+  font-size:clamp(1.1rem,2vw,1.5rem); margin-top:.35em; line-height:1;
+}
+
+.facts{
+  display:grid; gap:clamp(.8rem,1.6vw,1.3rem);
+  grid-template-columns:repeat(auto-fit, minmax(13rem,1fr));
+  margin-bottom:clamp(1.6rem,3vw,2.4rem);
+}
+.fact{
+  background:var(--panel); border:.1rem solid var(--hairline);
+  border-left:.35rem solid var(--accent);
+  padding:clamp(1rem,2vw,1.5rem) clamp(1.1rem,2.2vw,1.7rem);
+}
+.fact .label{ font-size:clamp(.62rem,.95vw,.78rem); margin-bottom:.8em }
+.fact .val{ font-weight:700; font-variant-numeric:tabular-nums; font-size:clamp(1.3rem,2.5vw,1.9rem); line-height:1 }
+.fact .note{
+  font-family:'Oswald',sans-serif; font-weight:500;
+  font-size:clamp(.65rem,1vw,.8rem); color:var(--dim);
+  letter-spacing:.12em; text-transform:uppercase; margin-top:.7em;
+}
+.note-line{
+  margin-top:clamp(1.2rem,2.4vw,1.8rem); text-align:center;
+  font-family:'Oswald',sans-serif; font-weight:500;
+  font-size:clamp(.68rem,1vw,.8rem); letter-spacing:.1em;
+  text-transform:uppercase; color:var(--dim);
+}
+
+/* ---------- Stream-Ansicht ---------- */
 
 .stream-frame{
   position:relative; width:100%; aspect-ratio:16/9;
@@ -237,7 +409,6 @@ body{
   border:.2rem solid var(--hairline); overflow:hidden;
 }
 .stream-frame iframe{ width:100%; height:100%; border:0; display:block }
-
 .locked{
   position:absolute; inset:0; z-index:2;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -253,96 +424,108 @@ body{
   font-size:clamp(1rem,2.4vw,1.8rem); letter-spacing:.06em;
 }
 .locked .sub{ font-size:clamp(.88rem,1.4vw,1.1rem); color:var(--dim); max-width:32rem; line-height:1.5 }
-.locked .mini-cd{
-  font-weight:700; font-variant-numeric:tabular-nums;
-  font-size:clamp(1.3rem,3vw,2.4rem); color:var(--accent);
-}
-
+.locked .mini-cd{ font-weight:700; font-variant-numeric:tabular-nums; font-size:clamp(1.3rem,3vw,2.4rem); color:var(--accent) }
 .stream-note{
   margin-top:clamp(1rem,2vw,1.4rem); text-align:center;
   font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
   font-size:clamp(.68rem,1.05vw,.82rem); letter-spacing:.14em; color:var(--dim);
 }
 
-/* ---------- Ansicht INFOS ---------- */
+/* ---------- Aufzeichnungen ---------- */
 
-.info-grid{
-  display:grid; gap:clamp(.9rem,1.8vw,1.5rem);
-  grid-template-columns:repeat(auto-fit, minmax(23rem,1fr));
-  align-items:start;
+.vod-grid{
+  display:grid; gap:clamp(.9rem,1.8vw,1.4rem);
+  grid-template-columns:repeat(auto-fit,minmax(24rem,1fr));
 }
-.info-card{
-  background:var(--panel);
-  border:.1rem solid var(--hairline);
-  border-top:.35rem solid var(--accent);
-  padding:clamp(1.3rem,2.4vw,1.9rem) clamp(1.3rem,2.6vw,2rem) clamp(1.4rem,2.6vw,2rem);
-}
-.info-card h3{
-  display:flex; align-items:center; gap:.7em;
+.vod{ background:var(--panel); border:.1rem solid var(--hairline) }
+.vod .frame{ width:100%; aspect-ratio:16/9; background:#000; overflow:hidden }
+.vod .frame iframe{ width:100%; height:100%; border:0; display:block }
+.vod .body{ padding:clamp(1rem,2vw,1.4rem) clamp(1.1rem,2.2vw,1.6rem) clamp(1.1rem,2.2vw,1.6rem) }
+.vod .body h3{
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:clamp(1.05rem,1.9vw,1.4rem); letter-spacing:.06em; line-height:1;
-  margin-bottom:clamp(.9rem,1.6vw,1.2rem);
+  font-size:clamp(.95rem,1.6vw,1.2rem); letter-spacing:.04em; line-height:1.2;
 }
-.info-card h3 .ico{ width:1.5em; height:1.5em; flex:none }
-.info-card h3 .ico svg{ width:100%; height:100%; display:block }
-.info-card h3 .ico path, .info-card h3 .ico circle,
-.info-card h3 .ico rect, .info-card h3 .ico line, .info-card h3 .ico polyline{
-  stroke:var(--accent); stroke-width:1.7; fill:none; stroke-linecap:round; stroke-linejoin:round;
+.vod .body .meta{
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.62rem,.95vw,.76rem); letter-spacing:.14em; color:var(--accent); margin-top:.7em;
 }
-.info-card ul{ list-style:none }
-.info-card li{
-  position:relative; padding-left:1.5em;
-  font-size:clamp(.95rem,1.3vw,1.08rem); line-height:1.55; color:rgba(255,255,255,.86);
-}
-.info-card li + li{ margin-top:.75em }
-.info-card li::before{
-  content:''; position:absolute; left:0; top:.62em;
-  width:.5em; height:.5em; background:var(--accent);
-  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
-}
-.info-card li strong{ color:var(--white); font-weight:700 }
 
-.facts{
-  display:grid; gap:clamp(.8rem,1.6vw,1.3rem);
-  grid-template-columns:repeat(auto-fit, minmax(13rem,1fr));
-  margin-bottom:clamp(1.6rem,3vw,2.4rem);
-}
-.fact{
-  background:var(--panel);
-  border:.1rem solid var(--hairline);
+/* ---------- Gaestebuch ---------- */
+
+.gb-form{
+  background:var(--panel); border:.1rem solid var(--hairline);
   border-left:.35rem solid var(--accent);
-  padding:clamp(1rem,2vw,1.5rem) clamp(1.1rem,2.2vw,1.7rem);
+  padding:clamp(1.3rem,2.5vw,2rem); margin-bottom:clamp(1.6rem,3vw,2.6rem);
 }
-.fact .label{ font-size:clamp(.62rem,.95vw,.78rem); margin-bottom:.8em }
-.fact .val{ font-weight:700; font-variant-numeric:tabular-nums; font-size:clamp(1.3rem,2.5vw,1.9rem); line-height:1 }
-.fact .note{
-  font-family:'Oswald',sans-serif; font-weight:500;
-  font-size:clamp(.65rem,1vw,.8rem); color:var(--dim);
-  letter-spacing:.12em; text-transform:uppercase; margin-top:.7em;
+.gb-form .hint{
+  font-size:clamp(.9rem,1.25vw,1.05rem); line-height:1.6;
+  color:rgba(255,255,255,.8); margin-bottom:clamp(1rem,2vw,1.5rem);
 }
+.field{ margin-bottom:clamp(.8rem,1.6vw,1.1rem) }
+.field label{
+  display:block; font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.62rem,.95vw,.76rem); letter-spacing:.16em; color:var(--accent); margin-bottom:.6em;
+}
+.field input, .field textarea{
+  width:100%; padding:.85em 1em;
+  background:rgba(13,6,32,.6); border:.1rem solid rgba(255,255,255,.2);
+  color:var(--white); font-family:'Rajdhani',sans-serif; font-weight:600;
+  font-size:clamp(.95rem,1.3vw,1.08rem); outline:none;
+  transition:border-color .2s ease;
+}
+.field input:focus, .field textarea:focus{ border-color:var(--accent) }
+.field textarea{ min-height:8rem; resize:vertical; line-height:1.5 }
+.send-btn{
+  display:inline-flex; align-items:center; gap:.7em;
+  padding:.9em 2.2em .95em; background:var(--accent); color:#170B2C;
+  border:0; cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.8rem,1.3vw,1rem); letter-spacing:.14em;
+  clip-path: polygon(.8rem 0, 100% 0, 100% calc(100% - .8rem), calc(100% - .8rem) 100%, 0 100%, 0 .8rem);
+  transition:transform .2s ease;
+}
+.send-btn:hover{ transform:translateY(-2px) }
+.send-btn:disabled{ opacity:.5; cursor:default; transform:none }
+.form-msg{
+  margin-top:1em; font-family:'Oswald',sans-serif; font-weight:600;
+  font-size:clamp(.75rem,1.1vw,.9rem); letter-spacing:.1em; text-transform:uppercase;
+}
+.form-msg.ok{ color:var(--green) }
+.form-msg.err{ color:#FF6B6B }
 
-.info-note{
-  margin-top:clamp(1.2rem,2.4vw,1.8rem); text-align:center;
+.gb-list{ display:grid; gap:clamp(.8rem,1.6vw,1.2rem) }
+.gb-entry{
+  background:rgba(58,30,99,.35); border:.1rem solid rgba(255,255,255,.14);
+  border-left:.3rem solid var(--accent);
+  padding:clamp(1.1rem,2.2vw,1.6rem) clamp(1.2rem,2.4vw,1.8rem);
+}
+.gb-entry .who{
+  display:flex; align-items:baseline; gap:.9em; flex-wrap:wrap;
+  margin-bottom:.7em;
+}
+.gb-entry .name{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.9rem,1.5vw,1.1rem); letter-spacing:.06em;
+}
+.gb-entry .when{
   font-family:'Oswald',sans-serif; font-weight:500;
-  font-size:clamp(.68rem,1vw,.8rem); letter-spacing:.1em;
-  text-transform:uppercase; color:var(--dim);
+  font-size:clamp(.62rem,.95vw,.76rem); letter-spacing:.14em; color:var(--dim);
+}
+.gb-entry .text{
+  font-size:clamp(.95rem,1.3vw,1.08rem); line-height:1.6; color:rgba(255,255,255,.88);
 }
 
 /* ============================================================
-   FUSSZEILE (nur Startansicht)
+   FUSSZEILE + MUSIK
    ============================================================ */
 
 .home-foot{
   display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
-  gap:clamp(.8rem,2vw,1.6rem);
-  margin-top:clamp(1rem,2vw,1.6rem);
+  gap:clamp(.8rem,2vw,1.6rem); margin-top:clamp(1rem,2vw,1.6rem);
   font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
   font-size:clamp(.62rem,.95vw,.78rem); letter-spacing:.18em; color:var(--dim);
 }
-.visits{
-  display:inline-flex; align-items:center; gap:.55em;
-  opacity:0; transition:opacity .5s ease;
-}
+.visits{ display:inline-flex; align-items:center; gap:.55em; opacity:0; transition:opacity .5s ease }
 .visits.show{ opacity:1 }
 .visits .num{
   font-family:'Rajdhani',sans-serif; font-weight:700;
@@ -353,21 +536,15 @@ body{
   stroke:var(--accent); stroke-width:1.8; fill:none; stroke-linecap:round; stroke-linejoin:round;
 }
 
-/* ============================================================
-   MUSIK-SCHALTER
-   ============================================================ */
-
 .sound-btn{
-  position:fixed; right:clamp(.9rem,2.2vw,1.6rem); bottom:clamp(.9rem,2.2vw,1.6rem);
-  z-index:80;
-  display:flex; align-items:center; gap:.55em;
-  padding:.7em 1.1em .75em;
+  position:fixed; right:clamp(.9rem,2.2vw,1.6rem); bottom:clamp(.9rem,2.2vw,1.6rem); z-index:80;
+  display:flex; align-items:center; gap:.55em; padding:.7em 1.1em .75em;
   background:var(--panel); border:.12rem solid var(--accent);
   color:var(--white); cursor:pointer;
   font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
   font-size:clamp(.65rem,1vw,.8rem); letter-spacing:.14em;
   clip-path: polygon(.75rem 0, 100% 0, 100% calc(100% - .75rem), calc(100% - .75rem) 100%, 0 100%, 0 .75rem);
-  transition:transform .2s ease, box-shadow .2s ease, opacity .3s ease;
+  transition:transform .2s ease, box-shadow .2s ease;
 }
 .sound-btn:hover{ transform:translateY(-2px); box-shadow:0 .4rem 1.5rem rgba(255,212,0,.25) }
 .sound-btn svg{ width:1.25em; height:1.25em; flex:none }
@@ -376,12 +553,44 @@ body{
 }
 .sound-btn .txt{ white-space:nowrap }
 
-@media (max-width: 768px){
+/* ============================================================
+   HANDY HOCHKANT
+   Bild ist 16:9 -- hochkant wird es oben in voller Breite gezeigt,
+   der Inhalt liegt darunter. Bildhoehe = 56,25 % der Breite.
+   ============================================================ */
+
+@media (max-aspect-ratio: 1/1){
   .bg-photo{
-    background-size:contain;
+    background-size:100% auto;
     background-position:center top;
     background-repeat:no-repeat;
+    background-color:var(--ink);
   }
+  .bg-photo::before{
+    background:linear-gradient(180deg, rgba(13,6,32,.20) 0%, rgba(13,6,32,.12) 32%,
+                                       rgba(13,6,32,.85) 50%, var(--ink) 62%);
+  }
+  #entry{ justify-content:flex-start; padding-top:calc(56.25vw + clamp(1.5rem,5vh,3.5rem)); gap:clamp(.9rem,2.4vh,1.6rem) }
+  #entry h1{ font-size:clamp(2.4rem,13vw,4.2rem) }
+  #entry .kicker{ font-size:clamp(.58rem,2.6vw,.85rem); letter-spacing:.32em }
+  #entry .date{ font-size:clamp(.7rem,3.2vw,1rem); letter-spacing:.14em }
+  .enter-btn{ font-size:clamp(1rem,4.6vw,1.4rem); padding:1rem 2.6rem }
+
+  #view-home{ justify-content:flex-start; gap:clamp(1rem,2.6vh,2rem); padding-top:calc(56.25vw + .9rem) }
+  .home-top{ padding-top:0 }
+  .home-top h2{ font-size:clamp(1.6rem,7.5vw,2.6rem) }
+  .home-top .kicker{ font-size:clamp(.52rem,2.4vw,.8rem); letter-spacing:.28em }
+  .home-top .place{ font-size:clamp(.58rem,2.4vw,.8rem); letter-spacing:.12em; line-height:1.5 }
+  .cd-box{ width:100%; max-width:32rem }
+  .cd-box .cd{ font-size:clamp(2.4rem,13vw,4rem) }
+  .cd-box .days{ font-size:clamp(1rem,4.6vw,1.6rem) }
+  .cd-box .cd-units{ gap:clamp(1.4rem,7vw,3rem) }
+  .nav-tiles{ margin-top:auto }
+  .menu-list{ grid-template-columns:1fr }
+
+  /* Unterseiten-Kopf auf schmalen Displays umbrechen lassen */
+  .sub-head{ flex-wrap:wrap; row-gap:.7rem }
+  .sub-head h2{ order:3; width:100%; flex:none }
 }
 
 @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important} }
@@ -389,12 +598,11 @@ body{
 </head>
 <body>
 
-<!-- ============ 0 · EINTRITT ============ -->
+<!-- ============ EINTRITT ============ -->
 <div id="entry" class="bg-photo">
-  <div class="kicker">6 Stunden · 52,5 km Ziel</div>
+  <div class="kicker" id="entry-kicker">Ultralauf · Live</div>
   <h1>You vs You</h1>
-  <div class="date">Samstag, 12. September 2026 · Werl</div>
-
+  <div class="date" id="entry-date">&nbsp;</div>
   <button class="enter-btn" id="enter-btn" type="button">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 6l6 6-6 6"/></svg>
     Eintreten
@@ -402,224 +610,215 @@ body{
   <div class="hint" id="entry-hint">Mit Musik</div>
 </div>
 
-<!-- ============ 1 · START ============ -->
-<section class="view bg-photo" id="view-home">
+<!-- ============ MENUE ============ -->
+<button class="menu-btn hidden" id="menu-btn" type="button" aria-label="Menü öffnen">
+  <svg class="bars" viewBox="0 0 24 24" aria-hidden="true">
+    <line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/>
+  </svg>
+  Menü
+</button>
 
+<nav id="menu" aria-label="Hauptmenü">
+  <div class="menu-head">
+    <span class="brand">You vs You</span>
+    <button class="close-btn" id="menu-close" type="button" aria-label="Menü schließen">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="menu-list">
+    <a class="menu-item" href="#home">
+      <span class="ico"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5.5 9.5V20h13V9.5"/></svg></span>
+      <span class="txt"><span class="m-head">Start</span><span class="m-sub">Countdown zum nächsten Event</span></span>
+    </a>
+    <a class="menu-item" href="#events">
+      <span class="ico"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+      <span class="txt"><span class="m-head">Events</span><span class="m-sub">Termine · Daten · Ergebnisse</span></span>
+    </a>
+    <a class="menu-item" href="#disziplin">
+      <span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><line x1="12" y1="7.6" x2="12" y2="8.2"/></svg></span>
+      <span class="txt"><span class="m-head">Disziplinen</span><span class="m-sub">Was hinter den Formaten steckt</span></span>
+    </a>
+    <a class="menu-item" href="#streams">
+      <span class="ico"><svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="14" height="14" rx="2"/><path d="M16.5 10l5-3v10l-5-3z"/></svg></span>
+      <span class="txt"><span class="m-head">Aufzeichnungen</span><span class="m-sub">Vergangene Streams ansehen</span></span>
+    </a>
+    <a class="menu-item" href="#training">
+      <span class="ico"><svg viewBox="0 0 24 24"><path d="M6.5 8v8M17.5 8v8M3.5 10v4M20.5 10v4"/><line x1="6.5" y1="12" x2="17.5" y2="12"/></svg></span>
+      <span class="txt"><span class="m-head">Training</span><span class="m-sub">Einheiten und Vorbereitung</span></span>
+    </a>
+    <a class="menu-item" href="#gaestebuch">
+      <span class="ico"><svg viewBox="0 0 24 24"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg></span>
+      <span class="txt"><span class="m-head">Gästebuch</span><span class="m-sub">Eintrag hinterlassen</span></span>
+    </a>
+  </div>
+</nav>
+
+<!-- ============ START ============ -->
+<section class="view bg-photo" id="view-home">
   <div class="home-top">
-    <div class="kicker">Live aus dem Stadtwald Werl</div>
-    <h2>6H Ultra</h2>
+    <div class="kicker" id="home-kicker">Nächstes Event</div>
+    <h2 id="home-title">—</h2>
+    <div class="place" id="home-place">&nbsp;</div>
   </div>
 
   <div class="cd-box" id="cd-box">
     <div class="label" id="cd-label">Start in</div>
     <div class="days" id="cd-days">-- Tage</div>
     <div class="cd" id="cd">--:--:--</div>
-    <div class="cd-units" id="cd-units">
-      <span>Std</span><span>Min</span><span>Sek</span>
-    </div>
+    <div class="cd-units" id="cd-units"><span>Std</span><span>Min</span><span>Sek</span></div>
   </div>
 
   <div>
     <div class="nav-tiles">
-
       <a class="tile" id="tile-stream" href="#stream">
-        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="2.5" y="5" width="14" height="14" rx="2"/>
-          <path d="M16.5 10l5-3v10l-5-3z"/>
-        </svg></span>
+        <span class="ico"><svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="14" height="14" rx="2"/><path d="M16.5 10l5-3v10l-5-3z"/></svg></span>
         <span class="txt">
           <span class="t-head">Live-Stream</span>
           <span class="state" id="tile-state"><i></i><span id="tile-state-txt">Noch nicht live</span></span>
         </span>
-        <span class="arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l7 7-7 7"/></svg></span>
+        <span class="arrow"><svg viewBox="0 0 24 24"><path d="M8 5l7 7-7 7"/></svg></span>
       </a>
-
-      <a class="tile" href="#infos">
-        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="12" r="9"/>
-          <line x1="12" y1="11" x2="12" y2="16.5"/>
-          <line x1="12" y1="7.6" x2="12" y2="8.2"/>
-        </svg></span>
+      <a class="tile" href="#events">
+        <span class="ico"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
         <span class="txt">
-          <span class="t-head">Infos zum Lauf</span>
-          <span class="t-sub">Start · Strecke · Verpflegung · Wertung</span>
+          <span class="t-head">Alle Infos</span>
+          <span class="t-sub">Events · Disziplinen · Training</span>
         </span>
-        <span class="arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l7 7-7 7"/></svg></span>
+        <span class="arrow"><svg viewBox="0 0 24 24"><path d="M8 5l7 7-7 7"/></svg></span>
       </a>
-
     </div>
 
     <div class="home-foot">
       <span>you-vs-you.online</span>
       <span class="visits" id="visits">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/>
-          <circle cx="12" cy="12" r="2.9"/>
-        </svg>
-        <span class="num" id="visit-num">–</span>
-        <span>Besuche</span>
+        <svg viewBox="0 0 24 24"><path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.9"/></svg>
+        <span class="num" id="visit-num">–</span><span>Besuche</span>
       </span>
     </div>
   </div>
-
 </section>
 
-<!-- ============ 2 · STREAM ============ -->
+<!-- ============ LIVE-STREAM ============ -->
 <section class="view" id="view-stream">
   <div class="sub-head">
-    <button class="back-btn" type="button" data-back>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>
-      Zurück
-    </button>
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
     <h2>Live-Stream</h2>
+    <button class="head-menu" type="button" data-menu>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
   </div>
-
-  <div class="sub-body">
-    <div class="inner">
-      <div class="stream-frame" id="stream-frame">
-        <div class="locked" id="locked">
-          <div class="lock-icon">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="4.5" y="10.5" width="15" height="10.5" rx="1.6"/>
-              <path d="M8 10.5V7.2a4 4 0 0 1 8 0v3.3"/>
-              <path d="M12 15v2.4"/>
-            </svg>
-          </div>
-          <div class="head" id="locked-head">Noch nicht live</div>
-          <div class="sub" id="locked-sub">Der Stream schaltet sich automatisch frei, sobald es losgeht. Diese Seite kann einfach offen bleiben.</div>
-          <div class="mini-cd" id="mini-cd">--:--:--</div>
-        </div>
+  <div class="sub-body"><div class="inner">
+    <div class="stream-frame" id="stream-frame">
+      <div class="locked" id="locked">
+        <div class="lock-icon"><svg viewBox="0 0 24 24">
+          <rect x="4.5" y="10.5" width="15" height="10.5" rx="1.6"/>
+          <path d="M8 10.5V7.2a4 4 0 0 1 8 0v3.3"/><path d="M12 15v2.4"/>
+        </svg></div>
+        <div class="head" id="locked-head">Noch nicht live</div>
+        <div class="sub" id="locked-sub">Der Stream schaltet sich automatisch frei, sobald es losgeht. Diese Seite kann einfach offen bleiben.</div>
+        <div class="mini-cd" id="mini-cd">--:--:--</div>
       </div>
-      <div class="stream-note" id="stream-note">Die Übertragung startet automatisch</div>
     </div>
-  </div>
+    <div class="stream-note" id="stream-note">Die Übertragung startet automatisch</div>
+  </div></div>
 </section>
 
-<!-- ============ 3 · INFOS ============ -->
-<section class="view" id="view-infos">
+<!-- ============ EVENTS ============ -->
+<section class="view" id="view-events">
   <div class="sub-head">
-    <button class="back-btn" type="button" data-back>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>
-      Zurück
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Events</h2>
+    <button class="head-menu" type="button" data-menu>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
     </button>
-    <h2>Infos zum Lauf</h2>
   </div>
+  <div class="sub-body"><div class="inner">
+    <div class="sec-title">Kommende Termine</div>
+    <div class="cards" id="events-next"></div>
+    <div class="sec-title">Gelaufen</div>
+    <div class="cards" id="events-past"></div>
+    <div class="note-line">Angaben ohne Gewähr — maßgeblich sind die Informationen der Veranstalter</div>
+  </div></div>
+</section>
 
-  <div class="sub-body">
-    <div class="inner">
+<!-- ============ DISZIPLINEN ============ -->
+<section class="view" id="view-disziplin">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Disziplinen</h2>
+    <button class="head-menu" type="button" data-menu>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner">
+    <div class="cards" id="disz-list"></div>
+  </div></div>
+</section>
 
-      <div class="facts">
-        <div class="fact">
-          <div class="label">Format</div>
-          <div class="val">6 Stunden</div>
-          <div class="note">Zeitlauf auf Rundkurs</div>
-        </div>
-        <div class="fact">
-          <div class="label">Start</div>
-          <div class="val">10:00 Uhr</div>
-          <div class="note">12. September 2026</div>
-        </div>
-        <div class="fact">
-          <div class="label">Runde</div>
-          <div class="val">7,5 km</div>
-          <div class="note">100 HM · Stadtwald Werl</div>
-        </div>
-        <div class="fact">
-          <div class="label">Mein Ziel</div>
-          <div class="val">52,5 km</div>
-          <div class="note">7 Runden</div>
-        </div>
+<!-- ============ AUFZEICHNUNGEN ============ -->
+<section class="view" id="view-streams">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Aufzeichnungen</h2>
+    <button class="head-menu" type="button" data-menu>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner">
+    <div class="vod-grid" id="vod-list"></div>
+  </div></div>
+</section>
+
+<!-- ============ TRAINING ============ -->
+<section class="view" id="view-training">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Training</h2>
+    <button class="head-menu" type="button" data-menu>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner">
+    <div class="cards" id="training-list"></div>
+  </div></div>
+</section>
+
+<!-- ============ GAESTEBUCH ============ -->
+<section class="view" id="view-gaestebuch">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Gästebuch</h2>
+    <button class="head-menu" type="button" data-menu>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner">
+
+    <div class="gb-form">
+      <div class="hint">Schreib gern etwas — eine Nachricht, ein Gruß, eine Frage.
+        Jeder Eintrag wird vorher gelesen und erscheint erst nach Freigabe auf der Seite.</div>
+      <div class="field">
+        <label for="gb-name">Name</label>
+        <input type="text" id="gb-name" maxlength="40" autocomplete="name" placeholder="Wie sollen wir dich nennen?">
       </div>
-
-      <div class="info-grid">
-
-        <article class="info-card">
-          <h3>
-            <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="4" y="3" width="16" height="18" rx="2"/>
-              <line x1="8" y1="8" x2="16" y2="8"/>
-              <line x1="8" y1="12" x2="16" y2="12"/>
-              <line x1="8" y1="16" x2="13" y2="16"/>
-            </svg></span>
-            Startunterlagen
-          </h3>
-          <ul>
-            <li>Ausgabe im <strong>Waldlabor</strong> zwischen <strong>07:30 und 09:00 Uhr</strong></li>
-            <li>Um <strong>09:45 Uhr</strong> Kurzbriefing am Start-/Zielbereich</li>
-          </ul>
-        </article>
-
-        <article class="info-card">
-          <h3>
-            <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 18c3-1 4-8 8-8s5 5 8 4"/>
-              <circle cx="4" cy="18" r="1.6"/>
-              <circle cx="20" cy="14" r="1.6"/>
-            </svg></span>
-            Strecke
-          </h3>
-          <ul>
-            <li>Rundkurs von <strong>7,5 km</strong> mit <strong>100 Höhenmetern</strong></li>
-            <li>Durch den <strong>Stadtwald Werl</strong> — fast ausschließlich Waldwege und Singletrails</li>
-          </ul>
-        </article>
-
-        <article class="info-card">
-          <h3>
-            <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 3v6a3 3 0 0 0 6 0V3"/>
-              <line x1="9" y1="12" x2="9" y2="21"/>
-              <path d="M17 3c-1.4 0-2.5 2.2-2.5 5s1.1 4 2.5 4 2.5-1.2 2.5-4S18.4 3 17 3z"/>
-              <line x1="17" y1="12" x2="17" y2="21"/>
-            </svg></span>
-            Verpflegung
-          </h3>
-          <ul>
-            <li>Im Start-/Zielbereich ein <strong>Verpflegungspunkt</strong> mit Getränken und reichhaltigem Buffet — für jeden ist etwas dabei</li>
-            <li>Bei etwa <strong>km 2,5 und km 5</strong> ein Zusatz-Verpflegungspunkt mit Wasser</li>
-            <li>Eigene Verpflegung kann vor Ort deponiert werden — bitte gegebenenfalls einen eigenen Tisch mitbringen und die Laufstrecke frei halten</li>
-          </ul>
-        </article>
-
-        <article class="info-card">
-          <h3>
-            <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="12" r="8.5"/>
-              <polyline points="12,7 12,12 15.5,14"/>
-            </svg></span>
-            Rundenwertung
-          </h3>
-          <ul>
-            <li>Jede <strong>vollständig absolvierte Runde</strong> innerhalb der 6 Stunden wird gewertet</li>
-            <li>Nicht beendete Runden werden mit Überschreiten der <strong>Zwischenmessungen bei km 2,5 und km 5</strong> berücksichtigt</li>
-            <li>Es findet <strong>keine weitere Restmetervermessung</strong> statt</li>
-          </ul>
-        </article>
-
-        <article class="info-card">
-          <h3>
-            <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M7 4h10v5a5 5 0 0 1-10 0z"/>
-              <path d="M7 5H4.5v1.5A3.5 3.5 0 0 0 7.6 10"/>
-              <path d="M17 5h2.5v1.5A3.5 3.5 0 0 1 16.4 10"/>
-              <line x1="12" y1="14" x2="12" y2="17"/>
-              <line x1="8.5" y1="20" x2="15.5" y2="20"/>
-              <path d="M10 17h4l1 3H9z"/>
-            </svg></span>
-            Wertung
-          </h3>
-          <ul>
-            <li>Jede/r Läufer/in mit <strong>mindestens einer Runde</strong> erhält eine Medaille</li>
-            <li><strong>Gesamtwertung</strong> für Männer und Frauen, Pokale für die Top 3 (m/w)</li>
-            <li>Jeder Ultra-Finisher (mindestens <strong>6 Runden</strong>) erhält den „Du bist Ultra"-Schlüsselanhänger</li>
-          </ul>
-        </article>
-
+      <div class="field">
+        <label for="gb-text">Nachricht</label>
+        <textarea id="gb-text" maxlength="600" placeholder="Deine Nachricht …"></textarea>
       </div>
-
-      <div class="info-note">Angaben ohne Gewähr — maßgeblich sind die Informationen des Veranstalters</div>
+      <button class="send-btn" id="gb-send" type="button">Absenden</button>
+      <div class="form-msg" id="gb-msg"></div>
     </div>
-  </div>
+
+    <div class="sec-title">Einträge</div>
+    <div class="gb-list" id="gb-list"></div>
+  </div></div>
 </section>
 
 <!-- Musik -->
@@ -631,77 +830,365 @@ body{
 
 <script>
 /* ================================================================
-   KONFIGURATION
+   1 · INHALTE — hier pflegst du alles
    ================================================================ */
+
 const CONFIG = {
-  // Twitch-Kanalname (nur der Name, ohne twitch.tv/)
-  twitchChannel: "DEINKANALNAME",
 
-  // Ab wann der Stream freigeschaltet wird
-  streamStart: "2026-09-12T10:00:00+02:00",
+  /* --- Grundeinstellungen --- */
+  twitchChannel: "DEINKANALNAME",   // nur der Name, ohne twitch.tv/
+  heroImage:     "start.jpg",       // Bild fuer Eintritt und Startansicht
+  music:         "musik.mp3",       // leer lassen = kein Ton
+  musicVolume:   0.35,
+  counterKey:    "you_vs_you_online_besuche_7f3a2",   // leer = Zaehler aus
 
-  // Wie lange der Player danach freigeschaltet bleibt (Stunden)
-  streamHours: 8,
+  /* --- Adresse des Formulars fuers Gaestebuch ---
+     Bei formspree.io kostenlos anlegen, die Adresse hier eintragen.
+     Leer lassen = das Formular wird ausgeblendet.                  */
+  formEndpoint:  "https://formspree.io/f/mrpzklje",
 
-  // Bild fuer Eintrittsseite und Startansicht
-  heroImage: "start.jpg",
+  /* ==============================================================
+     EVENTS
+     Die Startansicht sucht sich automatisch das naechste Event.
+     Ist eins vorbei, rutscht das darauffolgende nach.
 
-  // Musikdatei im selben Repo. Leer lassen = kein Ton, kein Schalter.
-  music: "musik.mp3",
-  musicVolume: 0.35,
+     stream    = ab wann der Player freigeschaltet wird
+     race      = offizieller Startschuss (nur zur Anzeige)
+     hours     = wie lange der Stream freigeschaltet bleibt
+     ============================================================== */
+  events: [
+    {
+      title:  "6H Ultra Werl",
+      place:  "Stadtwald Werl",
+      stream: "2026-09-12T10:00:00+02:00",
+      race:   "2026-09-12T10:00:00+02:00",
+      hours:  8,
+      badge:  "6-Stunden-Lauf",
+      facts: [
+        { k:"Format",   v:"6 Stunden" },
+        { k:"Runde",    v:"7,5 km" },
+        { k:"Höhe",     v:"100 hm" },
+        { k:"Mein Ziel", v:"52,5 km" }
+      ],
+      info: [
+        "Startunterlagen im <strong>Waldlabor</strong> zwischen 07:30 und 09:00 Uhr, Kurzbriefing um 09:45 Uhr",
+        "Rundkurs durch den Stadtwald Werl — fast ausschließlich Waldwege und Singletrails",
+        "Verpflegungspunkt im Start-/Zielbereich, Wasser zusätzlich bei km 2,5 und km 5",
+        "Jede vollständige Runde zählt, Zwischenmessungen bei km 2,5 und km 5",
+        "Medaille ab einer Runde, „Du bist Ultra\"-Anhänger ab 6 Runden"
+      ]
+    }
+    /* Weiteres Event? Einfach als naechsten Block anhaengen:
+    ,{
+      title:  "Name des Laufs",
+      place:  "Ort",
+      stream: "2027-05-01T08:00:00+02:00",
+      race:   "2027-05-01T08:00:00+02:00",
+      hours:  10,
+      badge:  "Marathon",
+      facts: [ { k:"Distanz", v:"42,2 km" } ],
+      info:  [ "Erste Info", "Zweite Info" ]
+    }
+    */
+  ],
 
-  // Besucherzaehler. Leer lassen = Zaehler aus.
-  counterKey: "you_vs_you_online_besuche_7f3a2"
+  /* ==============================================================
+     DISZIPLINEN
+     ============================================================== */
+  disciplines: [
+    {
+      title: "Zeitlauf",
+      sub:   "6 oder 12 Stunden",
+      text:  "Beim Zeitlauf zählt nicht die Strecke, sondern die Uhr. Auf einem kurzen Rundkurs geht es darum, in einer festen Zeit so viele Runden wie möglich zu sammeln. Wer die Einteilung falsch angeht, steht nach der Hälfte still — die eigentliche Disziplin ist das Haushalten mit den Kräften."
+    },
+    {
+      title: "Ultralauf",
+      sub:   "alles über 42,195 km",
+      text:  "Ultra beginnt dort, wo der Marathon endet. Tempo tritt in den Hintergrund, dafür rücken Verpflegung, Ausrüstung und Kopf nach vorn. Die entscheidenden Kilometer sind selten die ersten."
+    },
+    {
+      title: "Rucking",
+      sub:   "Gehen mit Gewicht",
+      text:  "Marschieren mit beschwertem Rucksack oder Weste. Belastet Rumpf, Beine und Schultern deutlich stärker als reines Gehen, ohne die Gelenke so zu fordern wie Laufen. Eine gute Ergänzung im Grundlagenbereich."
+    },
+    {
+      title: "Trail",
+      sub:   "abseits vom Asphalt",
+      text:  "Waldwege, Wurzeln, Singletrails. Der Untergrund wechselt ständig, das Tempo ebenso. Höhenmeter und Trittsicherheit bestimmen den Rhythmus mehr als die Pace-Anzeige an der Uhr."
+    }
+  ],
+
+  /* ==============================================================
+     AUFZEICHNUNGEN
+     type: "twitch"  -> id = die Video-Nummer aus der Twitch-Adresse
+                        (twitch.tv/videos/123456789 -> id: "123456789")
+     type: "youtube" -> id = die Kennung aus der YouTube-Adresse
+                        (youtu.be/AbCdEf -> id: "AbCdEf")
+     ============================================================== */
+  vods: [
+    /* Beispiel -- nach dem ersten Stream ausfuellen:
+    { title:"6H Ultra Werl — kompletter Lauf", date:"12.09.2026", type:"twitch", id:"123456789" },
+    { title:"Zusammenschnitt", date:"14.09.2026", type:"youtube", id:"AbCdEfGhIjk" }
+    */
+  ],
+
+  /* ==============================================================
+     TRAINING
+     ============================================================== */
+  trainings: [
+    /* Beispiel:
+    { date:"08.08.2026", title:"Langer Lauf", meta:"28 km · 3:10 h",
+      text:"Ruhiges Grundlagentempo im Wald, letzte 5 km angezogen." }
+    */
+  ],
+
+  /* ==============================================================
+     GAESTEBUCH — freigegebene Eintraege
+     Kommt eine Nachricht per Mail rein und du willst sie zeigen,
+     traegst du sie hier ein. Neueste zuerst.
+     ============================================================== */
+  guestbook: [
+    /* { name:"Max", date:"10.08.2026", text:"Viel Erfolg!" } */
+  ]
 };
 
 const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
 
-/* ---- Bild setzen ---- */
-document.querySelectorAll('.bg-photo').forEach(el => {
-  el.style.backgroundImage = 'url("' + CONFIG.heroImage + '")';
-});
+/* ================================================================
+   2 · ZEIT UND EVENT-AUSWAHL
+   ================================================================ */
 
-const startMs = new Date(CONFIG.streamStart).getTime();
-const endMs   = startMs + CONFIG.streamHours * 3600000;
 const pad = n => String(n).padStart(2,'0');
+const ms  = s => new Date(s).getTime();
 
-function splitTime(ms){
-  const s = Math.max(0, Math.floor(ms/1000));
-  return { d:Math.floor(s/86400), h:Math.floor(s%86400/3600),
-           m:Math.floor(s%3600/60), s:s%60 };
+function splitTime(t){
+  const s = Math.max(0, Math.floor(t/1000));
+  return { d:Math.floor(s/86400), h:Math.floor(s%86400/3600), m:Math.floor(s%3600/60), s:s%60 };
 }
-function phase(){
+
+/* Events nach Datum sortieren -- die Reihenfolge in der Liste ist egal */
+const EVENTS = [...CONFIG.events].sort((a,b) => ms(a.stream) - ms(b.stream));
+
+function endOf(e){ return ms(e.stream) + (e.hours || 8) * 3600000; }
+
+/* Das aktuelle Event: das erste, das noch nicht vorbei ist.
+   Ist alles vorbei, bleibt das letzte stehen. */
+function currentEvent(){
   const now = Date.now();
-  if (now < startMs) return 'before';
-  if (now < endMs)   return 'live';
+  return EVENTS.find(e => now < endOf(e)) || EVENTS[EVENTS.length - 1] || null;
+}
+
+function phaseOf(e){
+  if (!e) return 'none';
+  const now = Date.now();
+  if (now < ms(e.stream)) return 'before';
+  if (now < endOf(e))     return 'live';
   return 'after';
 }
 
+/* Termine immer in deutscher Zeit anzeigen -- unabhaengig davon,
+   in welcher Zeitzone der Besucher gerade sitzt. */
+const TZ = 'Europe/Berlin';
+function dateText(iso){
+  const d = new Date(iso);
+  const wd = d.toLocaleDateString('de-DE', { weekday:'long', timeZone:TZ });
+  return wd + ', ' + d.toLocaleDateString('de-DE',
+    { day:'2-digit', month:'long', year:'numeric', timeZone:TZ });
+}
+function timeText(iso){
+  return new Date(iso).toLocaleTimeString('de-DE',
+    { hour:'2-digit', minute:'2-digit', timeZone:TZ }) + ' Uhr';
+}
+</script>
+
+<script>
 /* ================================================================
-   ANSICHTEN — ueber die Adresse gesteuert, damit die
-   Zurueck-Taste des Browsers ganz normal funktioniert
+   3 · SEITEN AUFBAUEN
    ================================================================ */
-const VIEWS = { home:'view-home', stream:'view-stream', infos:'view-infos' };
+
+let EVT = currentEvent();
+
+/* ---- Startansicht ---- */
+function paintHome(){
+  if (!EVT){
+    $('home-title').textContent = 'Bald mehr';
+    $('home-kicker').textContent = 'Kein Termin eingetragen';
+    $('home-place').textContent = '';
+    $('cd-box').classList.add('hidden');
+    return;
+  }
+  $('home-title').textContent = EVT.title;
+  $('home-place').textContent = EVT.place + ' · ' + dateText(EVT.stream);
+  $('entry-date').textContent = dateText(EVT.stream) + ' · ' + EVT.place;
+
+  const idx = EVENTS.indexOf(EVT);
+  $('home-kicker').textContent =
+    phaseOf(EVT) === 'after' ? 'Letztes Event'
+    : (idx === 0 ? 'Nächstes Event' : 'Als Nächstes');
+}
+
+/* ---- Events ---- */
+function eventCard(e, isNext){
+  const p = phaseOf(e);
+  const badge = p === 'live' ? '<span class="badge g">Läuft jetzt</span>'
+              : p === 'after' ? '<span class="badge d">Beendet</span>'
+              : (isNext ? '<span class="badge">Als Nächstes</span>' : '');
+
+  const facts = (e.facts || []).map(f =>
+    '<div class="stat"><div class="k">' + esc(f.k) + '</div><div class="v">' + esc(f.v) + '</div></div>').join('');
+
+  const info = (e.info || []).map(t => '<li>' + t + '</li>').join('');
+
+  return '<article class="card ' + (p === 'after' ? 'past' : (isNext ? 'next' : '')) + '">'
+       + badge
+       + '<h3>' + esc(e.title) + '</h3>'
+       + '<div class="meta">' + dateText(e.stream) + ' · ' + timeText(e.race || e.stream)
+       + ' · ' + esc(e.place) + '</div>'
+       + (info ? '<ul>' + info + '</ul>' : '')
+       + (facts ? '<div class="stat-row">' + facts + '</div>' : '')
+       + '</article>';
+}
+
+function paintEvents(){
+  const now = Date.now();
+  const next = EVENTS.filter(e => now < endOf(e));
+  const past = EVENTS.filter(e => now >= endOf(e)).reverse();
+
+  $('events-next').innerHTML = next.length
+    ? next.map((e,i) => eventCard(e, i === 0)).join('')
+    : '<div class="empty">Noch kein neuer Termin eingetragen</div>';
+
+  $('events-past').innerHTML = past.length
+    ? past.map(e => eventCard(e, false)).join('')
+    : '<div class="empty">Hier erscheinen die Events nach dem Lauf</div>';
+}
+
+/* ---- Disziplinen ---- */
+function paintDisciplines(){
+  $('disz-list').innerHTML = (CONFIG.disciplines || []).map(d =>
+    '<article class="card"><h3>' + esc(d.title) + '</h3>'
+    + (d.sub ? '<div class="meta">' + esc(d.sub) + '</div>' : '')
+    + '<p>' + esc(d.text) + '</p></article>').join('')
+    || '<div class="empty">Noch nichts eingetragen</div>';
+}
+
+/* ---- Aufzeichnungen ---- */
+function vodSrc(v){
+  const host = location.hostname || 'localhost';
+  if (v.type === 'youtube') return 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.id);
+  const parents = [host];
+  if (host.startsWith('www.')) parents.push(host.slice(4)); else parents.push('www.' + host);
+  return 'https://player.twitch.tv/?video=' + encodeURIComponent(v.id)
+       + parents.map(p => '&parent=' + encodeURIComponent(p)).join('') + '&autoplay=false';
+}
+
+function paintVods(){
+  const list = CONFIG.vods || [];
+  $('vod-list').innerHTML = list.length
+    ? list.map(v =>
+        '<div class="vod"><div class="frame"><iframe src="' + vodSrc(v)
+        + '" allowfullscreen title="' + esc(v.title) + '"></iframe></div>'
+        + '<div class="body"><h3>' + esc(v.title) + '</h3>'
+        + (v.date ? '<div class="meta">' + esc(v.date) + '</div>' : '')
+        + '</div></div>').join('')
+    : '<div class="empty">Nach dem ersten Stream erscheinen hier die Aufzeichnungen</div>';
+}
+
+/* ---- Training ---- */
+function paintTrainings(){
+  const list = CONFIG.trainings || [];
+  $('training-list').innerHTML = list.length
+    ? list.map(t =>
+        '<article class="card"><h3>' + esc(t.title) + '</h3>'
+        + '<div class="meta">' + esc(t.date || '') + (t.meta ? ' · ' + esc(t.meta) : '') + '</div>'
+        + (t.text ? '<p>' + esc(t.text) + '</p>' : '') + '</article>').join('')
+    : '<div class="empty">Hier landen die Einheiten aus der Vorbereitung</div>';
+}
+
+/* ---- Gaestebuch ---- */
+function paintGuestbook(){
+  const list = CONFIG.guestbook || [];
+  $('gb-list').innerHTML = list.length
+    ? list.map(g =>
+        '<div class="gb-entry"><div class="who"><span class="name">' + esc(g.name) + '</span>'
+        + (g.date ? '<span class="when">' + esc(g.date) + '</span>' : '') + '</div>'
+        + '<div class="text">' + esc(g.text) + '</div></div>').join('')
+    : '<div class="empty">Noch keine freigegebenen Einträge — sei der Erste</div>';
+
+  if (!CONFIG.formEndpoint) document.querySelector('.gb-form').classList.add('hidden');
+}
+
+/* ---- Formular abschicken ---- */
+(function(){
+  const btn = $('gb-send'), msg = $('gb-msg');
+  if (!btn) return;
+
+  btn.addEventListener('click', async () => {
+    const name = $('gb-name').value.trim();
+    const text = $('gb-text').value.trim();
+
+    if (name.length < 2 || text.length < 3){
+      msg.className = 'form-msg err';
+      msg.textContent = 'Bitte Name und Nachricht ausfüllen';
+      return;
+    }
+    if (!CONFIG.formEndpoint){
+      msg.className = 'form-msg err';
+      msg.textContent = 'Formular ist noch nicht eingerichtet';
+      return;
+    }
+
+    btn.disabled = true;
+    msg.className = 'form-msg';
+    msg.textContent = 'Wird gesendet …';
+
+    try{
+      const r = await fetch(CONFIG.formEndpoint, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Accept':'application/json' },
+        body: JSON.stringify({ name, nachricht:text, seite:'Gästebuch you-vs-you.online' })
+      });
+      if (!r.ok) throw new Error();
+      msg.className = 'form-msg ok';
+      msg.textContent = 'Danke! Dein Eintrag wird geprüft und dann veröffentlicht.';
+      $('gb-name').value = ''; $('gb-text').value = '';
+    }catch(_){
+      msg.className = 'form-msg err';
+      msg.textContent = 'Das hat nicht geklappt — bitte später nochmal versuchen';
+      btn.disabled = false;
+    }
+  });
+})();
+
+/* ================================================================
+   4 · NAVIGATION
+   ================================================================ */
+
+const VIEWS = {
+  home:'view-home', stream:'view-stream', events:'view-events',
+  disziplin:'view-disziplin', streams:'view-streams',
+  training:'view-training', gaestebuch:'view-gaestebuch'
+};
+
+function closeMenu(){ $('menu').classList.remove('open'); }
 
 function render(){
   const key = (location.hash || '#home').replace('#','');
   const name = VIEWS[key] ? key : 'home';
 
-  Object.entries(VIEWS).forEach(([k, id]) => {
-    $(id).classList.toggle('on', k === name);
-  });
-
-  // Unterseiten immer oben beginnen
-  if (name !== 'home') window.scrollTo(0, 0);
-
-  // Player erst laden, wenn die Stream-Ansicht wirklich geoeffnet wird
-  if (name === 'stream' && phase() === 'live') insertPlayer();
+  Object.entries(VIEWS).forEach(([k,id]) => $(id).classList.toggle('on', k === name));
+  /* Der schwebende Menue-Knopf gehoert nur auf die Startansicht --
+     die Unterseiten haben ihn oben in der Kopfzeile. */
+  $('menu-btn').classList.toggle('hidden', name !== 'home' || !entered);
+  closeMenu();
+  if (name !== 'home') window.scrollTo(0,0);
+  if (name === 'stream' && phaseOf(EVT) === 'live') insertPlayer();
 }
-window.addEventListener('hashchange', render);
 
-/* Zurueck-Knoepfe: echte Browser-Historie nutzen, wenn vorhanden */
+let entered = false;
 let cameFromInside = false;
-window.addEventListener('hashchange', () => { cameFromInside = true; });
+window.addEventListener('hashchange', () => { cameFromInside = true; render(); });
 
 document.querySelectorAll('[data-back]').forEach(b => {
   b.addEventListener('click', () => {
@@ -710,25 +1197,28 @@ document.querySelectorAll('[data-back]').forEach(b => {
   });
 });
 
+document.querySelectorAll('#menu-btn, [data-menu]').forEach(b =>
+  b.addEventListener('click', () => $('menu').classList.add('open')));
+$('menu-close').addEventListener('click', closeMenu);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
 /* ================================================================
-   STREAM-PLAYER
+   5 · LIVE-PLAYER
    ================================================================ */
+
 let playerInserted = false;
 function insertPlayer(){
-  if (playerInserted) return;
+  if (playerInserted || !CONFIG.twitchChannel) return;
   playerInserted = true;
 
   const host = location.hostname || 'localhost';
   const parents = [host];
-  if (host.startsWith('www.')) parents.push(host.slice(4));
-  else parents.push('www.' + host);
-
-  const src = 'https://player.twitch.tv/?channel=' + encodeURIComponent(CONFIG.twitchChannel)
-            + parents.map(p => '&parent=' + encodeURIComponent(p)).join('')
-            + '&autoplay=true&muted=false';
+  if (host.startsWith('www.')) parents.push(host.slice(4)); else parents.push('www.' + host);
 
   const frame = document.createElement('iframe');
-  frame.src = src;
+  frame.src = 'https://player.twitch.tv/?channel=' + encodeURIComponent(CONFIG.twitchChannel)
+            + parents.map(p => '&parent=' + encodeURIComponent(p)).join('')
+            + '&autoplay=true&muted=false';
   frame.allowFullscreen = true;
   frame.setAttribute('allow','autoplay; fullscreen; picture-in-picture');
   frame.title = 'Live-Stream';
@@ -736,46 +1226,61 @@ function insertPlayer(){
   $('stream-frame').appendChild(frame);
   $('locked').classList.add('hidden');
   $('stream-note').textContent = 'Übertragung läuft';
-
-  // Hintergrundmusik ausblenden, damit sie den Stream-Ton nicht ueberlagert
   if (window.fadeOutMusic) window.fadeOutMusic();
 }
 
 /* ================================================================
-   SEKUNDENTAKT
+   6 · SEKUNDENTAKT
    ================================================================ */
+
 function tick(){
-  const p = phase();
+  const before = EVT;
+  EVT = currentEvent();
+
+  /* Ist ein Event vorbei und ein neues rueckt nach, wird alles neu aufgebaut */
+  if (EVT !== before){
+    paintHome(); paintEvents();
+    playerInserted = false;
+    $('locked').classList.remove('hidden');
+    const old = $('stream-frame').querySelector('iframe');
+    if (old) old.remove();
+  }
+
+  const p = phaseOf(EVT);
 
   if (p === 'before'){
-    const t = splitTime(startMs - Date.now());
+    const t = splitTime(ms(EVT.stream) - Date.now());
     const hms = pad(t.h) + ':' + pad(t.m) + ':' + pad(t.s);
+    $('cd-label').textContent = 'Start in';
     $('cd-days').textContent = t.d > 0 ? (t.d === 1 ? '1 Tag' : t.d + ' Tage') : '';
     $('cd-days').style.display = t.d > 0 ? '' : 'none';
     $('cd').textContent = hms;
+    $('cd-units').classList.remove('hidden');
+    $('cd-box').classList.remove('live');
     $('mini-cd').textContent = (t.d > 0 ? t.d + ' Tage · ' : '') + hms;
+    $('tile-stream').classList.remove('is-live');
+    $('tile-state-txt').textContent = 'Noch nicht live';
   }
   else if (p === 'live'){
     $('cd-box').classList.add('live');
     $('cd-label').textContent = 'Jetzt';
-    $('cd-days').classList.add('hidden');
+    $('cd-days').style.display = 'none';
     $('cd').textContent = 'LIVE';
     $('cd-units').classList.add('hidden');
-
     $('tile-stream').classList.add('is-live');
     $('tile-state-txt').textContent = 'Läuft jetzt';
-
-    // Nur laden, wenn die Stream-Ansicht offen ist
     if ($('view-stream').classList.contains('on')) insertPlayer();
   }
-  else {
+  else if (p === 'after'){
     $('cd-label').textContent = 'Beendet';
-    $('cd-days').classList.add('hidden');
+    $('cd-days').style.display = 'none';
     $('cd').textContent = 'Danke!';
     $('cd-units').classList.add('hidden');
+    $('cd-box').classList.remove('live');
+    $('tile-stream').classList.remove('is-live');
     $('tile-state-txt').textContent = 'Beendet';
     $('locked-head').textContent = 'Übertragung beendet';
-    $('locked-sub').textContent = 'Danke fürs Zuschauen. Die Aufzeichnung folgt.';
+    $('locked-sub').textContent = 'Danke fürs Zuschauen. Aufzeichnungen findest du im Menü.';
     $('mini-cd').textContent = '';
     $('stream-note').textContent = '';
   }
@@ -784,21 +1289,19 @@ function tick(){
 }
 
 /* ================================================================
-   MUSIK
-   Browser lassen Ton nie von allein starten -- es braucht immer
-   einen echten Klick. Der Eintreten-Knopf ist genau dieser Klick.
+   7 · MUSIK
+   Browser lassen Ton nie von allein starten -- es braucht einen
+   echten Klick. Der Eintreten-Knopf ist genau dieser Klick.
    ================================================================ */
-const Music = (function(){
-  const btn = $('sound-btn'), icon = $('sound-icon'),
-        txt = $('sound-txt'), audio = $('bg-music');
 
+const Music = (function(){
+  const btn = $('sound-btn'), icon = $('sound-icon'), txt = $('sound-txt'), audio = $('bg-music');
   if (!CONFIG.music) return { start(){}, show(){} };
 
   const ON  = '<path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z"/><path d="M16 8.8a4.4 4.4 0 0 1 0 6.4"/><path d="M18.8 6a8.2 8.2 0 0 1 0 12"/>';
   const OFF = '<path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z"/><line x1="16.5" y1="9.5" x2="21" y2="14.5"/><line x1="21" y1="9.5" x2="16.5" y2="14.5"/>';
 
   let playing = false;
-
   function paint(){
     icon.innerHTML = playing ? ON : OFF;
     txt.textContent = playing ? 'Musik aus' : 'Musik an';
@@ -807,8 +1310,7 @@ const Music = (function(){
     if (playing) return;
     if (!audio.src) audio.src = CONFIG.music;
     audio.volume = CONFIG.musicVolume;
-    audio.play().then(() => { playing = true; paint(); })
-                .catch(() => { playing = false; paint(); });
+    audio.play().then(() => { playing = true; paint(); }).catch(() => { playing = false; paint(); });
   }
   function stop(){ audio.pause(); playing = false; paint(); }
 
@@ -823,38 +1325,33 @@ const Music = (function(){
 
   btn.addEventListener('click', () => playing ? stop() : start());
   paint();
-
-  return {
-    start,
-    show(){ btn.classList.remove('hidden'); }
-  };
+  return { start, show(){ btn.classList.remove('hidden'); } };
 })();
 
 /* ================================================================
-   EINTRITT
+   8 · EINTRITT
    ================================================================ */
-(function(){
-  const entry = $('entry');
-  if (!CONFIG.music) $('entry-hint').textContent = '';
 
-  $('enter-btn').addEventListener('click', () => {
-    Music.start();          // laeuft, weil es ein echter Klick ist
-    Music.show();
-    entry.classList.add('fade');
-    setTimeout(() => entry.classList.add('hidden'), 750);
-  });
-})();
+$('enter-btn').addEventListener('click', () => {
+  Music.start();
+  Music.show();
+  entered = true;
+  render();
+  $('entry').classList.add('fade');
+  setTimeout(() => $('entry').classList.add('hidden'), 750);
+});
+if (!CONFIG.music) $('entry-hint').textContent = '';
 
 /* ================================================================
-   BESUCHERZAEHLER
+   9 · BESUCHERZAEHLER
    Faellt der Dienst aus, bleibt der Zaehler unsichtbar.
    Pro Browsersitzung wird nur einmal hochgezaehlt.
    ================================================================ */
+
 (function(){
   if (!CONFIG.counterKey) return;
   const box = $('visits'), num = $('visit-num');
   const base = 'https://countapi.mileshilliard.com/api/v1/';
-
   let already = false;
   try{ already = sessionStorage.getItem('vvy_counted') === '1'; }catch(_){}
 
@@ -866,11 +1363,23 @@ const Music = (function(){
       num.textContent = v.toLocaleString('de-DE');
       box.classList.add('show');
       try{ sessionStorage.setItem('vvy_counted','1'); }catch(_){}
-    })
-    .catch(() => {});
+    }).catch(() => {});
 })();
 
-/* ---- Start ---- */
+/* ================================================================
+   10 · START
+   ================================================================ */
+
+document.querySelectorAll('.bg-photo').forEach(el => {
+  el.style.backgroundImage = 'url("' + CONFIG.heroImage + '")';
+});
+
+paintHome();
+paintEvents();
+paintDisciplines();
+paintVods();
+paintTrainings();
+paintGuestbook();
 render();
 tick();
 </script>
