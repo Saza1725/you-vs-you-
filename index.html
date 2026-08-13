@@ -431,6 +431,44 @@ body{
   font-size:clamp(.68rem,1.05vw,.82rem); letter-spacing:.14em; color:var(--dim);
 }
 
+/* ---------- Sendeplan-Hinweis in der Stream-Ansicht ---------- */
+
+.plan{
+  margin-top:clamp(1.4rem,2.8vw,2.2rem);
+  background:var(--panel);
+  border:.1rem solid var(--hairline);
+  border-left:.4rem solid var(--accent);
+  padding:clamp(1.2rem,2.4vw,1.9rem) clamp(1.3rem,2.6vw,2rem);
+}
+.plan h3{
+  display:flex; align-items:center; gap:.7em;
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1rem,1.8vw,1.35rem); letter-spacing:.05em; line-height:1.15;
+  margin-bottom:clamp(.9rem,1.8vw,1.3rem);
+}
+.plan h3 .ico{ width:1.5em; height:1.5em; flex:none }
+.plan h3 .ico svg{ width:100%; height:100%; display:block }
+.plan h3 .ico path, .plan h3 .ico circle, .plan h3 .ico polyline{
+  stroke:var(--accent); stroke-width:1.7; fill:none; stroke-linecap:round; stroke-linejoin:round;
+}
+.plan ul{ list-style:none }
+.plan li{
+  position:relative; padding-left:1.6em;
+  font-size:clamp(.95rem,1.3vw,1.08rem); line-height:1.55; color:rgba(255,255,255,.88);
+}
+.plan li + li{ margin-top:.8em }
+.plan li::before{
+  content:''; position:absolute; left:0; top:.6em; width:.55em; height:.55em;
+  background:var(--accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+.plan li strong{ color:var(--white); font-weight:700 }
+.plan .foot{
+  margin-top:clamp(1rem,2vw,1.4rem); padding-top:clamp(.9rem,1.8vw,1.2rem);
+  border-top:.1rem solid rgba(255,255,255,.14);
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.66rem,1vw,.8rem); letter-spacing:.12em; color:var(--dim); line-height:1.6;
+}
+
 /* ---------- Aufzeichnungen ---------- */
 
 .vod-grid{
@@ -722,6 +760,17 @@ body{
       </div>
     </div>
     <div class="stream-note" id="stream-note">Die Übertragung startet automatisch</div>
+
+    <section class="plan" id="plan">
+      <h3>
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="8.5"/><polyline points="12,7 12,12 15.5,14"/>
+        </svg></span>
+        So läuft die Übertragung
+      </h3>
+      <ul id="plan-list"></ul>
+      <div class="foot" id="plan-foot"></div>
+    </section>
   </div></div>
 </section>
 
@@ -842,10 +891,23 @@ const CONFIG = {
   musicVolume:   0.35,
   counterKey:    "you_vs_you_online_besuche_7f3a2",   // leer = Zaehler aus
 
+  /* ==============================================================
+     SENDEPLAN
+     Steht in der Stream-Ansicht -- vorher und in jeder Pause.
+     Zeilen frei aendern, <strong> hebt etwas hervor.
+     ============================================================== */
+  streamPlan: [
+    "Gestreamt wird <strong>jede zweite Runde</strong> — eine Runde live, eine Runde Pause",
+    "Eine Runde sind <strong>7,5 km</strong> und dauert etwa <strong>45 Minuten</strong>",
+    "Die <strong>finale Runde</strong> wird auf jeden Fall komplett übertragen",
+    "In den Pausen läuft die Kamera weiter — daraus entsteht später ein <strong>Zusammenschnitt</strong>"
+  ],
+  streamPlanFoot: "Die Pausen schonen Akku und Datenverbindung, damit der Stream bis zum Ziel durchhält. Aufzeichnungen und Zusammenschnitte findest du danach im Menü unter „Aufzeichnungen\".",
+
   /* --- Adresse des Formulars fuers Gaestebuch ---
      Bei formspree.io kostenlos anlegen, die Adresse hier eintragen.
      Leer lassen = das Formular wird ausgeblendet.                  */
-  formEndpoint:  "https://formspree.io/f/mrpzklje",
+  formEndpoint:  "",
 
   /* ==============================================================
      EVENTS
@@ -1104,6 +1166,14 @@ function paintTrainings(){
         + '<div class="meta">' + esc(t.date || '') + (t.meta ? ' · ' + esc(t.meta) : '') + '</div>'
         + (t.text ? '<p>' + esc(t.text) + '</p>' : '') + '</article>').join('')
     : '<div class="empty">Hier landen die Einheiten aus der Vorbereitung</div>';
+}
+
+/* ---- Sendeplan ---- */
+function paintPlan(){
+  const list = CONFIG.streamPlan || [];
+  if (!list.length){ $('plan').classList.add('hidden'); return; }
+  $('plan-list').innerHTML = list.map(t => '<li>' + t + '</li>').join('');
+  $('plan-foot').innerHTML = CONFIG.streamPlanFoot || '';
 }
 
 /* ---- Gaestebuch ---- */
@@ -1380,6 +1450,7 @@ paintDisciplines();
 paintVods();
 paintTrainings();
 paintGuestbook();
+paintPlan();
 render();
 tick();
 </script>
