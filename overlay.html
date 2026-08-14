@@ -332,14 +332,23 @@ const CONFIG = {
 
   introImage:  "",
   introAudio:  "",
-  introKicker: "Live"
+  introKicker: "Live",
+
+  /* ---- Live-Werte an die Website senden ----
+     Beide Angaben kommen ueber den Link, damit das Kennwort
+     nicht in der oeffentlichen Datei steht:
+       &live=https://vvy-live.DEINNAME.workers.dev&key=DEINKENNWORT
+     Fehlt eine der beiden, wird nichts gesendet.                  */
+  liveUrl:     "",
+  liveKey:     ""
 };
 
 (function(){
   const q = new URLSearchParams(location.search);
   const map = { target:'targetKm', start:'startAt', racestart:'raceStartAt',
                 title:'title', sub:'subtitle',
-                image:'introImage', audio:'introAudio', kicker:'introKicker' };
+                image:'introImage', audio:'introAudio', kicker:'introKicker',
+                live:'liveUrl', key:'liveKey' };
   for (const [k,v] of Object.entries(map)) if (q.has(k)) CONFIG[v] = q.get(k);
   if (q.has('target'))   CONFIG.targetKm  = parseFloat(String(q.get('target')).replace(',','.')) || 0;
   if (q.has('duration')) CONFIG.durationH = parseFloat(String(q.get('duration')).replace(',','.')) || 0;
@@ -353,7 +362,12 @@ const $ = id => document.getElementById(id);
 const revealMs = CONFIG.startAt ? new Date(CONFIG.startAt).getTime() : 0;
 const raceStartMs = CONFIG.raceStartAt ? new Date(CONFIG.raceStartAt).getTime() : (revealMs || Date.now());
 
-const state = { meters:0, gain:0, last:null, baseAlt:null, trail:[], fix:0 };
+const state = { meters:0, gain:0, last:null, baseAlt:null, trail:[], fix:0,
+                tempC:null, wxCode:null };
+
+/* Zwischenergebnisse aus render() -- der Live-Sender liest sie ab,
+   damit Website und Stream exakt dieselben Zahlen zeigen. */
+const calc = { km:0, elapsed:0, left:null, pace:0, apace:0 };
 
 /* ================================================================
    ZWISCHENSPEICHER
@@ -508,6 +522,8 @@ async function updateWeather(){
       '&current=temperature_2m,weather_code');
     const j = await r.json();
     const c = j.current.temperature_2m;
+    state.tempC  = c;
+    state.wxCode = j.current.weather_code;
     const cs = c.toFixed(1) + ' \u00B0C', fs = (c*9/5+32).toFixed(1) + ' \u00B0F';
     $('temp-c').textContent = cs;  $('temp-c2').textContent = cs;
     $('temp-f').textContent = fs;  $('temp-f2').textContent = fs;
@@ -574,9 +590,101 @@ function render(){
   $('ele-m').textContent  = Math.round(state.gain).toLocaleString('de-DE');
   $('ele-ft').textContent = Math.round(state.gain*3.28084).toLocaleString('de-DE');
 
+  /* Werte für den Live-Sender merken */
+  calc.km      = km;
+  calc.elapsed = elapsed;
+  calc.left    = CONFIG.durationH > 0 ? Math.max(0, CONFIG.durationH*3600000 - elapsed) : null;
+  calc.pace    = cSec;
+  calc.apace   = aSec;
+
   updateWeather();
+  Live.tick();
   requestAnimationFrame(render);
 }
+
+/* ================================================================
+   LIVE-SENDER
+   Schickt alle 30 Sekunden einen kleinen Datensatz an die Brücke
+   bei Cloudflare, damit die Website die Werte anzeigen kann --
+   auch in den Runden, in denen der Stream pausiert.
+
+   Es werden ausschliesslich Kilometer, Zeiten, Hoehenmeter und
+   das Wetter uebertragen. KEINE Koordinaten.
+
+   Faellt das Netz aus, wird der Fehler verschluckt und beim
+   naechsten Versuch weitergemacht -- der Stream laeuft davon
+   voellig unbeeindruckt weiter.
+   ================================================================ */
+const Live = (function(){
+  const off = { tick(){}, flush(){} };
+  if (!CONFIG.liveUrl || !CONFIG.liveKey) return off;
+
+  const url  = String(CONFIG.liveUrl).replace(/\/+$/, '');
+  const hist = [];                 // [Minuten seit Rennstart, Kilometer]
+  const SEND_MS = 30000;           // Sendetakt
+  const HIST_MIN = 5;              // Verlaufspunkt alle 5 Minuten
+
+  let lastSend = 0, lastHistMin = -1, busy = false;
+
+  function payload(){
+    const min = Math.floor(calc.elapsed / 60000);
+
+    /* Verlauf höchstens alle 5 Minuten ergänzen -- ergibt bei
+       6 Stunden rund 72 Punkte und bleibt winzig. */
+    if (min >= 0 && Math.floor(min / HIST_MIN) > lastHistMin){
+      lastHistMin = Math.floor(min / HIST_MIN);
+      hist.push([min, Math.round(calc.km * 100) / 100]);
+      if (hist.length > 200) hist.shift();
+    }
+
+    return {
+      v:       1,
+      t:       Date.now(),
+      fix:     state.fix || null,
+      title:   CONFIG.title,
+      km:      Math.round(calc.km * 100) / 100,
+      gain:    Math.round(state.gain),
+      elapsed: Math.round(calc.elapsed),
+      left:    calc.left === null ? null : Math.round(calc.left),
+      dur:     CONFIG.durationH || null,
+      target:  CONFIG.targetKm  || null,
+      pace:    Math.round(calc.pace)  || null,
+      apace:   Math.round(calc.apace) || null,
+      temp:    state.tempC  === null ? null : Math.round(state.tempC * 10) / 10,
+      wx:      state.wxCode === null ? null : state.wxCode,
+      hist:    hist
+    };
+  }
+
+  async function send(keepalive){
+    if (busy) return;
+    busy = true;
+    try{
+      await fetch(url, {
+        method:  'POST',
+        headers: { 'Content-Type':'application/json', 'X-Token': CONFIG.liveKey },
+        body:    JSON.stringify(payload()),
+        keepalive: !!keepalive
+      });
+    }catch(_){ /* Netz weg -- beim nächsten Takt erneut */ }
+    busy = false;
+  }
+
+  return {
+    tick(){
+      const now = Date.now();
+      if (now - lastSend < SEND_MS) return;
+      if (now < raceStartMs) return;              // vor dem Startschuss nichts senden
+      lastSend = now;
+      send(false);
+    },
+    flush(){ lastSend = Date.now(); send(true); }
+  };
+})();
+
+/* Beim Wegschalten oder Schliessen noch einmal den Endstand senden */
+['pagehide','beforeunload'].forEach(ev => window.addEventListener(ev, () => Live.flush()));
+
 render();
 
 /* ================================================================

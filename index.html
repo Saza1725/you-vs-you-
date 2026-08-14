@@ -607,6 +607,165 @@ body{
 .consent-btn svg{ width:1.15em; height:1.15em; flex:none }
 .consent-btn svg path, .consent-btn svg polygon{ stroke:#170B2C; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round }
 
+/* ---------- Live-Werte aus dem Lauf ---------- */
+
+.live{
+  margin-top:clamp(1.4rem,2.8vw,2.2rem);
+  background:var(--panel);
+  border:.1rem solid var(--hairline);
+  border-left:.4rem solid var(--green);
+  padding:clamp(1.2rem,2.4vw,1.9rem) clamp(1.3rem,2.6vw,2rem);
+}
+.live.stale{ border-left-color:rgba(255,255,255,.3) }
+.live-head{
+  display:flex; align-items:center; gap:.7em; flex-wrap:wrap;
+  margin-bottom:clamp(1rem,2vw,1.4rem);
+}
+.live-head h3{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1rem,1.8vw,1.35rem); letter-spacing:.05em; line-height:1.15;
+}
+.live-dot{
+  display:inline-flex; align-items:center; gap:.45em; margin-left:auto;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.58rem,.95vw,.74rem); letter-spacing:.16em; color:var(--green);
+}
+.live-dot i{
+  width:.55em; height:.55em; border-radius:50%; background:var(--green);
+  box-shadow:0 0 .7em rgba(74,222,128,.9); animation:pulse 1.6s ease-in-out infinite;
+}
+.live.stale .live-dot{ color:var(--dim) }
+.live.stale .live-dot i{ background:var(--dim); box-shadow:none; animation:none }
+
+/* Kennzahlen */
+.live-grid{
+  display:grid; gap:clamp(.7rem,1.5vw,1.1rem);
+  grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));
+}
+.live-cell{
+  background:rgba(13,6,32,.45); border:.1rem solid rgba(255,255,255,.12);
+  padding:clamp(.8rem,1.6vw,1.1rem) clamp(.9rem,1.8vw,1.2rem);
+}
+.live-cell .k{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.55rem,.9vw,.7rem); letter-spacing:.14em; color:var(--dim);
+}
+.live-cell .v{
+  font-weight:700; font-size:clamp(1.25rem,2.4vw,1.8rem);
+  line-height:1; margin-top:.45em;
+}
+.live-cell .u{
+  font-family:'Oswald',sans-serif; font-weight:500;
+  font-size:.5em; letter-spacing:.1em; color:var(--dim); margin-left:.4em;
+}
+.live-cell.wide{ grid-column:span 2 }
+
+/* Fortschritt zum Tagesziel */
+.live-goal{ margin-top:clamp(1.1rem,2.2vw,1.6rem) }
+.live-goal .top{
+  display:flex; justify-content:space-between; align-items:baseline; gap:1em;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.6rem,1vw,.76rem); letter-spacing:.14em; color:var(--dim);
+  margin-bottom:.7em;
+}
+.live-goal .top b{ color:var(--accent); font-weight:600 }
+.live-goal .bar{
+  position:relative; height:.7rem; width:100%;
+  background:rgba(255,255,255,.14); overflow:hidden;
+}
+.live-goal .bar span{
+  position:absolute; inset:0 auto 0 0; width:0%;
+  background:linear-gradient(90deg, var(--accent) 0%, var(--green) 100%);
+  transition:width .6s linear;
+}
+.live-laps{
+  display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.8em;
+}
+.live-laps i{
+  flex:1 1 1.4rem; height:.35rem; min-width:1rem;
+  background:rgba(255,255,255,.16); display:block;
+}
+.live-laps i.done{ background:var(--accent) }
+.live-laps i.part{ background:linear-gradient(90deg,var(--accent) 50%, rgba(255,255,255,.16) 50%) }
+.live-lap-txt{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.6rem,1vw,.76rem); letter-spacing:.14em; color:var(--dim); margin-top:.75em;
+}
+.live-lap-txt b{ color:var(--white); font-weight:700 }
+
+/* Verlaufskurve */
+.live-chart{ margin-top:clamp(1.2rem,2.4vw,1.8rem) }
+.live-chart .cap{
+  display:flex; justify-content:space-between; align-items:baseline; gap:1em;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.6rem,1vw,.76rem); letter-spacing:.14em; color:var(--dim);
+  margin-bottom:.8em;
+}
+.live-chart figure{ margin:0 }
+.live-chart svg{ width:100%; height:auto; display:block; overflow:visible }
+.live-chart .grid line{ stroke:rgba(255,255,255,.09); stroke-width:1 }
+.live-chart .axis text{
+  fill:rgba(255,255,255,.5); font-family:'Oswald',sans-serif; font-weight:500;
+  font-size:9px; letter-spacing:.08em;
+}
+.live-chart .target{ stroke:rgba(255,255,255,.35); stroke-width:1; stroke-dasharray:4 4 }
+.live-chart .target-txt{ fill:rgba(255,255,255,.5); font-family:'Oswald',sans-serif; font-size:9px; letter-spacing:.08em }
+.live-chart .area{ fill:url(#kmFill) }
+.live-chart .line{ fill:none; stroke:var(--accent); stroke-width:2; stroke-linecap:round; stroke-linejoin:round }
+.live-chart .end{ fill:var(--accent); stroke:#170B2C; stroke-width:2 }
+.live-chart .end-txt{
+  fill:var(--white); font-family:'Oswald',sans-serif; font-weight:700;
+  font-size:11px; letter-spacing:.04em;
+}
+.live-chart .cross{ stroke:rgba(255,255,255,.45); stroke-width:1 }
+.live-chart .hit{ fill:var(--accent); stroke:#170B2C; stroke-width:2 }
+.live-chart figure{ position:relative }
+.live-tip{
+  position:absolute; bottom:calc(100% - 1.2rem); pointer-events:none;
+  background:rgba(13,6,32,.96); border:.1rem solid var(--hairline);
+  padding:.45em .8em .5em; white-space:nowrap; z-index:5;
+}
+.live-tip b{
+  display:block; font-weight:700; font-variant-numeric:tabular-nums;
+  font-size:clamp(.9rem,1.3vw,1.05rem); line-height:1.1;
+}
+.live-tip span{
+  display:block; font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.55rem,.9vw,.68rem); letter-spacing:.12em; color:var(--dim); margin-top:.35em;
+}
+.live-table{ margin-top:.9em }
+.live-table summary{
+  cursor:pointer; font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.58rem,.95vw,.74rem); letter-spacing:.14em; color:var(--dim);
+}
+.live-table summary:hover{ color:var(--accent) }
+.live-table table{ width:100%; border-collapse:collapse; margin-top:.9em }
+.live-table th, .live-table td{
+  text-align:left; padding:.45em .6em; font-variant-numeric:tabular-nums;
+  font-size:clamp(.8rem,1.1vw,.92rem); border-bottom:.1rem solid rgba(255,255,255,.1);
+}
+.live-table th{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.58rem,.9vw,.72rem); letter-spacing:.14em; color:var(--dim);
+}
+.live-foot{
+  margin-top:clamp(1rem,2vw,1.3rem); padding-top:clamp(.8rem,1.6vw,1.1rem);
+  border-top:.1rem solid rgba(255,255,255,.14);
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.6rem,.95vw,.75rem); letter-spacing:.12em; color:var(--dim);
+}
+
+/* Kompakte Zeile unter dem Countdown auf der Startansicht */
+.cd-live{
+  margin-top:clamp(.8rem,1.6vw,1.1rem);
+  padding-top:clamp(.8rem,1.6vw,1.1rem);
+  border-top:.1rem solid rgba(255,255,255,.18);
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.65rem,1.1vw,.85rem); letter-spacing:.12em; color:var(--dim);
+  display:flex; flex-wrap:wrap; justify-content:center; gap:.5em 1.2em;
+}
+.cd-live b{ color:var(--accent); font-weight:700; font-size:1.25em; letter-spacing:.02em }
+
 /* ---------- Sendeplan-Hinweis in der Stream-Ansicht ---------- */
 
 .plan{
@@ -938,6 +1097,7 @@ body{
       <div class="bar"><span id="cd-bar"></span></div>
       <div class="marks"><span id="cd-elapsed">0:00 h</span><span id="cd-left">—</span></div>
     </div>
+    <div class="cd-live hidden" id="cd-live"></div>
   </div>
 
     <div class="actions" id="actions">
@@ -1022,6 +1182,39 @@ body{
       </div>
     </div>
     <div class="stream-note" id="stream-note">Die Übertragung startet automatisch</div>
+
+    <section class="live hidden" id="live" aria-live="polite">
+      <div class="live-head">
+        <h3 id="live-title">Live vom Lauf</h3>
+        <span class="live-dot" id="live-dot"><i></i><span id="live-dot-txt">Live</span></span>
+      </div>
+
+      <div class="live-grid" id="live-grid"></div>
+
+      <div class="live-goal hidden" id="live-goal">
+        <div class="top">
+          <span>Fortschritt zum Tagesziel</span>
+          <span><b id="live-goal-pct">0 %</b></span>
+        </div>
+        <div class="bar"><span id="live-goal-bar"></span></div>
+        <div class="live-laps" id="live-laps" aria-hidden="true"></div>
+        <div class="live-lap-txt" id="live-lap-txt"></div>
+      </div>
+
+      <div class="live-chart hidden" id="live-chart">
+        <div class="cap">
+          <span>Kilometer im Verlauf</span>
+          <span id="live-chart-note"></span>
+        </div>
+        <figure id="live-fig"></figure>
+        <details class="live-table">
+          <summary>Werte als Tabelle</summary>
+          <div id="live-table-wrap"></div>
+        </details>
+      </div>
+
+      <div class="live-foot" id="live-foot"></div>
+    </section>
 
     <section class="plan" id="plan">
       <h3>
@@ -1191,6 +1384,21 @@ const CONFIG = {
 
   /* --- Grundeinstellungen --- */
   twitchChannel: "SaPhiVs",         // NUR der Kanalname, ohne twitch.tv/  ·  leer = Hinweis statt Player
+
+  /* ==============================================================
+     LIVE-WERTE AUS DEM LAUF
+     Adresse der Brücke bei Cloudflare, z. B.
+     "https://vvy-live.deinname.workers.dev"
+     Leer lassen = kein Abruf, die Seite verhält sich wie bisher.
+
+     lapKm    = Rundenlänge für den Rundenzähler (0 = ausblenden)
+     staleSec = ab wann die Werte als veraltet gelten
+     ============================================================== */
+  live: {
+    url:      "https://vvy-live.527nv2tghb.workers.dev",
+    lapKm:    7.5,
+    staleSec: 180
+  },
   music:         "musik.mp3",       // leer lassen = kein Ton
   musicVolume:   0.35,
   counterKey:    "you_vs_you_online_besuche_7f3a2",   // leer = Zaehler aus
@@ -1650,6 +1858,9 @@ function hasAddress(){
   return Boolean(l.street && l.city);
 }
 
+/* Abschnittsnummern verschieben sich, wenn der Live-Abschnitt dazukommt */
+function dsN(n){ return (CONFIG.live && CONFIG.live.url) ? n + 1 : n; }
+
 function paintLegal(){
   const l = CONFIG.legal || {};
   if (!legalReady()){
@@ -1714,7 +1925,20 @@ function paintLegal(){
     + 'Art. 6 Abs. 1 lit. f DSGVO — das berechtigte Interesse an einer einfachen '
     + 'Reichweitenmessung ohne Tracking.</p>'
 
-    + '<h3>5 · Eingebettete Videos (Twitch, YouTube)</h3>'
+    + (CONFIG.live && CONFIG.live.url
+        ? '<h3>5 · Live-Werte während des Laufs</h3>'
+        + '<p>Während einer Veranstaltung zeigt diese Seite Kilometer, Zeiten, Höhenmeter '
+        + 'und das Wetter aus der Stoppuhr im Stream. Diese Werte werden über einen eigenen '
+        + 'Dienst bei <strong>Cloudflare</strong> (Cloudflare Inc., 101 Townsend St, '
+        + 'San Francisco, CA 94107, USA) abgerufen; dabei wird technisch bedingt die '
+        + 'IP-Adresse übermittelt. Es werden keine Cookies gesetzt.</p>'
+        + '<p>Übertragen werden ausschließlich Streckenwerte — <strong>keine '
+        + 'Standortdaten und keine Koordinaten</strong>. Rechtsgrundlage ist Art. 6 Abs. 1 '
+        + 'lit. f DSGVO — das berechtigte Interesse daran, den Verlauf auch dann zu zeigen, '
+        + 'wenn die Übertragung gerade pausiert.</p>'
+        : '')
+
+    + '<h3>' + (CONFIG.live && CONFIG.live.url ? '6' : '5') + ' · Eingebettete Videos (Twitch, YouTube)</h3>'
     + '<p>Live-Stream und Aufzeichnungen werden über <strong>Twitch</strong> '
     + '(Twitch Interactive Inc., 350 Bush Street, San Francisco, CA 94104, USA) '
     + 'beziehungsweise <strong>YouTube</strong> im erweiterten Datenschutzmodus '
@@ -1727,7 +1951,7 @@ function paintLegal(){
     + 'für weitere Besuche.</p>'
     + '<p id="revoke-wrap"></p>'
 
-    + '<h3>6 · Gästebuch</h3>'
+    + '<h3>' + (dsN(6)) + ' · Gästebuch</h3>'
     + '<p>Nachrichten aus dem Gästebuch-Formular werden über den Dienst <strong>Formspree</strong> '
     + '(Formspree Inc., USA) per E-Mail zugestellt. Übermittelt werden der eingegebene Name, die '
     + 'Nachricht sowie technische Verbindungsdaten. Rechtsgrundlage ist die Einwilligung nach '
@@ -1735,17 +1959,17 @@ function paintLegal(){
     + 'Veröffentlichung erfolgt erst nach manueller Prüfung. Die Einwilligung kann jederzeit '
     + 'formlos per E-Mail widerrufen werden; der Eintrag wird dann entfernt.</p>'
 
-    + '<h3>7 · Musik</h3>'
+    + '<h3>' + (dsN(7)) + ' · Musik</h3>'
     + '<p>Die optionale Hintergrundmusik wird von diesem Server ausgeliefert. Es findet keine '
     + 'Übermittlung an Dritte statt.</p>'
 
-    + '<h3>8 · Lokale Speicherung</h3>'
+    + '<h3>' + (dsN(8)) + ' · Lokale Speicherung</h3>'
     + '<p>Im Browser werden zwei technische Einträge abgelegt: die Entscheidung über das Laden '
     + 'eingebetteter Videos sowie ein Merker, damit der Besuchszähler pro Sitzung nur einmal '
     + 'erhöht wird. Beide enthalten keine personenbezogenen Daten und lassen sich über die '
     + 'Browsereinstellungen jederzeit löschen.</p>'
 
-    + '<h3>9 · Deine Rechte</h3>'
+    + '<h3>' + (dsN(9)) + ' · Deine Rechte</h3>'
     + '<ul>'
     + '<li>Auskunft über die verarbeiteten Daten (Art. 15 DSGVO)</li>'
     + '<li>Berichtigung unrichtiger Daten (Art. 16 DSGVO)</li>'
@@ -1977,6 +2201,7 @@ function tick(){
   if (p === 'none') return;
 
   paintProgress();
+  scheduleLive();
 
   if (p === 'before'){
     const t = splitTime(ms(EVT.stream) - Date.now());
@@ -2235,6 +2460,294 @@ function paintProgress(){
 })();
 
 /* ================================================================
+   12b · LIVE-WERTE AUS DEM LAUF
+
+   Die Werte kommen aus dem Stream-Overlay über eine kleine Brücke
+   bei Cloudflare. Ist keine Adresse eingetragen, passiert hier
+   nichts und die Seite sieht aus wie vorher.
+
+   Übertragen werden nur Kilometer, Zeiten, Höhenmeter und Wetter --
+   keine Koordinaten.
+   ================================================================ */
+
+const LIVE = CONFIG.live || {};
+let liveData = null, liveTs = 0, liveBusy = false, liveTimer = null;
+
+const nf = (n, d) => Number(n).toLocaleString('de-DE',
+  { minimumFractionDigits:d, maximumFractionDigits:d });
+
+function paceTxt(sec){
+  if (!sec || !isFinite(sec) || sec <= 0 || sec > 5999) return '–';
+  return Math.floor(sec/60) + ':' + pad(Math.round(sec%60));
+}
+function hmTxt(msv){
+  const t = splitTime(msv);
+  return (t.d ? t.d*24 + t.h : t.h) + ':' + pad(t.m) + ' h';
+}
+
+async function fetchLive(){
+  if (!LIVE.url || liveBusy) return;
+  liveBusy = true;
+  try{
+    const r = await fetch(LIVE.url.replace(/\/+$/,'') + '?_=' + Date.now(),
+                          { cache:'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    if (j && j.ok && j.data){
+      liveData = j.data;
+      liveTs   = j.ts || Date.now();
+    }
+  }catch(_){ /* Netz weg -- alte Werte stehen lassen */ }
+  liveBusy = false;
+  paintLive();
+}
+
+/* Abruf nur solange es etwas zu holen gibt */
+function scheduleLive(){
+  if (!LIVE.url) return;
+  const p = phaseOf(EVT);
+  const want = (p === 'live') ? 20000 : null;   // während des Laufs alle 20 s
+
+  if (want && !liveTimer){
+    fetchLive();
+    liveTimer = setInterval(fetchLive, want);
+  } else if (!want && liveTimer){
+    clearInterval(liveTimer); liveTimer = null;
+    fetchLive();                                 // Endstand einmal nachladen
+  }
+}
+
+function paintLive(){
+  const box = $('live');
+  if (!LIVE.url || !liveData){ box.classList.add('hidden'); $('cd-live').classList.add('hidden'); return; }
+
+  const d      = liveData;
+  const ageSec = Math.max(0, Math.round((Date.now() - (d.t || liveTs)) / 1000));
+  const stale  = ageSec > (LIVE.staleSec || 180);
+  const ended  = phaseOf(EVT) === 'after';
+
+  box.classList.remove('hidden');
+  box.classList.toggle('stale', stale || ended);
+  setText($('live-title'), ended ? 'Ergebnis' : 'Live vom Lauf');
+  setText($('live-dot-txt'), ended ? 'Beendet' : (stale ? 'Kein Signal' : 'Live'));
+
+  /* ---- Kennzahlen ---- */
+  const cells = [
+    { k:'Gelaufen', v:nf(d.km || 0, 1), u:'km' },
+    d.left != null ? { k:'Restzeit',  v:hmTxt(d.left).replace(' h',''), u:'h' }
+                   : { k:'Laufzeit',  v:hmTxt(d.elapsed || 0).replace(' h',''), u:'h' },
+    { k:'Pace jetzt', v:paceTxt(d.pace),  u:'/km' },
+    { k:'Ø Pace',     v:paceTxt(d.apace), u:'/km' },
+    { k:'Höhenmeter', v:nf(d.gain || 0, 0), u:'hm' }
+  ];
+  if (d.temp != null) cells.push({ k:'Temperatur', v:nf(d.temp, 1), u:'°C' });
+
+  $('live-grid').innerHTML = cells.map(c =>
+    '<div class="live-cell"><div class="k">' + esc(c.k) + '</div>'
+    + '<div class="v">' + esc(c.v) + '<span class="u">' + esc(c.u) + '</span></div></div>').join('');
+
+  /* ---- Fortschritt zum Tagesziel ---- */
+  const target = Number(d.target) || 0;
+  if (target > 0){
+    $('live-goal').classList.remove('hidden');
+    const pct = Math.min(100, (d.km || 0) / target * 100);
+    $('live-goal-bar').style.width = pct.toFixed(1) + '%';
+    setText($('live-goal-pct'), Math.round(pct) + ' % von ' + nf(target,1) + ' km');
+  } else {
+    $('live-goal').classList.add('hidden');
+  }
+
+  /* ---- Rundenzähler ---- */
+  const lapKm = Number(LIVE.lapKm) || 0;
+  if (lapKm > 0 && target > 0){
+    const lkm     = d.km || 0;
+    const planned = Math.max(1, Math.round(target / lapKm));   // Runden bis zum Tagesziel
+    const done    = Math.floor(lkm / lapKm);                   // voll abgeschlossene Runden
+    const part    = (lkm % lapKm) / lapKm;                     // angefangene Runde
+    /* Laeuft er ueber das Ziel hinaus, waechst die Leiste einfach mit */
+    const total   = Math.max(planned, done + (part > 0 ? 1 : 0));
+
+    let marks = '';
+    for (let i = 0; i < total; i++){
+      marks += '<i class="' + (i < done ? 'done' : (i === done && part > .15 ? 'part' : '')) + '"></i>';
+    }
+    $('live-laps').innerHTML = marks;
+
+    $('live-lap-txt').innerHTML =
+        done >= planned
+          ? 'Tagesziel geschafft · <b>' + done + ' Runden</b> voll'
+      : done + 1 === planned
+          ? '<b>Letzte Runde</b> · noch <b>' + nf(Math.max(0, target - lkm), 1) + ' km</b> bis zum Ziel'
+          : 'Runde <b>' + (done + 1) + '</b> von <b>' + planned
+            + '</b> · <b>' + nf(Math.max(0, lapKm - (lkm % lapKm)), 1) + ' km</b> bis zur nächsten';
+  } else {
+    $('live-laps').innerHTML = '';
+    $('live-lap-txt').textContent = '';
+  }
+
+  paintLiveChart(d);
+
+  /* ---- Fußzeile ---- */
+  setText($('live-foot'), ended
+    ? 'Endstand nach dem Lauf. Aufzeichnungen findest du im Menü.'
+    : (stale
+        ? 'Zuletzt aktualisiert vor ' + (ageSec < 120 ? ageSec + ' Sekunden' : Math.round(ageSec/60) + ' Minuten')
+          + ' — vermutlich gerade kein Empfang auf der Strecke.'
+        : 'Aktualisiert vor ' + ageSec + ' Sekunden · die Werte kommen direkt aus der Uhr im Stream.'));
+
+  /* ---- Kompaktzeile unter dem Countdown ---- */
+  const cd = $('cd-live');
+  if (phaseOf(EVT) === 'live'){
+    cd.classList.remove('hidden');
+    let txt = '<span><b>' + nf(d.km || 0, 1) + '</b> km</span>';
+    if (lapKm > 0 && target > 0){
+      const total = Math.max(1, Math.round(target / lapKm));
+      const done  = Math.floor((d.km || 0) / lapKm);
+      txt += '<span>Runde <b>' + Math.min(total, done + 1) + '</b> / ' + total + '</span>';
+    }
+    if (d.apace) txt += '<span>Ø <b>' + paceTxt(d.apace) + '</b> /km</span>';
+    cd.innerHTML = txt;
+  } else {
+    cd.classList.add('hidden');
+  }
+}
+
+/* ================================================================
+   VERLAUFSKURVE
+   Eine Reihe, eine Farbe. Das Tagesziel ist eine zurückhaltende
+   Schwelle, keine zweite Datenfarbe -- zwei kräftige Farben wären
+   bei Rot-Grün-Sehschwäche kaum zu unterscheiden.
+   ================================================================ */
+function paintLiveChart(d){
+  const wrap = $('live-chart');
+  const pts  = Array.isArray(d.hist) ? d.hist.filter(p => Array.isArray(p) && p.length === 2) : [];
+  if (pts.length < 3){ wrap.classList.add('hidden'); return; }
+  wrap.classList.remove('hidden');
+
+  const W = 640, H = 190;
+  const M = { t:14, r:46, b:26, l:34 };
+  const iw = W - M.l - M.r, ih = H - M.t - M.b;
+
+  const maxMin = Math.max(pts[pts.length-1][0], (d.dur ? d.dur * 60 : 0), 1);
+  const target = Number(d.target) || 0;
+  const maxKm  = Math.max(pts[pts.length-1][1], target, 1) * 1.08;
+
+  const X = m => M.l + (m / maxMin) * iw;
+  const Y = k => M.t + ih - (k / maxKm) * ih;
+
+  const line = pts.map((p,i) => (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1)).join(' ');
+  const area = line + ' L' + X(pts[pts.length-1][0]).toFixed(1) + ' ' + (M.t+ih)
+             + ' L' + X(pts[0][0]).toFixed(1) + ' ' + (M.t+ih) + ' Z';
+
+  /* Achsen: wenige, ruhige Schritte */
+  const hourStep = maxMin > 480 ? 120 : 60;
+  const xt = [];
+  for (let m = 0; m <= maxMin; m += hourStep) xt.push(m);
+  const kmStep = maxKm > 60 ? 20 : (maxKm > 25 ? 10 : 5);
+  const yt = [];
+  for (let k = 0; k <= maxKm; k += kmStep) yt.push(k);
+
+  const grid = yt.map(k =>
+    '<line x1="' + M.l + '" y1="' + Y(k).toFixed(1) + '" x2="' + (M.l+iw) + '" y2="' + Y(k).toFixed(1) + '"/>').join('');
+
+  const xlab = xt.map(m =>
+    '<text x="' + X(m).toFixed(1) + '" y="' + (M.t+ih+16) + '" text-anchor="middle">' + (m/60) + ' h</text>').join('');
+  const ylab = yt.map(k =>
+    '<text x="' + (M.l-8) + '" y="' + (Y(k)+3).toFixed(1) + '" text-anchor="end">' + k + '</text>').join('');
+
+  const tline = target > 0 && target <= maxKm
+    ? '<line class="target" x1="' + M.l + '" y1="' + Y(target).toFixed(1) + '" x2="' + (M.l+iw) + '" y2="' + Y(target).toFixed(1) + '"/>'
+      + '<text class="target-txt" x="' + (M.l+iw+6) + '" y="' + (Y(target)+3).toFixed(1) + '">Ziel</text>'
+    : '';
+
+  const last  = pts[pts.length-1];
+  const endX  = X(last[0]), endY = Y(last[1]);
+  /* Beschriftung am rechten Rand nach innen kippen statt abschneiden */
+  const rightish = endX > M.l + iw * .72;
+  const endLbl = '<text class="end-txt" x="' + (rightish ? endX - 9 : endX + 9).toFixed(1)
+               + '" y="' + (endY - 9).toFixed(1) + '" text-anchor="' + (rightish ? 'end' : 'start') + '">'
+               + nf(last[1],1) + ' km</text>';
+
+  /* Verlauf von der Spitze bis zur Grundlinie -- feste Koordinaten,
+     damit der Farbverlauf nicht springt, wenn die Kurve waechst. */
+  const topY = Y(Math.max(...pts.map(p => p[1])));
+
+  $('live-fig').innerHTML =
+    '<svg viewBox="0 0 ' + W + ' ' + H + '" id="live-svg" role="img" '
+  + 'aria-label="Verlauf der gelaufenen Kilometer: ' + nf(last[1],1) + ' Kilometer nach '
+  + Math.floor(last[0]/60) + ' Stunden ' + (last[0]%60) + ' Minuten">'
+  + '<defs><linearGradient id="kmFill" gradientUnits="userSpaceOnUse" '
+  + 'x1="0" y1="' + topY.toFixed(1) + '" x2="0" y2="' + (M.t+ih) + '">'
+  + '<stop offset="0%"   stop-color="#FFD400" stop-opacity=".42"/>'
+  + '<stop offset="55%"  stop-color="#FFD400" stop-opacity=".16"/>'
+  + '<stop offset="100%" stop-color="#FFD400" stop-opacity="0"/>'
+  + '</linearGradient></defs>'
+  + '<g class="grid">' + grid + '</g>'
+  + tline
+  + '<path class="area" d="' + area + '"/>'
+  + '<path class="line" d="' + line + '"/>'
+  + '<line class="cross hidden" id="live-cross" y1="' + M.t + '" y2="' + (M.t+ih) + '"/>'
+  + '<circle class="hit hidden" id="live-hit" r="4.5"/>'
+  + '<circle class="end" cx="' + endX.toFixed(1) + '" cy="' + endY.toFixed(1) + '" r="4"/>'
+  + endLbl
+  + '<g class="axis">' + xlab + ylab + '</g>'
+  + '<rect id="live-catch" x="' + M.l + '" y="' + M.t + '" width="' + iw + '" height="' + ih
+  + '" fill="transparent" style="cursor:crosshair"/>'
+  + '</svg>'
+  + '<div class="live-tip hidden" id="live-tip"></div>';
+
+  setText($('live-chart-note'), 'Punkt alle 5 Minuten');
+  bindChartHover(pts, X, Y, M, iw, W);
+
+  /* Tabellenansicht -- damit die Kurve nicht die einzige Quelle ist */
+  /* (Aufbau siehe unten) */
+  const rows = pts.filter((_,i) => i % Math.max(1, Math.ceil(pts.length/24)) === 0 || i === pts.length-1);
+  $('live-table-wrap').innerHTML =
+    '<table><thead><tr><th>Nach</th><th>Kilometer</th></tr></thead><tbody>'
+  + rows.map(p => '<tr><td>' + Math.floor(p[0]/60) + ':' + pad(p[0]%60) + ' h</td><td>'
+      + nf(p[1],1) + ' km</td></tr>').join('')
+  + '</tbody></table>';
+}
+
+/* Fadenkreuz mit Werteanzeige -- funktioniert mit Maus und Finger */
+function bindChartHover(pts, X, Y, M, iw, W){
+  const svg   = $('live-svg'), catcher = $('live-catch');
+  const cross = $('live-cross'), dot = $('live-hit'), tip = $('live-tip');
+  if (!svg || !catcher) return;
+
+  function hide(){
+    cross.classList.add('hidden'); dot.classList.add('hidden'); tip.classList.add('hidden');
+  }
+
+  function move(ev){
+    const box = svg.getBoundingClientRect();
+    const sx  = (ev.clientX - box.left) / box.width * W;    // Bildschirm -> SVG-Koordinaten
+
+    /* naechstliegender Datenpunkt */
+    let best = pts[0], bd = Infinity;
+    for (const p of pts){
+      const d = Math.abs(X(p[0]) - sx);
+      if (d < bd){ bd = d; best = p; }
+    }
+    const px = X(best[0]), py = Y(best[1]);
+
+    cross.setAttribute('x1', px); cross.setAttribute('x2', px); cross.classList.remove('hidden');
+    dot.setAttribute('cx', px);   dot.setAttribute('cy', py);   dot.classList.remove('hidden');
+
+    tip.innerHTML = '<b>' + nf(best[1],1) + ' km</b><span>nach ' + Math.floor(best[0]/60)
+                  + ':' + pad(best[0]%60) + ' h</span>';
+    tip.classList.remove('hidden');
+    const left = px / W * box.width;
+    tip.style.left = Math.max(0, Math.min(box.width - tip.offsetWidth, left - tip.offsetWidth/2)) + 'px';
+  }
+
+  catcher.addEventListener('pointermove', move);
+  catcher.addEventListener('pointerdown', move);
+  catcher.addEventListener('pointerleave', hide);
+  catcher.addEventListener('pointercancel', hide);
+}
+
+/* ================================================================
    13 · ALS APP SPEICHERBAR (Service Worker)
    Sorgt dafuer, dass die Seite auch bei wackliger Verbindung
    laedt und sich aufs Startdisplay legen laesst.
@@ -2264,6 +2777,7 @@ paintLegal();
 paintJsonLd();
 render();
 tick();
+if (LIVE.url) fetchLive();     /* Endstand auch nach dem Lauf zeigen */
 </script>
 
 </body>
