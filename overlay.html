@@ -185,6 +185,19 @@ body:not(.imperial) .imp{ display:none }
 }
 .intro .rule{ height:.4rem; width:25rem; background:var(--accent); margin-top:2.8rem }
 
+
+/* ---- Diagnose-Schild (nur mit &debug=1 sichtbar) ---- */
+.sendbadge{
+  position:fixed; left:12px; bottom:12px; z-index:9999;
+  font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px; line-height:1.35;
+  padding:8px 12px; border-radius:6px; cursor:pointer;
+  background:rgba(0,0,0,.82); color:#fff; border:2px solid #888;
+  max-width:70vw; word-break:break-word; white-space:pre-line;
+}
+.sendbadge b{ display:block; font-size:11px; letter-spacing:.12em; opacity:.65; font-weight:600 }
+.sendbadge.ok{   border-color:#4ADE80; color:#4ADE80 }
+.sendbadge.err{  border-color:#FF6B6B; color:#FF6B6B }
+.sendbadge.wait{ border-color:#FFD400; color:#FFD400 }
 .sound-hint{
   position:absolute; left:50%; bottom:8%; transform:translateX(-50%);
   font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
@@ -304,6 +317,7 @@ body:not(.imperial) .imp{ display:none }
   </div>
 
   <audio id="intro-audio" loop preload="auto"></audio>
+  <div class="sendbadge" id="sendbadge" hidden><b>Senden an Website</b><span id="sendbadge-txt">–</span></div>
   <div class="sound-hint" id="sound-hint">Zum Aktivieren des Tons antippen</div>
 
 </div>
@@ -329,6 +343,7 @@ const CONFIG = {
   weather:     true,
   imperial:    false,
   demo:        false,
+  debug:       false,
 
   introImage:  "",
   introAudio:  "",
@@ -355,6 +370,7 @@ const CONFIG = {
   if (q.has('demo'))     CONFIG.demo     = q.get('demo') !== '0';
   if (q.has('weather'))  CONFIG.weather  = q.get('weather') !== '0';
   if (q.has('imperial')) CONFIG.imperial = q.get('imperial') !== '0';
+  if (q.has('debug'))    CONFIG.debug    = q.get('debug')    !== '0';
 })();
 
 const $ = id => document.getElementById(id);
@@ -616,15 +632,41 @@ function render(){
    voellig unbeeindruckt weiter.
    ================================================================ */
 const Live = (function(){
+
+  /* ---- Diagnose-Schild ---- */
+  const badge = document.getElementById('sendbadge');
+  const btxt  = document.getElementById('sendbadge-txt');
+  const show  = !!CONFIG.debug;
+  if (show && badge) badge.hidden = false;
+
+  function uhr(){
+    const d = new Date();
+    return String(d.getHours()).padStart(2,'0') + ':' +
+           String(d.getMinutes()).padStart(2,'0') + ':' +
+           String(d.getSeconds()).padStart(2,'0');
+  }
+  function melde(zustand, text){
+    console.log('[Live] ' + zustand + ' — ' + text);
+    if (!show || !badge) return;
+    badge.className = 'sendbadge ' + zustand;
+    btxt.textContent = text;
+  }
+
   const off = { tick(){}, flush(){} };
-  if (!CONFIG.liveUrl || !CONFIG.liveKey) return off;
+
+  if (!CONFIG.liveUrl || !CONFIG.liveKey){
+    melde('err', 'AUS\n' + (!CONFIG.liveUrl ? 'live= fehlt im Link' : 'key= fehlt im Link'));
+    return off;
+  }
 
   const url  = String(CONFIG.liveUrl).replace(/\/+$/, '');
   const hist = [];                 // [Minuten seit Rennstart, Kilometer]
   const SEND_MS = 30000;           // Sendetakt
   const HIST_MIN = 5;              // Verlaufspunkt alle 5 Minuten
 
-  let lastSend = 0, lastHistMin = -1, busy = false;
+  let lastSend = 0, lastHistMin = -1, busy = false, zaehler = 0;
+
+  melde('wait', 'bereit\n' + url.replace(/^https?:\/\//,''));
 
   function payload(){
     const min = Math.floor(calc.elapsed / 60000);
@@ -659,22 +701,44 @@ const Live = (function(){
   async function send(keepalive){
     if (busy) return;
     busy = true;
+    melde('wait', 'sende …');
     try{
-      await fetch(url, {
+      const r = await fetch(url, {
         method:  'POST',
         headers: { 'Content-Type':'application/json', 'X-Token': CONFIG.liveKey },
         body:    JSON.stringify(payload()),
         keepalive: !!keepalive
       });
-    }catch(_){ /* Netz weg -- beim nächsten Takt erneut */ }
+      if (r.ok){
+        zaehler++;
+        melde('ok', 'OK ' + uhr() + '\n' + calc.km.toFixed(2) + ' km · ' + zaehler + '. Sendung');
+      } else if (r.status === 401){
+        melde('err', 'FEHLER 401\nKennwort stimmt nicht mit\nTOKEN bei Cloudflare überein');
+      } else if (r.status === 503){
+        melde('err', 'FEHLER 503\nTOKEN bei Cloudflare fehlt');
+      } else if (r.status === 500){
+        melde('err', 'FEHLER 500\nDatenbank nicht verbunden\n(Bindung DB prüfen)');
+      } else {
+        melde('err', 'FEHLER ' + r.status + '\n' + uhr());
+      }
+    }catch(e){
+      melde('err', 'KEIN NETZ\n' + uhr() + '\n' + (e && e.message ? e.message : ''));
+    }
     busy = false;
   }
+
+  /* Antippen sendet sofort -- praktisch beim Einrichten */
+  if (badge) badge.addEventListener('click', () => { lastSend = Date.now(); send(false); });
 
   return {
     tick(){
       const now = Date.now();
+      if (now < raceStartMs){
+        const s = Math.ceil((raceStartMs - now) / 1000);
+        melde('wait', 'wartet auf Rennstart\nnoch ' + s + ' s');
+        return;
+      }
       if (now - lastSend < SEND_MS) return;
-      if (now < raceStartMs) return;              // vor dem Startschuss nichts senden
       lastSend = now;
       send(false);
     },
