@@ -2526,7 +2526,16 @@ function paintLive(){
   const d      = liveData;
   const ageSec = Math.max(0, Math.round((Date.now() - (d.t || liveTs)) / 1000));
   const stale  = ageSec > (LIVE.staleSec || 180);
-  const ended  = phaseOf(EVT) === 'after';
+  const phase  = phaseOf(EVT);
+  const ended  = phase === 'after';
+
+  /* Vor dem Event nur zeigen, wenn die Werte frisch sind.
+     Sonst würde ein Testeintrag wochenlang als „Live vom Lauf"
+     auf der Startseite stehen, obwohl gar kein Lauf läuft.
+     Zehn Minuten Fenster, damit ein Trockentest sichtbar bleibt. */
+  if (phase === 'before' && ageSec > 600){
+    box.classList.add('hidden'); $('cd-live').classList.add('hidden'); return;
+  }
 
   box.classList.remove('hidden');
   box.classList.toggle('stale', stale || ended);
