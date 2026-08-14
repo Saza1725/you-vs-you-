@@ -3,11 +3,47 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>YOU VS YOU</title>
-<meta name="description" content="Ultralauf live. Events, Streams, Training. You vs You.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<title>YOU VS YOU — Ultralauf live</title>
+<meta name="description" content="Ultralauf live: Countdown, Live-Stream, Events, Disziplinen und Training. You vs You.">
+<meta name="theme-color" content="#0D0620">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://www.you-vs-you.online/">
+
+<!-- ---------- Teilen: Open Graph + Twitter ---------- -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="You vs You">
+<meta property="og:locale" content="de_DE">
+<meta property="og:url" content="https://www.you-vs-you.online/">
+<meta property="og:title" content="YOU VS YOU — Ultralauf live">
+<meta property="og:description" content="Countdown, Live-Stream und alle Infos zum nächsten Ultralauf.">
+<meta property="og:image" content="https://www.you-vs-you.online/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Zwei Läufer auf leuchtenden Buchstaben: YOU VS YOU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="YOU VS YOU — Ultralauf live">
+<meta name="twitter:description" content="Countdown, Live-Stream und alle Infos zum nächsten Ultralauf.">
+<meta name="twitter:image" content="https://www.you-vs-you.online/og.jpg">
+
+<!-- ---------- Symbole ---------- -->
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<!-- ---------- Auf dem Handy als App speicherbar ---------- -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="You vs You">
+
+<!-- ---------- Schriften und Titelbild vorladen ----------
+     Die Schriften liegen auf dem eigenen Server. Es geht keine
+     Verbindung zu Google -- damit entfaellt die Uebermittlung
+     der Besucher-IP in die USA.                                  -->
+<link rel="preload" href="fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/rajdhani-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="start.webp" as="image" type="image/webp" fetchpriority="high">
+
 <style>
 /* ============================================================
    YOU VS YOU
@@ -15,11 +51,45 @@
    Farben wie das Stream-Overlay: Violett + Gold
    ============================================================ */
 
+/* ---------- Schriften (lokal) ---------- */
+
+@font-face{
+  font-family:'Oswald'; font-style:normal; font-weight:200 700; font-display:swap;
+  src:url(fonts/oswald-latin.woff2) format('woff2-variations');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Oswald'; font-style:normal; font-weight:200 700; font-display:swap;
+  src:url(fonts/oswald-latin-ext.woff2) format('woff2-variations');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+@font-face{
+  font-family:'Rajdhani'; font-style:normal; font-weight:600; font-display:swap;
+  src:url(fonts/rajdhani-600-latin.woff2) format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Rajdhani'; font-style:normal; font-weight:600; font-display:swap;
+  src:url(fonts/rajdhani-600-latin-ext.woff2) format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+@font-face{
+  font-family:'Rajdhani'; font-style:normal; font-weight:700; font-display:swap;
+  src:url(fonts/rajdhani-700-latin.woff2) format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Rajdhani'; font-style:normal; font-weight:700; font-display:swap;
+  src:url(fonts/rajdhani-700-latin-ext.woff2) format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
 :root{
   --ink:      #0D0620;
   --accent:   #FFD400;
   --white:    #FFFFFF;
   --green:    #4ADE80;
+  --red:      #FF6B6B;
   --dim:      rgba(255,255,255,.55);
   --panel:    linear-gradient(180deg, rgba(58,30,99,.92) 0%, rgba(23,11,44,.95) 100%);
   --hairline: rgba(255,212,0,.30);
@@ -33,6 +103,9 @@ body{
   -webkit-font-smoothing:antialiased; overflow-x:hidden;
 }
 
+/* Sichtbarer Fokus fuer Tastatur -- vorher fehlte er komplett */
+:focus-visible{ outline:.18rem solid var(--accent); outline-offset:.2rem }
+
 .label{
   font-family:'Oswald','Arial Narrow',sans-serif;
   font-weight:600; text-transform:uppercase;
@@ -40,7 +113,15 @@ body{
 }
 .hidden{ display:none !important }
 
-.bg-photo{ background:var(--ink) center/cover no-repeat; position:relative }
+/* Titelbild direkt im CSS -- so beginnt der Browser den Download
+   sofort beim Einlesen der Seite und nicht erst nach dem Skript.
+   Erste Zeile = Rueckfallebene fuer aeltere Browser ohne image-set. */
+.bg-photo{
+  background:var(--ink) center/cover no-repeat;
+  background-image:url("start.jpg");
+  background-image:image-set(url("start.webp") type("image/webp"), url("start.jpg") type("image/jpeg"));
+  position:relative;
+}
 .bg-photo::before{
   content:''; position:absolute; inset:0;
   background:linear-gradient(180deg, rgba(13,6,32,.62) 0%, rgba(13,6,32,.42) 42%, rgba(13,6,32,.92) 100%);
@@ -112,10 +193,13 @@ body{
   background:rgba(13,6,32,.97);
   backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
   display:flex; flex-direction:column;
-  opacity:0; pointer-events:none; transition:opacity .3s ease;
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .3s ease, visibility 0s linear .3s;
   overflow-y:auto;
 }
-#menu.open{ opacity:1; pointer-events:auto }
+/* visibility statt nur opacity: sonst bleiben die Links im
+   Tabulator-Verlauf erreichbar, obwohl das Menue zu ist. */
+#menu.open{ opacity:1; visibility:visible; pointer-events:auto; transition:opacity .3s ease }
 
 .menu-head{
   display:flex; align-items:center; justify-content:space-between;
@@ -166,6 +250,18 @@ body{
 }
 .menu-item .txt{ flex:1; min-width:0 }
 
+.menu-legal{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:clamp(1rem,3vw,2.2rem);
+  padding:0 clamp(1rem,4vw,3rem) clamp(2rem,4vw,3rem);
+}
+.menu-legal a{
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.65rem,1vw,.8rem); letter-spacing:.16em;
+  color:var(--dim); text-decoration:none; border-bottom:.1rem solid transparent;
+  transition:color .2s ease, border-color .2s ease;
+}
+.menu-legal a:hover{ color:var(--accent); border-bottom-color:var(--accent) }
+
 /* ============================================================
    ANSICHTEN
    ============================================================ */
@@ -191,8 +287,9 @@ body{
   font-size:clamp(.62rem,1.15vw,.9rem); letter-spacing:.2em; color:var(--dim); margin-top:.9em;
 }
 
+.cd-wrap{ display:flex; flex-direction:column; align-items:center; width:100% }
 .cd-box{
-  align-self:center; text-align:center;
+  text-align:center;
   padding:clamp(1rem,2vw,1.6rem) clamp(1.6rem,3.4vw,2.8rem) clamp(1.1rem,2.2vw,1.8rem);
   background:var(--panel); border:.15rem solid var(--accent);
   backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
@@ -212,6 +309,53 @@ body{
 }
 .cd-box.live{ border-color:var(--green) }
 .cd-box.live .cd{ color:var(--green); font-size:clamp(1.8rem,5vw,3.6rem) }
+
+/* ---------- Fortschritt waehrend des Laufs ---------- */
+
+.cd-progress{
+  margin-top:clamp(.9rem,1.8vw,1.3rem); text-align:left;
+  width:100%; min-width:min(19rem,68vw);
+}
+.cd-progress .bar{
+  position:relative; height:.55rem; width:100%;
+  background:rgba(255,255,255,.16); overflow:hidden;
+}
+.cd-progress .bar span{
+  position:absolute; inset:0 auto 0 0; width:0%;
+  background:linear-gradient(90deg, var(--accent) 0%, var(--green) 100%);
+  transition:width .5s linear;
+}
+.cd-progress .marks{
+  display:flex; justify-content:space-between; gap:1.4em; margin-top:.7em;
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.55rem,.9vw,.72rem); letter-spacing:.14em; color:var(--dim);
+}
+.cd-progress .marks span{ white-space:nowrap }
+.cd-progress .marks b{ color:var(--green); font-weight:600 }
+
+/* ---------- Kalender + Teilen ---------- */
+
+.actions{
+  display:flex; flex-wrap:wrap; justify-content:center;
+  gap:clamp(.5rem,1.2vw,.9rem); margin-top:clamp(.9rem,2vw,1.4rem);
+}
+.act{
+  display:inline-flex; align-items:center; gap:.6em;
+  padding:.65em 1.2em .7em;
+  background:rgba(58,30,99,.55); border:.12rem solid var(--hairline);
+  color:var(--white); cursor:pointer; text-decoration:none;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.62rem,1vw,.78rem); letter-spacing:.14em;
+  clip-path: polygon(.65rem 0, 100% 0, 100% calc(100% - .65rem), calc(100% - .65rem) 100%, 0 100%, 0 .65rem);
+  transition:border-color .2s ease, transform .2s ease;
+}
+.act:hover{ border-color:var(--accent); transform:translateY(-2px) }
+.act svg{ width:1.15em; height:1.15em; flex:none }
+.act svg path, .act svg rect, .act svg circle, .act svg line, .act svg polyline{
+  stroke:var(--accent); stroke-width:1.9; fill:none; stroke-linecap:round; stroke-linejoin:round;
+}
+.act.done{ border-color:var(--green) }
+.act.done svg path, .act.done svg line{ stroke:var(--green) }
 
 .nav-tiles{
   display:grid; gap:clamp(.7rem,1.6vw,1.2rem);
@@ -431,6 +575,36 @@ body{
   font-size:clamp(.68rem,1.05vw,.82rem); letter-spacing:.14em; color:var(--dim);
 }
 
+/* ---------- Einwilligung fuer eingebettete Videos ---------- */
+
+.consent{
+  position:absolute; inset:0; z-index:3;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:clamp(.7rem,1.8vw,1.2rem); text-align:center; padding:clamp(1.2rem,3vw,2rem);
+  background:linear-gradient(180deg, rgba(58,30,99,.72) 0%, rgba(23,11,44,.88) 100%);
+}
+.consent .head{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.95rem,2vw,1.5rem); letter-spacing:.06em;
+}
+.consent .sub{
+  font-size:clamp(.8rem,1.25vw,1rem); color:rgba(255,255,255,.75);
+  max-width:38rem; line-height:1.55;
+}
+.consent .sub a{ color:var(--accent); text-decoration:underline; text-underline-offset:.2em }
+.consent-btn{
+  display:inline-flex; align-items:center; gap:.7em;
+  padding:.85em 2em .9em; background:var(--accent); color:#170B2C;
+  border:0; cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.78rem,1.3vw,1rem); letter-spacing:.14em;
+  clip-path: polygon(.8rem 0, 100% 0, 100% calc(100% - .8rem), calc(100% - .8rem) 100%, 0 100%, 0 .8rem);
+  transition:transform .2s ease;
+}
+.consent-btn:hover{ transform:translateY(-2px) }
+.consent-btn svg{ width:1.15em; height:1.15em; flex:none }
+.consent-btn svg path, .consent-btn svg polygon{ stroke:#170B2C; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round }
+
 /* ---------- Sendeplan-Hinweis in der Stream-Ansicht ---------- */
 
 .plan{
@@ -476,7 +650,7 @@ body{
   grid-template-columns:repeat(auto-fit,minmax(24rem,1fr));
 }
 .vod{ background:var(--panel); border:.1rem solid var(--hairline) }
-.vod .frame{ width:100%; aspect-ratio:16/9; background:#000; overflow:hidden }
+.vod .frame{ position:relative; width:100%; aspect-ratio:16/9; background:#000; overflow:hidden }
 .vod .frame iframe{ width:100%; height:100%; border:0; display:block }
 .vod .body{ padding:clamp(1rem,2vw,1.4rem) clamp(1.1rem,2.2vw,1.6rem) clamp(1.1rem,2.2vw,1.6rem) }
 .vod .body h3{
@@ -513,6 +687,15 @@ body{
 }
 .field input:focus, .field textarea:focus{ border-color:var(--accent) }
 .field textarea{ min-height:8rem; resize:vertical; line-height:1.5 }
+/* Honigtopf gegen Spam-Roboter -- fuer Menschen unsichtbar */
+.hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden }
+.gb-consent{
+  display:flex; align-items:flex-start; gap:.8em;
+  margin-bottom:clamp(1rem,2vw,1.4rem);
+  font-size:clamp(.82rem,1.15vw,.95rem); line-height:1.55; color:rgba(255,255,255,.78);
+}
+.gb-consent input{ margin-top:.35em; width:1.1em; height:1.1em; flex:none; accent-color:var(--accent) }
+.gb-consent a{ color:var(--accent); text-decoration:underline; text-underline-offset:.2em }
 .send-btn{
   display:inline-flex; align-items:center; gap:.7em;
   padding:.9em 2.2em .95em; background:var(--accent); color:#170B2C;
@@ -529,7 +712,7 @@ body{
   font-size:clamp(.75rem,1.1vw,.9rem); letter-spacing:.1em; text-transform:uppercase;
 }
 .form-msg.ok{ color:var(--green) }
-.form-msg.err{ color:#FF6B6B }
+.form-msg.err{ color:var(--red) }
 
 .gb-list{ display:grid; gap:clamp(.8rem,1.6vw,1.2rem) }
 .gb-entry{
@@ -553,6 +736,41 @@ body{
   font-size:clamp(.95rem,1.3vw,1.08rem); line-height:1.6; color:rgba(255,255,255,.88);
 }
 
+/* ---------- Rechtstexte ---------- */
+
+.prose{ max-width:62rem }
+.prose h3{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1rem,1.8vw,1.3rem); letter-spacing:.05em; line-height:1.2;
+  margin:clamp(1.8rem,3vw,2.6rem) 0 clamp(.7rem,1.3vw,1rem); color:var(--accent);
+}
+.prose h3:first-child{ margin-top:0 }
+.prose p{
+  font-size:clamp(.95rem,1.3vw,1.05rem); line-height:1.7;
+  color:rgba(255,255,255,.84); margin-bottom:.9em;
+}
+.prose ul{ list-style:none; margin-bottom:.9em }
+.prose li{
+  position:relative; padding-left:1.5em;
+  font-size:clamp(.95rem,1.3vw,1.05rem); line-height:1.65; color:rgba(255,255,255,.84);
+}
+.prose li + li{ margin-top:.5em }
+.prose li::before{
+  content:''; position:absolute; left:0; top:.66em; width:.45em; height:.45em;
+  background:var(--accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+.prose strong{ color:var(--white); font-weight:700 }
+.prose a{ color:var(--accent); text-decoration:underline; text-underline-offset:.2em }
+.revoke-btn{
+  display:inline-flex; align-items:center; gap:.6em; margin-top:.4em;
+  padding:.7em 1.4em .75em; background:transparent;
+  border:.12rem solid var(--accent); color:var(--accent); cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.7rem,1.05vw,.85rem); letter-spacing:.14em;
+  transition:background .2s ease, color .2s ease;
+}
+.revoke-btn:hover{ background:var(--accent); color:#170B2C }
+
 /* ============================================================
    FUSSZEILE + MUSIK
    ============================================================ */
@@ -563,6 +781,8 @@ body{
   font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
   font-size:clamp(.62rem,.95vw,.78rem); letter-spacing:.18em; color:var(--dim);
 }
+.home-foot a{ color:var(--dim); text-decoration:none; border-bottom:.1rem solid transparent; transition:color .2s ease, border-color .2s ease }
+.home-foot a:hover{ color:var(--accent); border-bottom-color:var(--accent) }
 .visits{ display:inline-flex; align-items:center; gap:.55em; opacity:0; transition:opacity .5s ease }
 .visits.show{ opacity:1 }
 .visits .num{
@@ -649,14 +869,15 @@ body{
 </div>
 
 <!-- ============ MENUE ============ -->
-<button class="menu-btn hidden" id="menu-btn" type="button" aria-label="Menü öffnen">
+<button class="menu-btn hidden" id="menu-btn" type="button"
+        aria-label="Menü öffnen" aria-expanded="false" aria-controls="menu">
   <svg class="bars" viewBox="0 0 24 24" aria-hidden="true">
     <line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/>
   </svg>
   Menü
 </button>
 
-<nav id="menu" aria-label="Hauptmenü">
+<nav id="menu" aria-label="Hauptmenü" aria-hidden="true" inert>
   <div class="menu-head">
     <span class="brand">You vs You</span>
     <button class="close-btn" id="menu-close" type="button" aria-label="Menü schließen">
@@ -666,29 +887,34 @@ body{
 
   <div class="menu-list">
     <a class="menu-item" href="#home">
-      <span class="ico"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5.5 9.5V20h13V9.5"/></svg></span>
+      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5.5 9.5V20h13V9.5"/></svg></span>
       <span class="txt"><span class="m-head">Start</span><span class="m-sub">Countdown zum nächsten Event</span></span>
     </a>
     <a class="menu-item" href="#events">
-      <span class="ico"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="16" rx="2"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
       <span class="txt"><span class="m-head">Events</span><span class="m-sub">Termine · Daten · Ergebnisse</span></span>
     </a>
     <a class="menu-item" href="#disziplin">
-      <span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><line x1="12" y1="7.6" x2="12" y2="8.2"/></svg></span>
+      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><line x1="12" y1="7.6" x2="12" y2="8.2"/></svg></span>
       <span class="txt"><span class="m-head">Disziplinen</span><span class="m-sub">Was hinter den Formaten steckt</span></span>
     </a>
     <a class="menu-item" href="#streams">
-      <span class="ico"><svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="14" height="14" rx="2"/><path d="M16.5 10l5-3v10l-5-3z"/></svg></span>
+      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="14" height="14" rx="2"/><path d="M16.5 10l5-3v10l-5-3z"/></svg></span>
       <span class="txt"><span class="m-head">Aufzeichnungen</span><span class="m-sub">Vergangene Streams ansehen</span></span>
     </a>
     <a class="menu-item" href="#training">
-      <span class="ico"><svg viewBox="0 0 24 24"><path d="M6.5 8v8M17.5 8v8M3.5 10v4M20.5 10v4"/><line x1="6.5" y1="12" x2="17.5" y2="12"/></svg></span>
+      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8v8M17.5 8v8M3.5 10v4M20.5 10v4"/><line x1="6.5" y1="12" x2="17.5" y2="12"/></svg></span>
       <span class="txt"><span class="m-head">Training</span><span class="m-sub">Einheiten und Vorbereitung</span></span>
     </a>
-    <a class="menu-item" href="#gaestebuch">
-      <span class="ico"><svg viewBox="0 0 24 24"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg></span>
+    <a class="menu-item" id="menu-gb" href="#gaestebuch">
+      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg></span>
       <span class="txt"><span class="m-head">Gästebuch</span><span class="m-sub">Eintrag hinterlassen</span></span>
     </a>
+  </div>
+
+  <div class="menu-legal hidden" id="menu-legal">
+    <a href="#impressum" id="menu-imp" class="hidden">Impressum</a>
+    <a href="#datenschutz">Datenschutz</a>
   </div>
 </nav>
 
@@ -700,38 +926,59 @@ body{
     <div class="place" id="home-place">&nbsp;</div>
   </div>
 
+  <div class="cd-wrap">
   <div class="cd-box" id="cd-box">
     <div class="label" id="cd-label">Start in</div>
     <div class="days" id="cd-days">-- Tage</div>
-    <div class="cd" id="cd">--:--:--</div>
+    <div class="cd" id="cd" role="timer" aria-live="off">--:--:--</div>
     <div class="cd-units" id="cd-units"><span>Std</span><span>Min</span><span>Sek</span></div>
+    <div class="cd-progress hidden" id="cd-progress">
+      <div class="bar"><span id="cd-bar"></span></div>
+      <div class="marks"><span id="cd-elapsed">0:00 h</span><span id="cd-left">—</span></div>
+    </div>
+  </div>
+
+    <div class="actions" id="actions">
+      <button class="act" type="button" id="act-cal">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="16" rx="2"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/><path d="M9.5 15l2 2 3.5-4"/></svg>
+        <span id="act-cal-txt">Zum Kalender</span>
+      </button>
+      <button class="act" type="button" id="act-share">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5.5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="18.5" r="2.6"/><line x1="8.3" y1="10.8" x2="15.7" y2="6.7"/><line x1="8.3" y1="13.2" x2="15.7" y2="17.3"/></svg>
+        <span id="act-share-txt">Teilen</span>
+      </button>
+    </div>
   </div>
 
   <div>
+
     <div class="nav-tiles">
       <a class="tile" id="tile-stream" href="#stream">
-        <span class="ico"><svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="14" height="14" rx="2"/><path d="M16.5 10l5-3v10l-5-3z"/></svg></span>
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="14" height="14" rx="2"/><path d="M16.5 10l5-3v10l-5-3z"/></svg></span>
         <span class="txt">
           <span class="t-head">Live-Stream</span>
           <span class="state" id="tile-state"><i></i><span id="tile-state-txt">Noch nicht live</span></span>
         </span>
-        <span class="arrow"><svg viewBox="0 0 24 24"><path d="M8 5l7 7-7 7"/></svg></span>
+        <span class="arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l7 7-7 7"/></svg></span>
       </a>
       <a class="tile" href="#events">
-        <span class="ico"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="16" rx="2"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
         <span class="txt">
           <span class="t-head">Alle Infos</span>
           <span class="t-sub">Events · Disziplinen · Training</span>
         </span>
-        <span class="arrow"><svg viewBox="0 0 24 24"><path d="M8 5l7 7-7 7"/></svg></span>
+        <span class="arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l7 7-7 7"/></svg></span>
       </a>
     </div>
 
     <div class="home-foot">
       <span>you-vs-you.online</span>
       <span class="visits" id="visits">
-        <svg viewBox="0 0 24 24"><path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.9"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.9"/></svg>
         <span class="num" id="visit-num">–</span><span>Besuche</span>
+      </span>
+      <span class="hidden" id="foot-legal">
+        <span class="hidden" id="foot-imp"><a href="#impressum">Impressum</a> · </span><a href="#datenschutz">Datenschutz</a>
       </span>
     </div>
   </div>
@@ -740,9 +987,9 @@ body{
 <!-- ============ LIVE-STREAM ============ -->
 <section class="view" id="view-stream">
   <div class="sub-head">
-    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
     <h2>Live-Stream</h2>
-    <button class="head-menu" type="button" data-menu>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
       <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
       Menü
     </button>
@@ -750,13 +997,26 @@ body{
   <div class="sub-body"><div class="inner">
     <div class="stream-frame" id="stream-frame">
       <div class="locked" id="locked">
-        <div class="lock-icon"><svg viewBox="0 0 24 24">
+        <div class="lock-icon"><svg viewBox="0 0 24 24" aria-hidden="true">
           <rect x="4.5" y="10.5" width="15" height="10.5" rx="1.6"/>
           <path d="M8 10.5V7.2a4 4 0 0 1 8 0v3.3"/><path d="M12 15v2.4"/>
         </svg></div>
         <div class="head" id="locked-head">Noch nicht live</div>
         <div class="sub" id="locked-sub">Der Stream schaltet sich automatisch frei, sobald es losgeht. Diese Seite kann einfach offen bleiben.</div>
         <div class="mini-cd" id="mini-cd">--:--:--</div>
+      </div>
+      <div class="consent hidden" id="stream-consent">
+        <div class="head">Stream laden?</div>
+        <div class="sub">
+          Der Player kommt von <strong>Twitch</strong>. Beim Laden werden deine IP-Adresse und
+          Geräteinformationen an Twitch Interactive Inc. (USA) übertragen und es können Cookies
+          gesetzt werden. Näheres im <a href="#datenschutz">Datenschutz</a>.
+        </div>
+        <button class="consent-btn" type="button" id="stream-consent-btn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg>
+          Stream jetzt laden
+        </button>
+        <div class="sub" style="font-size:.78rem">Einmal bestätigen — danach lädt der Stream automatisch.</div>
       </div>
     </div>
     <div class="stream-note" id="stream-note">Die Übertragung startet automatisch</div>
@@ -777,9 +1037,9 @@ body{
 <!-- ============ EVENTS ============ -->
 <section class="view" id="view-events">
   <div class="sub-head">
-    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
     <h2>Events</h2>
-    <button class="head-menu" type="button" data-menu>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
       <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
       Menü
     </button>
@@ -796,9 +1056,9 @@ body{
 <!-- ============ DISZIPLINEN ============ -->
 <section class="view" id="view-disziplin">
   <div class="sub-head">
-    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
     <h2>Disziplinen</h2>
-    <button class="head-menu" type="button" data-menu>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
       <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
       Menü
     </button>
@@ -811,9 +1071,9 @@ body{
 <!-- ============ AUFZEICHNUNGEN ============ -->
 <section class="view" id="view-streams">
   <div class="sub-head">
-    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
     <h2>Aufzeichnungen</h2>
-    <button class="head-menu" type="button" data-menu>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
       <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
       Menü
     </button>
@@ -826,9 +1086,9 @@ body{
 <!-- ============ TRAINING ============ -->
 <section class="view" id="view-training">
   <div class="sub-head">
-    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
     <h2>Training</h2>
-    <button class="head-menu" type="button" data-menu>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
       <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
       Menü
     </button>
@@ -841,33 +1101,76 @@ body{
 <!-- ============ GAESTEBUCH ============ -->
 <section class="view" id="view-gaestebuch">
   <div class="sub-head">
-    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
     <h2>Gästebuch</h2>
-    <button class="head-menu" type="button" data-menu>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
       <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
       Menü
     </button>
   </div>
   <div class="sub-body"><div class="inner">
 
-    <div class="gb-form">
+    <form class="gb-form" id="gb-form" novalidate>
       <div class="hint">Schreib gern etwas — eine Nachricht, ein Gruß, eine Frage.
         Jeder Eintrag wird vorher gelesen und erscheint erst nach Freigabe auf der Seite.</div>
+
       <div class="field">
         <label for="gb-name">Name</label>
-        <input type="text" id="gb-name" maxlength="40" autocomplete="name" placeholder="Wie sollen wir dich nennen?">
+        <input type="text" id="gb-name" name="name" maxlength="40" autocomplete="name"
+               placeholder="Wie sollen wir dich nennen?" required>
       </div>
       <div class="field">
         <label for="gb-text">Nachricht</label>
-        <textarea id="gb-text" maxlength="600" placeholder="Deine Nachricht …"></textarea>
+        <textarea id="gb-text" name="nachricht" maxlength="600" placeholder="Deine Nachricht …" required></textarea>
       </div>
-      <button class="send-btn" id="gb-send" type="button">Absenden</button>
-      <div class="form-msg" id="gb-msg"></div>
-    </div>
+
+      <!-- Honigtopf: Roboter fuellen ihn aus, Menschen sehen ihn nie -->
+      <div class="hp" aria-hidden="true">
+        <label for="gb-website">Bitte leer lassen</label>
+        <input type="text" id="gb-website" name="_gotcha" tabindex="-1" autocomplete="off">
+      </div>
+
+      <label class="gb-consent" for="gb-ok">
+        <input type="checkbox" id="gb-ok" required>
+        <span>Ich bin damit einverstanden, dass mein Name und meine Nachricht zur Prüfung
+          gespeichert und nach Freigabe auf dieser Seite veröffentlicht werden.
+          Die Einwilligung kann jederzeit widerrufen werden.
+          <a href="#datenschutz">Datenschutz</a></span>
+      </label>
+
+      <button class="send-btn" id="gb-send" type="submit">Absenden</button>
+      <div class="form-msg" id="gb-msg" role="status" aria-live="polite"></div>
+    </form>
 
     <div class="sec-title">Einträge</div>
     <div class="gb-list" id="gb-list"></div>
   </div></div>
+</section>
+
+<!-- ============ IMPRESSUM ============ -->
+<section class="view" id="view-impressum">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Impressum</h2>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner prose" id="impressum-body"></div></div>
+</section>
+
+<!-- ============ DATENSCHUTZ ============ -->
+<section class="view" id="view-datenschutz">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Datenschutz</h2>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner prose" id="datenschutz-body"></div></div>
 </section>
 
 <!-- Musik -->
@@ -885,11 +1188,29 @@ body{
 const CONFIG = {
 
   /* --- Grundeinstellungen --- */
-  twitchChannel: "SaPhiVs",   // nur der Name, ohne twitch.tv/
-  heroImage:     "start.jpg",       // Bild fuer Eintritt und Startansicht
+  twitchChannel: "SaPhiVs",         // NUR der Kanalname, ohne twitch.tv/  ·  leer = Hinweis statt Player
   music:         "musik.mp3",       // leer lassen = kein Ton
   musicVolume:   0.35,
   counterKey:    "you_vs_you_online_besuche_7f3a2",   // leer = Zaehler aus
+
+  /* ==============================================================
+     ANGABEN FUER DIE RECHTSSEITEN
+
+     PFLICHT sind nur "name" und "email" -- damit erscheint die
+     Datenschutzerklaerung. Ohne diese beiden bleibt sie versteckt.
+
+     "street" und "city" sind FREIWILLIG. Nur wenn du beide
+     ausfuellst, kommt zusaetzlich ein Impressum dazu.
+     Fuer eine rein private Seite ohne Werbung, Sponsoren oder
+     Verkauf ist ein Impressum nicht vorgeschrieben -- ein
+     unvollstaendiges waere schlechter als gar keines.
+     ============================================================== */
+  legal: {
+    name:   "Sascha",               // Pflicht
+    email:  "kontakt@you-vs-you.online",   // Pflicht
+    street: "",                     // optional · nur zusammen mit city
+    city:   ""                      // optional · nur zusammen mit street
+  },
 
   /* ==============================================================
      SENDEPLAN
@@ -902,12 +1223,15 @@ const CONFIG = {
     "Die <strong>finale Runde</strong> wird auf jeden Fall komplett übertragen",
     "In den Pausen läuft die Kamera weiter — daraus entsteht später ein <strong>Zusammenschnitt</strong>"
   ],
-  streamPlanFoot: "Die Pausen schonen Akku und Datenverbindung, damit der Stream bis zum Ziel durchhält. Aufzeichnungen und Zusammenschnitte findest du danach im Menü unter „Aufzeichnungen\".",
+  streamPlanFoot: "Die Pausen schonen Akku und Datenverbindung, damit der Stream bis zum Ziel durchhält. Aufzeichnungen und Zusammenschnitte findest du danach im Menü unter „Aufzeichnungen“.",
 
-  /* --- Adresse des Formulars fuers Gaestebuch ---
-     Bei formspree.io kostenlos anlegen, die Adresse hier eintragen.
-     Leer lassen = das Formular wird ausgeblendet.                  */
-  formEndpoint:  "",
+  /* ==============================================================
+     GAESTEBUCH-FORMULAR
+     Bei formspree.io kostenlos ein Formular anlegen und die
+     Adresse hier eintragen (Form "https://formspree.io/f/xxxxxxxx").
+     Leer lassen = Formular und Menuepunkt werden ausgeblendet.
+     ============================================================== */
+  formEndpoint:  "https://formspree.io/f/mrpzklje",
 
   /* ==============================================================
      EVENTS
@@ -917,6 +1241,8 @@ const CONFIG = {
      stream    = ab wann der Player freigeschaltet wird
      race      = offizieller Startschuss (nur zur Anzeige)
      hours     = wie lange der Stream freigeschaltet bleibt
+     raceHours = reine Wettkampfdauer -- steuert den Fortschrittsbalken
+                 und den Kalendereintrag (fehlt der Wert, gilt hours)
      ============================================================== */
   events: [
     {
@@ -925,6 +1251,7 @@ const CONFIG = {
       stream: "2026-09-12T10:00:00+02:00",
       race:   "2026-09-12T10:00:00+02:00",
       hours:  8,
+      raceHours: 6,
       badge:  "6-Stunden-Lauf",
       facts: [
         { k:"Format",   v:"6 Stunden" },
@@ -937,7 +1264,7 @@ const CONFIG = {
         "Rundkurs durch den Stadtwald Werl — fast ausschließlich Waldwege und Singletrails",
         "Verpflegungspunkt im Start-/Zielbereich, Wasser zusätzlich bei km 2,5 und km 5",
         "Jede vollständige Runde zählt, Zwischenmessungen bei km 2,5 und km 5",
-        "Medaille ab einer Runde, „Du bist Ultra\"-Anhänger ab 6 Runden"
+        "Medaille ab einer Runde, „Du bist Ultra“-Anhänger ab 6 Runden"
       ]
     }
     /* Weiteres Event? Einfach als naechsten Block anhaengen:
@@ -1015,7 +1342,11 @@ const CONFIG = {
 };
 
 const $ = id => document.getElementById(id);
-const esc = s => String(s).replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+/* Nur schreiben, wenn sich wirklich etwas geaendert hat --
+   spart im Sekundentakt unnoetige Layout-Arbeit. */
+const setText = (el, v) => { if (el && el.textContent !== v) el.textContent = v; };
+const esc = s => String(s == null ? '' : s)
+  .replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
 
 /* ================================================================
    2 · ZEIT UND EVENT-AUSWAHL
@@ -1029,8 +1360,12 @@ function splitTime(t){
   return { d:Math.floor(s/86400), h:Math.floor(s%86400/3600), m:Math.floor(s%3600/60), s:s%60 };
 }
 
-/* Events nach Datum sortieren -- die Reihenfolge in der Liste ist egal */
-const EVENTS = [...CONFIG.events].sort((a,b) => ms(a.stream) - ms(b.stream));
+/* Events nach Datum sortieren -- die Reihenfolge in der Liste ist egal.
+   Eintraege ohne gueltiges Datum werden aussortiert, damit ein Tippfehler
+   nicht die ganze Startansicht lahmlegt. */
+const EVENTS = [...CONFIG.events]
+  .filter(e => e && isFinite(ms(e.stream)))
+  .sort((a,b) => ms(a.stream) - ms(b.stream));
 
 function endOf(e){ return ms(e.stream) + (e.hours || 8) * 3600000; }
 
@@ -1066,7 +1401,28 @@ function timeText(iso){
 
 <script>
 /* ================================================================
-   3 · SEITEN AUFBAUEN
+   3 · EINWILLIGUNG FUER EINGEBETTETE VIDEOS
+   Twitch und YouTube laden erst nach ausdruecklicher Zustimmung.
+   Die Entscheidung wird lokal gespeichert -- danach laedt der
+   Stream automatisch, ohne dass nochmal geklickt werden muss.
+   ================================================================ */
+
+const EMBED_KEY = 'vvy_embed_ok';
+
+function embedAllowed(){
+  try{ return localStorage.getItem(EMBED_KEY) === '1'; }catch(_){ return false; }
+}
+function allowEmbeds(){
+  try{ localStorage.setItem(EMBED_KEY,'1'); }catch(_){}
+  applyEmbedConsent();
+}
+function revokeEmbeds(){
+  try{ localStorage.removeItem(EMBED_KEY); }catch(_){}
+  location.reload();
+}
+
+/* ================================================================
+   4 · SEITEN AUFBAUEN
    ================================================================ */
 
 let EVT = currentEvent();
@@ -1074,12 +1430,17 @@ let EVT = currentEvent();
 /* ---- Startansicht ---- */
 function paintHome(){
   if (!EVT){
-    $('home-title').textContent = 'Bald mehr';
+    $('home-title').textContent  = 'Bald mehr';
     $('home-kicker').textContent = 'Kein Termin eingetragen';
-    $('home-place').textContent = '';
+    $('home-place').textContent  = '';
+    $('entry-date').textContent  = 'Termin folgt';
     $('cd-box').classList.add('hidden');
+    $('actions').classList.add('hidden');
     return;
   }
+  $('cd-box').classList.remove('hidden');
+  /* Kalendereintrag und Teilen ergeben nur vor und waehrend des Laufs Sinn */
+  $('actions').classList.toggle('hidden', phaseOf(EVT) === 'after');
   $('home-title').textContent = EVT.title;
   $('home-place').textContent = EVT.place + ' · ' + dateText(EVT.stream);
   $('entry-date').textContent = dateText(EVT.stream) + ' · ' + EVT.place;
@@ -1136,25 +1497,45 @@ function paintDisciplines(){
 }
 
 /* ---- Aufzeichnungen ---- */
-function vodSrc(v){
+function twitchParents(){
   const host = location.hostname || 'localhost';
-  if (v.type === 'youtube') return 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.id);
-  const parents = [host];
-  if (host.startsWith('www.')) parents.push(host.slice(4)); else parents.push('www.' + host);
+  const list = [host];
+  if (host.startsWith('www.')) list.push(host.slice(4)); else list.push('www.' + host);
+  return [...new Set(list)];
+}
+
+function vodSrc(v){
+  if (v.type === 'youtube'){
+    return 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.id) + '?rel=0';
+  }
   return 'https://player.twitch.tv/?video=' + encodeURIComponent(v.id)
-       + parents.map(p => '&parent=' + encodeURIComponent(p)).join('') + '&autoplay=false';
+       + twitchParents().map(p => '&parent=' + encodeURIComponent(p)).join('')
+       + '&autoplay=false';
 }
 
 function paintVods(){
   const list = CONFIG.vods || [];
-  $('vod-list').innerHTML = list.length
-    ? list.map(v =>
-        '<div class="vod"><div class="frame"><iframe src="' + vodSrc(v)
-        + '" allowfullscreen title="' + esc(v.title) + '"></iframe></div>'
-        + '<div class="body"><h3>' + esc(v.title) + '</h3>'
-        + (v.date ? '<div class="meta">' + esc(v.date) + '</div>' : '')
-        + '</div></div>').join('')
-    : '<div class="empty">Nach dem ersten Stream erscheinen hier die Aufzeichnungen</div>';
+  if (!list.length){
+    $('vod-list').innerHTML = '<div class="empty">Nach dem ersten Stream erscheinen hier die Aufzeichnungen</div>';
+    return;
+  }
+  const ok = embedAllowed();
+  $('vod-list').innerHTML = list.map(v =>
+    '<div class="vod"><div class="frame">'
+    + (ok
+        ? '<iframe src="' + esc(vodSrc(v)) + '" allowfullscreen loading="lazy" title="' + esc(v.title) + '"></iframe>'
+        : '<div class="consent">'
+          + '<div class="head">Video laden?</div>'
+          + '<div class="sub">Beim Laden werden Daten an '
+          + (v.type === 'youtube' ? 'Google Ireland Ltd.' : 'Twitch Interactive Inc. (USA)')
+          + ' übertragen. Näheres im <a href="#datenschutz">Datenschutz</a>.</div>'
+          + '<button class="consent-btn" type="button" data-allow-embeds>'
+          + '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg>Video laden</button>'
+          + '</div>')
+    + '</div>'
+    + '<div class="body"><h3>' + esc(v.title) + '</h3>'
+    + (v.date ? '<div class="meta">' + esc(v.date) + '</div>' : '')
+    + '</div></div>').join('');
 }
 
 /* ---- Training ---- */
@@ -1186,15 +1567,27 @@ function paintGuestbook(){
         + '<div class="text">' + esc(g.text) + '</div></div>').join('')
     : '<div class="empty">Noch keine freigegebenen Einträge — sei der Erste</div>';
 
-  if (!CONFIG.formEndpoint) document.querySelector('.gb-form').classList.add('hidden');
+  /* Das Formular erscheint nur, wenn beides steht:
+     eine Empfangsadresse UND eine Datenschutzerklaerung.
+     Namen und Nachrichten einzusammeln, ohne dass Besucher
+     nachlesen koennen was damit passiert, waere nicht zulaessig. */
+  if (!CONFIG.formEndpoint || !legalReady()){
+    $('gb-form').classList.add('hidden');
+    $('menu-gb').classList.add('hidden');
+    if (CONFIG.formEndpoint && !legalReady()){
+      console.warn('[You vs You] Gästebuch wartet auf CONFIG.legal (name + email).');
+    }
+  }
 }
 
 /* ---- Formular abschicken ---- */
 (function(){
-  const btn = $('gb-send'), msg = $('gb-msg');
-  if (!btn) return;
+  const form = $('gb-form'), btn = $('gb-send'), msg = $('gb-msg');
+  if (!form) return;
 
-  btn.addEventListener('click', async () => {
+  form.addEventListener('submit', async ev => {
+    ev.preventDefault();
+
     const name = $('gb-name').value.trim();
     const text = $('gb-text').value.trim();
 
@@ -1203,6 +1596,12 @@ function paintGuestbook(){
       msg.textContent = 'Bitte Name und Nachricht ausfüllen';
       return;
     }
+    if (!$('gb-ok').checked){
+      msg.className = 'form-msg err';
+      msg.textContent = 'Bitte der Veröffentlichung zustimmen';
+      return;
+    }
+    if ($('gb-website').value){ return; }        // Roboter -- still verwerfen
     if (!CONFIG.formEndpoint){
       msg.className = 'form-msg err';
       msg.textContent = 'Formular ist noch nicht eingerichtet';
@@ -1217,43 +1616,247 @@ function paintGuestbook(){
       const r = await fetch(CONFIG.formEndpoint, {
         method:'POST',
         headers:{ 'Content-Type':'application/json', 'Accept':'application/json' },
-        body: JSON.stringify({ name, nachricht:text, seite:'Gästebuch you-vs-you.online' })
+        body: JSON.stringify({
+          name: name,
+          nachricht: text,
+          _subject: 'Neuer Gästebuch-Eintrag von ' + name,
+          seite: 'Gästebuch you-vs-you.online'
+        })
       });
-      if (!r.ok) throw new Error();
+      if (!r.ok) throw new Error('HTTP ' + r.status);
       msg.className = 'form-msg ok';
       msg.textContent = 'Danke! Dein Eintrag wird geprüft und dann veröffentlicht.';
-      $('gb-name').value = ''; $('gb-text').value = '';
+      form.reset();
     }catch(_){
       msg.className = 'form-msg err';
       msg.textContent = 'Das hat nicht geklappt — bitte später nochmal versuchen';
+    }finally{
       btn.disabled = false;
     }
   });
 })();
 
+/* ---- Impressum und Datenschutz ---- */
+function legalReady(){
+  const l = CONFIG.legal || {};
+  return Boolean(l.name && l.email);
+}
+/* Ein Impressum gibt es nur mit vollstaendiger Anschrift.
+   Eine halbe Anschrift waere schlechter als gar kein Impressum. */
+function hasAddress(){
+  const l = CONFIG.legal || {};
+  return Boolean(l.street && l.city);
+}
+
+function paintLegal(){
+  const l = CONFIG.legal || {};
+  if (!legalReady()){
+    console.warn('[You vs You] CONFIG.legal.name und .email fehlen — die Datenschutzseite ist ausgeblendet.');
+    return;
+  }
+
+  $('menu-legal').classList.remove('hidden');
+  $('foot-legal').classList.remove('hidden');
+  if (hasAddress()){
+    $('menu-imp').classList.remove('hidden');
+    $('foot-imp').classList.remove('hidden');
+  }
+
+  const anschrift = [esc(l.name), esc(l.street), esc(l.city)].filter(Boolean).join('<br>');
+  const mail = esc(l.email);
+
+  if (hasAddress()) $('impressum-body').innerHTML =
+      '<h3>Angaben gemäß § 5 DDG</h3>'
+    + '<p>' + anschrift + '</p>'
+    + '<h3>Kontakt</h3>'
+    + '<p>E-Mail: <a href="mailto:' + mail + '">' + mail + '</a></p>'
+    + '<h3>Verantwortlich für den Inhalt</h3>'
+    + '<p>' + esc(l.name) + ', Anschrift wie oben.</p>'
+    + '<h3>Haftung für Inhalte</h3>'
+    + '<p>Die Inhalte dieser Seite wurden mit Sorgfalt erstellt. Für die Richtigkeit, '
+    + 'Vollständigkeit und Aktualität wird jedoch keine Gewähr übernommen. Angaben zu '
+    + 'Veranstaltungen sind unverbindlich — maßgeblich sind ausschließlich die Informationen '
+    + 'der jeweiligen Veranstalter.</p>'
+    + '<h3>Haftung für Links</h3>'
+    + '<p>Diese Seite enthält Verweise auf externe Angebote, auf deren Inhalte kein Einfluss '
+    + 'besteht. Für die Inhalte der verlinkten Seiten ist stets deren Anbieter verantwortlich. '
+    + 'Bei Bekanntwerden von Rechtsverstößen werden entsprechende Links entfernt.</p>'
+    + '<h3>Urheberrecht</h3>'
+    + '<p>Die auf dieser Seite erstellten Inhalte unterliegen dem deutschen Urheberrecht. '
+    + 'Vervielfältigung und Verbreitung außerhalb der Grenzen des Urheberrechts bedürfen der '
+    + 'schriftlichen Zustimmung.</p>';
+
+  $('datenschutz-body').innerHTML =
+      '<h3>1 · Verantwortlicher</h3>'
+    + '<p>' + anschrift + '<br>E-Mail: <a href="mailto:' + mail + '">' + mail + '</a></p>'
+
+    + '<h3>2 · Hosting und Server-Protokolle</h3>'
+    + '<p>Diese Seite wird bei <strong>GitHub Pages</strong> (GitHub Inc., 88 Colin P Kelly Jr St, '
+    + 'San Francisco, CA 94107, USA) gehostet. Beim Aufruf werden technisch notwendige Daten wie '
+    + 'IP-Adresse, Datum und Uhrzeit, aufgerufene Datei und Browserkennung in Server-Protokollen '
+    + 'verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO — das berechtigte Interesse an '
+    + 'einem sicheren und störungsfreien Betrieb. Einzelheiten in der '
+    + '<a href="https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement" '
+    + 'target="_blank" rel="noopener noreferrer">Datenschutzerklärung von GitHub</a>.</p>'
+
+    + '<h3>3 · Schriftarten</h3>'
+    + '<p>Die verwendeten Schriften <em>Oswald</em> und <em>Rajdhani</em> werden ausschließlich '
+    + '<strong>von diesem Server</strong> geladen. Es besteht keine Verbindung zu Google Fonts, '
+    + 'es wird keine IP-Adresse an Google übermittelt.</p>'
+
+    + '<h3>4 · Besuchszähler</h3>'
+    + '<p>Auf der Startseite wird ein einfacher Zähler des Dienstes <em>countapi</em> '
+    + '(mileshilliard.com) eingebunden. Dabei wird ausschließlich ein anonymer Zählerstand '
+    + 'abgerufen und erhöht; technisch bedingt wird dem Dienst die IP-Adresse übermittelt. '
+    + 'Es werden keine Cookies gesetzt und keine Profile gebildet. Rechtsgrundlage ist '
+    + 'Art. 6 Abs. 1 lit. f DSGVO — das berechtigte Interesse an einer einfachen '
+    + 'Reichweitenmessung ohne Tracking.</p>'
+
+    + '<h3>5 · Eingebettete Videos (Twitch, YouTube)</h3>'
+    + '<p>Live-Stream und Aufzeichnungen werden über <strong>Twitch</strong> '
+    + '(Twitch Interactive Inc., 350 Bush Street, San Francisco, CA 94104, USA) '
+    + 'beziehungsweise <strong>YouTube</strong> im erweiterten Datenschutzmodus '
+    + '(Google Ireland Ltd., Gordon House, Barrow Street, Dublin 4, Irland) eingebunden.</p>'
+    + '<p>Diese Inhalte werden <strong>erst nach ausdrücklichem Klick</strong> geladen. Vorher '
+    + 'besteht keinerlei Verbindung zu diesen Anbietern. Mit dem Klick werden IP-Adresse, '
+    + 'Geräte- und Browserinformationen an den jeweiligen Anbieter übertragen; es können Cookies '
+    + 'gesetzt und Daten in die USA übermittelt werden. Rechtsgrundlage ist die Einwilligung nach '
+    + 'Art. 6 Abs. 1 lit. a DSGVO. Die Einwilligung wird lokal im Browser gespeichert und gilt '
+    + 'für weitere Besuche.</p>'
+    + '<p id="revoke-wrap"></p>'
+
+    + '<h3>6 · Gästebuch</h3>'
+    + '<p>Nachrichten aus dem Gästebuch-Formular werden über den Dienst <strong>Formspree</strong> '
+    + '(Formspree Inc., USA) per E-Mail zugestellt. Übermittelt werden der eingegebene Name, die '
+    + 'Nachricht sowie technische Verbindungsdaten. Rechtsgrundlage ist die Einwilligung nach '
+    + 'Art. 6 Abs. 1 lit. a DSGVO, die beim Absenden ausdrücklich erteilt wird. Eine '
+    + 'Veröffentlichung erfolgt erst nach manueller Prüfung. Die Einwilligung kann jederzeit '
+    + 'formlos per E-Mail widerrufen werden; der Eintrag wird dann entfernt.</p>'
+
+    + '<h3>7 · Musik</h3>'
+    + '<p>Die optionale Hintergrundmusik wird von diesem Server ausgeliefert. Es findet keine '
+    + 'Übermittlung an Dritte statt.</p>'
+
+    + '<h3>8 · Lokale Speicherung</h3>'
+    + '<p>Im Browser werden zwei technische Einträge abgelegt: die Entscheidung über das Laden '
+    + 'eingebetteter Videos sowie ein Merker, damit der Besuchszähler pro Sitzung nur einmal '
+    + 'erhöht wird. Beide enthalten keine personenbezogenen Daten und lassen sich über die '
+    + 'Browsereinstellungen jederzeit löschen.</p>'
+
+    + '<h3>9 · Deine Rechte</h3>'
+    + '<ul>'
+    + '<li>Auskunft über die verarbeiteten Daten (Art. 15 DSGVO)</li>'
+    + '<li>Berichtigung unrichtiger Daten (Art. 16 DSGVO)</li>'
+    + '<li>Löschung (Art. 17 DSGVO) und Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>'
+    + '<li>Datenübertragbarkeit (Art. 20 DSGVO)</li>'
+    + '<li>Widerspruch gegen Verarbeitungen auf Grundlage berechtigter Interessen (Art. 21 DSGVO)</li>'
+    + '<li>Widerruf erteilter Einwilligungen mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO)</li>'
+    + '<li>Beschwerde bei einer Datenschutz-Aufsichtsbehörde (Art. 77 DSGVO)</li>'
+    + '</ul>'
+    + '<p>Für alle Anliegen genügt eine formlose Nachricht an '
+    + '<a href="mailto:' + mail + '">' + mail + '</a>.</p>';
+
+  paintRevoke();
+}
+
+function paintRevoke(){
+  const wrap = $('revoke-wrap');
+  if (!wrap) return;
+  wrap.innerHTML = embedAllowed()
+    ? '<button class="revoke-btn" type="button" id="revoke-btn">Einwilligung widerrufen</button>'
+    : '<em style="color:rgba(255,255,255,.6)">Aktuell ist keine Einwilligung gespeichert.</em>';
+  const b = $('revoke-btn');
+  if (b) b.addEventListener('click', revokeEmbeds);
+}
+
+/* ---- Strukturierte Daten fuer Suchmaschinen ---- */
+function paintJsonLd(){
+  const upcoming = EVENTS.filter(e => Date.now() < endOf(e));
+  if (!upcoming.length) return;
+  const data = upcoming.map(e => ({
+    '@context':'https://schema.org',
+    '@type':'SportsEvent',
+    name: e.title,
+    startDate: e.stream,
+    endDate: new Date(endOf(e)).toISOString(),
+    eventStatus:'https://schema.org/EventScheduled',
+    eventAttendanceMode:'https://schema.org/OfflineEventAttendanceMode',
+    location:{ '@type':'Place', name:e.place, address:{ '@type':'PostalAddress', addressLocality:e.place, addressCountry:'DE' } },
+    image:['https://www.you-vs-you.online/og.jpg'],
+    url:'https://www.you-vs-you.online/#events',
+    description: (e.info && e.info[0] ? String(e.info[0]).replace(/<[^>]*>/g,'') : e.title)
+  }));
+  const s = document.createElement('script');
+  s.type = 'application/ld+json';
+  s.textContent = JSON.stringify(data.length === 1 ? data[0] : data);
+  document.head.appendChild(s);
+}
+
 /* ================================================================
-   4 · NAVIGATION
+   5 · NAVIGATION
    ================================================================ */
 
 const VIEWS = {
   home:'view-home', stream:'view-stream', events:'view-events',
   disziplin:'view-disziplin', streams:'view-streams',
-  training:'view-training', gaestebuch:'view-gaestebuch'
+  training:'view-training', gaestebuch:'view-gaestebuch',
+  impressum:'view-impressum', datenschutz:'view-datenschutz'
 };
 
-function closeMenu(){ $('menu').classList.remove('open'); }
+const menu = $('menu');
+const menuToggles = document.querySelectorAll('#menu-btn, [data-menu]');
+let lastFocus = null;
+
+function openMenu(trigger){
+  lastFocus = trigger || document.activeElement;
+  menu.classList.add('open');
+  menu.removeAttribute('inert');
+  menu.setAttribute('aria-hidden','false');
+  menuToggles.forEach(b => b.setAttribute('aria-expanded','true'));
+  $('menu-close').focus();
+}
+function closeMenu(returnFocus){
+  if (!menu.classList.contains('open')){
+    menu.setAttribute('inert','');
+    menu.setAttribute('aria-hidden','true');
+    return;
+  }
+  menu.classList.remove('open');
+  menu.setAttribute('inert','');
+  menu.setAttribute('aria-hidden','true');
+  menuToggles.forEach(b => b.setAttribute('aria-expanded','false'));
+  if (returnFocus && lastFocus && document.contains(lastFocus)) lastFocus.focus();
+  lastFocus = null;
+}
+
+/* Tabulator bleibt im offenen Menue */
+menu.addEventListener('keydown', e => {
+  if (e.key !== 'Tab') return;
+  const items = menu.querySelectorAll('a[href], button');
+  if (!items.length) return;
+  const first = items[0], last = items[items.length - 1];
+  if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+});
+
+menuToggles.forEach(b => b.addEventListener('click', () => openMenu(b)));
+$('menu-close').addEventListener('click', () => closeMenu(true));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(true); });
 
 function render(){
-  const key = (location.hash || '#home').replace('#','');
+  let key = (location.hash || '#home').replace('#','');
+  /* Rechtsseiten nur anzeigen, wenn sie auch befuellt sind */
+  if (key === 'datenschutz' && !legalReady()) key = 'home';
+  if (key === 'impressum'   && !hasAddress()) key = 'home';
   const name = VIEWS[key] ? key : 'home';
 
   Object.entries(VIEWS).forEach(([k,id]) => $(id).classList.toggle('on', k === name));
   /* Der schwebende Menue-Knopf gehoert nur auf die Startansicht --
      die Unterseiten haben ihn oben in der Kopfzeile. */
   $('menu-btn').classList.toggle('hidden', name !== 'home' || !entered);
-  closeMenu();
+  closeMenu(false);
   if (name !== 'home') window.scrollTo(0,0);
-  if (name === 'stream' && phaseOf(EVT) === 'live') insertPlayer();
+  if (name === 'stream') updateStreamPanel();
 }
 
 let entered = false;
@@ -1267,27 +1870,30 @@ document.querySelectorAll('[data-back]').forEach(b => {
   });
 });
 
-document.querySelectorAll('#menu-btn, [data-menu]').forEach(b =>
-  b.addEventListener('click', () => $('menu').classList.add('open')));
-$('menu-close').addEventListener('click', closeMenu);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+/* Einwilligungs-Knoepfe in den Aufzeichnungen (nachtraeglich erzeugt) */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-allow-embeds]');
+  if (t){ allowEmbeds(); }
+});
 
 /* ================================================================
-   5 · LIVE-PLAYER
+   6 · LIVE-PLAYER
    ================================================================ */
 
 let playerInserted = false;
+
+function channelReady(){
+  const c = String(CONFIG.twitchChannel || '').trim();
+  return c && !/^dein/i.test(c);   // Platzhalter zaehlt nicht als Kanal
+}
+
 function insertPlayer(){
-  if (playerInserted || !CONFIG.twitchChannel) return;
+  if (playerInserted || !channelReady()) return;
   playerInserted = true;
 
-  const host = location.hostname || 'localhost';
-  const parents = [host];
-  if (host.startsWith('www.')) parents.push(host.slice(4)); else parents.push('www.' + host);
-
   const frame = document.createElement('iframe');
-  frame.src = 'https://player.twitch.tv/?channel=' + encodeURIComponent(CONFIG.twitchChannel)
-            + parents.map(p => '&parent=' + encodeURIComponent(p)).join('')
+  frame.src = 'https://player.twitch.tv/?channel=' + encodeURIComponent(CONFIG.twitchChannel.trim())
+            + twitchParents().map(p => '&parent=' + encodeURIComponent(p)).join('')
             + '&autoplay=true&muted=false';
   frame.allowFullscreen = true;
   frame.setAttribute('allow','autoplay; fullscreen; picture-in-picture');
@@ -1295,12 +1901,64 @@ function insertPlayer(){
 
   $('stream-frame').appendChild(frame);
   $('locked').classList.add('hidden');
+  $('stream-consent').classList.add('hidden');
   $('stream-note').textContent = 'Übertragung läuft';
   if (window.fadeOutMusic) window.fadeOutMusic();
 }
 
+function removePlayer(){
+  playerInserted = false;
+  const old = $('stream-frame').querySelector('iframe');
+  if (old) old.remove();
+  $('locked').classList.remove('hidden');
+  $('stream-consent').classList.add('hidden');
+}
+
+/* Entscheidet, was in der Stream-Ansicht zu sehen ist:
+   Countdown -> Einwilligung -> Player. */
+function updateStreamPanel(){
+  const p = phaseOf(EVT);
+
+  if (p !== 'live'){
+    if (playerInserted) removePlayer();
+    $('stream-consent').classList.add('hidden');
+    $('locked').classList.remove('hidden');
+    return;
+  }
+
+  if (!channelReady()){
+    $('stream-consent').classList.add('hidden');
+    $('locked').classList.remove('hidden');
+    $('locked-head').textContent = 'Stream startet gleich';
+    $('locked-sub').textContent  = 'Der Kanal wird gerade freigeschaltet. Bitte die Seite in wenigen Minuten neu laden.';
+    $('mini-cd').textContent = '';
+    return;
+  }
+
+  if (embedAllowed()){
+    $('locked').classList.add('hidden');
+    $('stream-consent').classList.add('hidden');
+    insertPlayer();
+  } else {
+    $('locked').classList.add('hidden');
+    $('stream-consent').classList.remove('hidden');
+    $('stream-note').textContent = 'Einmal bestätigen, dann läuft der Stream';
+  }
+}
+
+function applyEmbedConsent(){
+  paintVods();
+  paintRevoke();
+  if ($('view-stream').classList.contains('on')) updateStreamPanel();
+}
+
+$('stream-consent-btn').addEventListener('click', allowEmbeds);
+
 /* ================================================================
-   6 · SEKUNDENTAKT
+   7 · SEKUNDENTAKT
+   Vier Aktualisierungen pro Sekunde reichen fuer eine
+   Sekundenanzeige voellig aus. Vorher liefen es 60 --
+   das kostet auf dem Handy ueber Stunden spuerbar Akku.
    ================================================================ */
 
 function tick(){
@@ -1310,56 +1968,60 @@ function tick(){
   /* Ist ein Event vorbei und ein neues rueckt nach, wird alles neu aufgebaut */
   if (EVT !== before){
     paintHome(); paintEvents();
-    playerInserted = false;
-    $('locked').classList.remove('hidden');
-    const old = $('stream-frame').querySelector('iframe');
-    if (old) old.remove();
+    removePlayer();
   }
 
   const p = phaseOf(EVT);
+  if (p === 'none') return;
+
+  paintProgress();
 
   if (p === 'before'){
     const t = splitTime(ms(EVT.stream) - Date.now());
     const hms = pad(t.h) + ':' + pad(t.m) + ':' + pad(t.s);
-    $('cd-label').textContent = 'Start in';
-    $('cd-days').textContent = t.d > 0 ? (t.d === 1 ? '1 Tag' : t.d + ' Tage') : '';
+    setText($('cd-label'), 'Start in');
+    setText($('cd-days'), t.d > 0 ? (t.d === 1 ? '1 Tag' : t.d + ' Tage') : '');
     $('cd-days').style.display = t.d > 0 ? '' : 'none';
-    $('cd').textContent = hms;
+    setText($('cd'), hms);
     $('cd-units').classList.remove('hidden');
     $('cd-box').classList.remove('live');
-    $('mini-cd').textContent = (t.d > 0 ? t.d + ' Tage · ' : '') + hms;
+    setText($('mini-cd'), (t.d > 0 ? t.d + ' Tage · ' : '') + hms);
     $('tile-stream').classList.remove('is-live');
-    $('tile-state-txt').textContent = 'Noch nicht live';
+    setText($('tile-state-txt'), 'Noch nicht live');
+    setText($('locked-head'), 'Noch nicht live');
+    setText($('locked-sub'), 'Der Stream schaltet sich automatisch frei, sobald es losgeht. Diese Seite kann einfach offen bleiben.');
   }
   else if (p === 'live'){
     $('cd-box').classList.add('live');
-    $('cd-label').textContent = 'Jetzt';
+    setText($('cd-label'), 'Jetzt');
     $('cd-days').style.display = 'none';
-    $('cd').textContent = 'LIVE';
+    setText($('cd'), 'LIVE');
     $('cd-units').classList.add('hidden');
     $('tile-stream').classList.add('is-live');
-    $('tile-state-txt').textContent = 'Läuft jetzt';
-    if ($('view-stream').classList.contains('on')) insertPlayer();
+    setText($('tile-state-txt'), 'Läuft jetzt');
+    if ($('view-stream').classList.contains('on')) updateStreamPanel();
   }
   else if (p === 'after'){
-    $('cd-label').textContent = 'Beendet';
+    setText($('cd-label'), 'Beendet');
     $('cd-days').style.display = 'none';
-    $('cd').textContent = 'Danke!';
+    setText($('cd'), 'Danke!');
     $('cd-units').classList.add('hidden');
     $('cd-box').classList.remove('live');
     $('tile-stream').classList.remove('is-live');
-    $('tile-state-txt').textContent = 'Beendet';
-    $('locked-head').textContent = 'Übertragung beendet';
-    $('locked-sub').textContent = 'Danke fürs Zuschauen. Aufzeichnungen findest du im Menü.';
-    $('mini-cd').textContent = '';
-    $('stream-note').textContent = '';
+    setText($('tile-state-txt'), 'Beendet');
+    setText($('locked-head'), 'Übertragung beendet');
+    setText($('locked-sub'), 'Danke fürs Zuschauen. Aufzeichnungen findest du im Menü.');
+    setText($('mini-cd'), '');
+    setText($('stream-note'), '');
   }
-
-  requestAnimationFrame(tick);
 }
 
+setInterval(tick, 250);
+/* Nach dem Aufwachen aus dem Hintergrund sofort nachziehen */
+document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
+
 /* ================================================================
-   7 · MUSIK
+   8 · MUSIK
    Browser lassen Ton nie von allein starten -- es braucht einen
    echten Klick. Der Eintreten-Knopf ist genau dieser Klick.
    ================================================================ */
@@ -1399,21 +2061,155 @@ const Music = (function(){
 })();
 
 /* ================================================================
-   8 · EINTRITT
+   9 · EINTRITT
    ================================================================ */
 
-$('enter-btn').addEventListener('click', () => {
-  Music.start();
-  Music.show();
+function enterSite(withMusic){
+  if (entered) return;
   entered = true;
+  if (withMusic){ Music.start(); }
+  Music.show();
   render();
   $('entry').classList.add('fade');
   setTimeout(() => $('entry').classList.add('hidden'), 750);
-});
+}
+
+$('enter-btn').addEventListener('click', () => enterSite(true));
 if (!CONFIG.music) $('entry-hint').textContent = '';
 
+/* Geteilte Links wie .../#events sollen direkt dort landen und nicht
+   hinter der Eintrittsseite haengen bleiben. Ohne Klick keine Musik --
+   das verlangen die Browser ohnehin. */
+(function(){
+  const key = (location.hash || '').replace('#','');
+  if (key && VIEWS[key] && key !== 'home'){
+    $('entry').classList.add('hidden');
+    entered = true;
+    Music.show();
+  }
+})();
+
 /* ================================================================
-   9 · BESUCHERZAEHLER
+   10 · KALENDER UND TEILEN
+   Beides laeuft komplett im Browser -- kein Server, kein Dienst.
+   ================================================================ */
+
+const SITE_URL = 'https://www.you-vs-you.online/';
+
+function raceHoursOf(e){ return Number(e.raceHours) > 0 ? Number(e.raceHours) : (e.hours || 6); }
+function raceStartOf(e){ return ms(e.race || e.stream); }
+function raceEndOf(e){ return raceStartOf(e) + raceHoursOf(e) * 3600000; }
+
+/* Zeitstempel im iCalendar-Format: 20260912T080000Z */
+function icsStamp(t){
+  return new Date(t).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+}
+/* Komma, Semikolon, Backslash und Zeilenumbruch muessen maskiert werden */
+function icsText(s){
+  return String(s == null ? '' : s)
+    .replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');
+}
+
+function buildIcs(e){
+  const start = raceStartOf(e);
+  const uid = 'vvy-' + icsStamp(start) + '@you-vs-you.online';
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//You vs You//Termin//DE',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    'UID:' + uid,
+    'DTSTAMP:' + icsStamp(Date.now()),
+    'DTSTART:' + icsStamp(start),
+    'DTEND:' + icsStamp(raceEndOf(e)),
+    'SUMMARY:' + icsText(e.title),
+    'LOCATION:' + icsText(e.place),
+    'DESCRIPTION:' + icsText('Live-Stream und alle Infos: ' + SITE_URL),
+    'URL:' + SITE_URL,
+    'BEGIN:VALARM',
+    'TRIGGER:-PT60M',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:' + icsText(e.title + ' startet in einer Stunde'),
+    'END:VALARM',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+}
+
+(function(){
+  const btn = $('act-cal'), txt = $('act-cal-txt');
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    if (!EVT) return;
+    const blob = new Blob([buildIcs(EVT)], { type:'text/calendar;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = EVT.title.replace(/[^\wÄÖÜäöüß -]/g,'').trim().replace(/\s+/g,'-') + '.ics';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+
+    btn.classList.add('done');
+    txt.textContent = 'Termin gespeichert';
+    setTimeout(() => { btn.classList.remove('done'); txt.textContent = 'Zum Kalender'; }, 3500);
+  });
+})();
+
+(function(){
+  const btn = $('act-share'), txt = $('act-share-txt');
+  if (!btn) return;
+
+  btn.addEventListener('click', async () => {
+    const title = 'You vs You';
+    const text  = EVT ? (EVT.title + ' — live am ' + dateText(EVT.stream)) : 'Ultralauf live';
+
+    /* Auf dem Handy oeffnet das die systemeigene Teilen-Auswahl. */
+    if (navigator.share){
+      try{ await navigator.share({ title, text, url: SITE_URL }); return; }
+      catch(_){ return; }                       // abgebrochen -- keine Meldung noetig
+    }
+    /* Am Rechner: Adresse in die Zwischenablage */
+    try{
+      await navigator.clipboard.writeText(SITE_URL);
+      btn.classList.add('done');
+      txt.textContent = 'Link kopiert';
+    }catch(_){
+      txt.textContent = SITE_URL.replace(/^https:\/\//,'');
+    }
+    setTimeout(() => { btn.classList.remove('done'); txt.textContent = 'Teilen'; }, 3500);
+  });
+})();
+
+/* ================================================================
+   11 · FORTSCHRITT WAEHREND DES LAUFS
+   ================================================================ */
+
+function paintProgress(){
+  const box = $('cd-progress');
+  if (!EVT){ box.classList.add('hidden'); return; }
+
+  const start = raceStartOf(EVT), end = raceEndOf(EVT), now = Date.now();
+  if (now < start || now >= end){ box.classList.add('hidden'); return; }
+
+  box.classList.remove('hidden');
+  const total = end - start;
+  const done  = Math.min(1, Math.max(0, (now - start) / total));
+  $('cd-bar').style.width = (done * 100).toFixed(2) + '%';
+
+  /* Restzeit auf die naechste volle Minute aufrunden --
+     sonst zeigt die Anzeige gefuehlt immer eine Minute zu wenig. */
+  const el = splitTime(now - start), lf = splitTime(end - now + 59999);
+  setText($('cd-elapsed'), el.h + ':' + pad(el.m) + ' h gelaufen');
+  setText($('cd-left'),    'noch ' + lf.h + ':' + pad(lf.m) + ' h');
+}
+
+/* ================================================================
+   12 · BESUCHERZAEHLER
    Faellt der Dienst aus, bleibt der Zaehler unsichtbar.
    Pro Browsersitzung wird nur einmal hochgezaehlt.
    ================================================================ */
@@ -1426,7 +2222,7 @@ if (!CONFIG.music) $('entry-hint').textContent = '';
   try{ already = sessionStorage.getItem('vvy_counted') === '1'; }catch(_){}
 
   fetch(base + (already ? 'get/' : 'hit/') + encodeURIComponent(CONFIG.counterKey))
-    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('counter')))
     .then(d => {
       const v = parseInt(d.value, 10);
       if (!isFinite(v)) return;
@@ -1437,12 +2233,23 @@ if (!CONFIG.music) $('entry-hint').textContent = '';
 })();
 
 /* ================================================================
-   10 · START
+   13 · ALS APP SPEICHERBAR (Service Worker)
+   Sorgt dafuer, dass die Seite auch bei wackliger Verbindung
+   laedt und sich aufs Startdisplay legen laesst.
+   Die Seite selbst wird immer zuerst aus dem Netz geholt --
+   eine Aenderung auf GitHub ist also sofort sichtbar.
    ================================================================ */
 
-document.querySelectorAll('.bg-photo').forEach(el => {
-  el.style.backgroundImage = 'url("' + CONFIG.heroImage + '")';
-});
+if ('serviceWorker' in navigator &&
+    (location.protocol === 'https:' || location.hostname === 'localhost')){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+/* ================================================================
+   14 · START
+   ================================================================ */
 
 paintHome();
 paintEvents();
@@ -1451,6 +2258,8 @@ paintVods();
 paintTrainings();
 paintGuestbook();
 paintPlan();
+paintLegal();
+paintJsonLd();
 render();
 tick();
 </script>

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /overlay.html
+
+Sitemap: https://www.you-vs-you.online/sitemap.xml

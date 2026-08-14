@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="You vs You">
+  <path d="M15 2 H62 V49 L49 62 H2 V15 Z" fill="#0D0620" stroke="#FFD400" stroke-width="4" stroke-linejoin="miter"/>
+  <g fill="#FFD400">
+    <path d="M11 17 h9.5 l6.5 11.5 L33.5 17 H43 L31.5 35.5 V47 h-9 V35.5 Z"/>
+    <rect x="48" y="17" width="5" height="30"/>
+  </g>
+</svg>

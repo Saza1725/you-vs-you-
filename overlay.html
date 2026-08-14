@@ -6,32 +6,30 @@
 <title>Race Overlay</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Archivo:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   FARBSCHEMA — eine Zeile tauschen, alles zieht nach
-   Aktuell: Graphit + Acid-Lime
-   Alternativen:  Amber #FFB020 · Eisblau #5CE1E6 · Magenta #FF4D8D
-                  Broadcast-Gold #FFD400
+   FARBSCHEMA — Broadcast-Vorlage: Violett + Gold
    ============================================================ */
-
 :root{
-  --accent:  #D7FF3E;
-  --white:   #FFFFFF;
-  --alert:   #FF4D4D;
-  --dim:     rgba(255,255,255,.50);
-  --panel:   linear-gradient(180deg, rgba(18,23,31,.94) 0%, rgba(9,12,17,.96) 100%);
-  --line:    rgba(255,255,255,.16);
+  --violet-hi: #3A1E63;
+  --violet-lo: #170B2C;
+  --accent:    #FFD400;
+  --white:     #FFFFFF;
+  --alert:     #FF4D4D;
+  --dim:       rgba(255,255,255,.48);
+
+  --panel:     linear-gradient(180deg, rgba(58,30,99,.94) 0%, rgba(23,11,44,.95) 100%);
+  --hairline:  rgba(255,212,0,.28);
+  --chamfer:   1.5rem;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
-html{
-  font-size: min(calc(100vw / 192), calc(100vh / 108));
-}
+html{ font-size: min(calc(100vw / 192), calc(100vh / 108)); }
 
 body{
   background: transparent;                 /* PFLICHT für Overlay-Nutzung */
-  font-family:'Archivo','Helvetica Neue',Arial,sans-serif;
+  font-family:'Rajdhani','Arial Narrow',Arial,sans-serif;
   color:var(--white); overflow:hidden; width:100vw; height:100vh;
   -webkit-font-smoothing: antialiased;
 }
@@ -40,129 +38,123 @@ body{
 /* ---------- Typo-Bausteine ---------- */
 
 .label{
-  font-family:'Barlow Condensed','Arial Narrow',sans-serif;
-  font-weight:700; text-transform:uppercase;
-  letter-spacing:.14em; color:var(--accent); line-height:1;
+  font-family:'Oswald','Arial Narrow',sans-serif;
+  font-weight:600; text-transform:uppercase;
+  letter-spacing:.07em; color:var(--accent); line-height:1;
 }
 .value{
   font-weight:700; font-variant-numeric:tabular-nums;
-  letter-spacing:-.015em; line-height:1; white-space:nowrap;
+  letter-spacing:.005em; line-height:1; white-space:nowrap;
 }
-.unit{
-  font-family:'Barlow Condensed',sans-serif; font-weight:600;
-  color:var(--dim); letter-spacing:.12em; text-transform:uppercase;
-}
-.stale{ opacity:.4 }
+.sub{ color:var(--dim); font-weight:600; font-variant-numeric:tabular-nums }
 body:not(.imperial) .imp{ display:none }
 
-/* ---------- 1 · Restzeit oben links ---------- */
+.panel{ background:var(--panel); border:.1rem solid var(--hairline) }
+.chamfer-tl{ clip-path: polygon(var(--chamfer) 0, 100% 0, 100% 100%, 0 100%, 0 var(--chamfer)) }
 
-.hero{
-  position:absolute; top:2rem; left:2rem;
-  padding:1.1rem 2.6rem 1.5rem 2.2rem;
-  background:var(--panel);
-  border-left:.6rem solid var(--accent);
+/* ---------- 1 · Stapel oben links: Zeit + Temperatur ---------- */
+
+.stack{ position:absolute; top:1.8rem; left:1.8rem; width:24rem }
+
+.timer{ padding:.75rem 1.6rem 1.05rem; border-color:var(--accent); border-width:.2rem }
+.timer .label{ font-size:1.2rem; letter-spacing:.16em; margin-bottom:.4rem }
+.timer .value{ font-size:4.3rem; letter-spacing:.01em }
+.timer.final{ border-color:var(--alert) }
+.timer.final .value{ color:var(--alert) }
+
+.temp{
+  margin-top:.65rem; padding:.75rem 1.6rem .95rem;
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
 }
-.hero .label{ font-size:1.6rem; margin-bottom:.7rem }
-.hero .value{ font-size:7.2rem }
-.hero.final{ border-left-color:var(--alert) }
-.hero.final .value{ color:var(--alert) }
-
-/* ---------- 2 · Uhrzeit + Wetter oben rechts ---------- */
-
-.env{
-  position:absolute; top:2rem; right:2rem;
-  display:flex; align-items:stretch;
-  background:var(--panel);
-  border-right:.6rem solid var(--accent);
-}
-.env .cell{ padding:1.1rem 2rem 1.3rem; border-left:.1rem solid var(--line) }
-.env .cell:first-child{ border-left:0 }
-.env .label{ font-size:1.35rem; margin-bottom:.7rem }
-.env .value{ font-size:2.9rem }
-.env .wx{ display:flex; align-items:center; gap:1.4rem }
-.env .icon{ width:4.4rem; height:4.4rem; flex:none }
-.env .icon svg{ width:100%; height:100% ; display:block }
-.env .icon path, .env .icon circle, .env .icon line{
-  stroke:var(--accent); stroke-width:1.9; fill:none;
+.temp .label{ font-size:1.2rem; letter-spacing:.16em; margin-bottom:.4rem }
+.temp .value{ font-size:1.85rem }
+.temp .value + .value{ margin-top:.2rem }
+.temp .icon{ width:4rem; height:4rem; flex:none }
+.temp .icon svg{ width:100%; height:100%; display:block }
+.temp .icon path, .temp .icon circle, .temp .icon line{
+  stroke:var(--accent); stroke-width:1.8; fill:none;
   stroke-linecap:round; stroke-linejoin:round;
 }
 
-/* ---------- 3 · Datenleiste unten ---------- */
+.accent-bar{ height:.5rem; width:60%; background:var(--accent); margin-top:.65rem }
 
-.bar{
-  position:absolute; left:0; right:0; bottom:0;
-  background:var(--panel);
-  border-top:.2rem solid rgba(255,255,255,.14);
-}
+/* ---------- 2 · Strecken-Daten oben rechts ---------- */
 
-.progress{ position:relative; height:.7rem; background:rgba(255,255,255,.10) }
-.progress .fill{
-  position:absolute; left:0; top:0; bottom:0; width:0%;
-  background:var(--accent); transition:width .6s linear;
+.course{
+  position:absolute; top:0; right:0; bottom:0; width:28rem;
+  padding:4.3rem 2.2rem 15rem 2.6rem;
+  background: linear-gradient(90deg, rgba(23,11,44,0) 0%, rgba(23,11,44,.88) 24%, rgba(58,30,99,.94) 100%);
 }
+.course h1{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:3.05rem; letter-spacing:.02em; line-height:1; margin-bottom:2.3rem;
+}
+.course .block{ margin-bottom:2.15rem }
+.course .label{ font-size:1.55rem; margin-bottom:.5rem }
+.course .value{ font-size:2.15rem }
+.course .value + .value{ margin-top:.15rem }
 
-.grid{
-  display:grid;
-  grid-template-columns: 27rem repeat(6, 1fr);
-  align-items:stretch;
-}
+/* ---------- 3 · Leistungs-Leiste unten ---------- */
 
-.ident{
-  padding:2rem 2.4rem 2.2rem;
-  background:rgba(215,255,62,.07);
-  border-right:.2rem solid var(--accent);
+.perf{
+  position:absolute; left:0; right:0; bottom:0; height:12.4rem;
+  padding:1.25rem 2.4rem 0 2.2rem;
+  background: linear-gradient(180deg, rgba(58,30,99,.92) 0%, rgba(23,11,44,.96) 100%);
+  border-top:.2rem solid var(--accent);
 }
-.ident .top{
-  font-family:'Barlow Condensed',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:3.4rem; line-height:1; letter-spacing:.02em; color:var(--accent);
+.perf h2{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:2.45rem; letter-spacing:.02em; line-height:1; margin-bottom:1rem;
 }
-.ident .bot{
-  font-family:'Barlow Condensed',sans-serif; font-weight:600; text-transform:uppercase;
-  font-size:1.4rem; letter-spacing:.34em; color:var(--white); margin-top:.9rem;
-}
+.metrics{ display:flex; align-items:flex-start; position:relative; z-index:2 }
+.metric{ padding:0 2.3rem; border-left:.1rem solid rgba(255,255,255,.18) }
+.metric:first-child{ padding-left:0; border-left:0 }
+.metric .label{ font-size:1.55rem; margin-bottom:.6rem }
+.metric .row{ display:flex; align-items:baseline; gap:.65rem }
+.metric .value{ font-size:2.15rem }
+.metric .unit{ font-family:'Oswald',sans-serif; font-size:1.4rem; color:var(--dim); font-weight:600; letter-spacing:.09em }
+.metric .row + .row{ margin-top:.2rem }
 
-.cellx{
-  padding:2rem 2rem 2.2rem;
-  border-left:.1rem solid var(--line);
-  display:flex; flex-direction:column; justify-content:space-between;
-}
-.cellx:first-of-type{ border-left:0 }
-.cellx .label{ font-size:1.55rem; margin-bottom:1.1rem }
-.cellx .main{ display:flex; align-items:baseline; gap:.8rem }
-.cellx .value{ font-size:3.6rem }
-.cellx .main .unit{ font-size:1.6rem }
-.cellx .second{ display:flex; align-items:baseline; gap:.6rem; margin-top:.6rem }
-.cellx .second .value{ font-size:1.7rem; color:var(--dim); font-weight:600 }
-.cellx .second .unit{ font-size:1.25rem }
+/* ---------- 4 · Signet unten rechts ---------- */
 
-/* ---------- Hochformat / schmale Fenster: Leiste umbrechen ---------- */
+.crest{
+  position:absolute; right:0; bottom:0; width:42rem; height:12.4rem;
+  pointer-events:none; z-index:1;
+}
+.crest svg{ width:100%; height:100%; display:block }
+.crest .wave{ fill:none; stroke:var(--accent); stroke-width:1.4; opacity:.32 }
+
+.badge{
+  position:absolute; right:2.6rem; bottom:1.6rem;
+  width:11.5rem; padding:1rem .8rem 1.1rem; text-align:center;
+  font-family:'Oswald',sans-serif; text-transform:uppercase;
+  border:.2rem solid var(--accent); background:var(--panel);
+  clip-path: polygon(1.2rem 0, 100% 0, 100% calc(100% - 1.2rem), calc(100% - 1.2rem) 100%, 0 100%, 0 1.2rem);
+  z-index:2;
+}
+.badge .top{ font-size:1.75rem; font-weight:700; color:var(--accent); letter-spacing:.04em; line-height:1 }
+.badge .rule{ height:.15rem; background:var(--accent); margin:.55rem auto; width:58% }
+.badge .bot{ font-size:1rem; font-weight:600; color:var(--white); letter-spacing:.28em }
+
+/* ---------- Hochformat / schmale Fenster ---------- */
 
 @media (max-aspect-ratio: 4/5){
   html{ font-size: calc(100vw / 62); }
-  .hero{ top:1.4rem; left:1.4rem; padding:.9rem 1.8rem 1.2rem 1.6rem }
-  .hero .value{ font-size:6rem }
-  .env{ top:1.4rem; right:1.4rem }
-  .env .value{ font-size:2.4rem }
-  .env .icon{ width:3.4rem; height:3.4rem }
-  .grid{ grid-template-columns: repeat(3, 1fr) }
-  .ident{
-    grid-column:1 / -1; border-right:0;
-    border-bottom:.2rem solid var(--accent);
-    display:flex; align-items:baseline; gap:1.6rem; padding:1.2rem 1.6rem;
-  }
-  .ident .bot{ margin-top:0 }
-  .cellx{ padding:1.4rem 1.4rem 1.6rem }
-  .cellx:nth-child(3n+2){ border-left:0 }
-  .cellx .label{ font-size:1.5rem; margin-bottom:.8rem }
-  .cellx .value{ font-size:3.1rem }
+  .stack{ top:1.4rem; left:1.4rem; width:20rem }
+  .timer .value{ font-size:3.6rem }
+  .course{ display:none }               /* Strecken-Spalte weicht am Handy der Leiste */
+  .perf{ height:auto; padding-bottom:1.4rem }
+  .metrics{ flex-wrap:wrap }
+  .metric{ width:50%; padding:1rem 1.2rem; border-left:0; border-top:.1rem solid rgba(255,255,255,.14) }
+  .badge{ position:static; margin:1rem auto 0 }
+  .crest{ display:none }
 }
 
-/* ---------- 4 · Intro: Standbild mit Countdown ---------- */
+/* ---------- 5 · Intro: Standbild mit Countdown ---------- */
 
 .intro{
   position:fixed; inset:0; z-index:50;
-  background:#05070A center/cover no-repeat;
+  background:#0D0620 center/cover no-repeat;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   transition:opacity .9s ease;
 }
@@ -170,35 +162,35 @@ body:not(.imperial) .imp{ display:none }
 .intro.gone{ display:none }
 .intro::after{
   content:''; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(5,7,10,.55) 0%, rgba(5,7,10,.80) 100%);
+  background:linear-gradient(180deg, rgba(13,6,32,.55) 0%, rgba(13,6,32,.82) 100%);
 }
 .intro > *{ position:relative; z-index:1 }
 
 .intro .kicker{
-  font-family:'Barlow Condensed',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:2.2rem; letter-spacing:.5em; color:var(--accent); margin-bottom:1.6rem;
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:2.1rem; letter-spacing:.5em; color:var(--accent); margin-bottom:1.5rem;
 }
 .intro .title{
-  font-family:'Barlow Condensed',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:7rem; line-height:.95; letter-spacing:.02em; text-align:center;
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:6.6rem; line-height:.95; letter-spacing:.02em; text-align:center;
 }
 .intro .cd-label{
-  font-family:'Barlow Condensed',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:1.8rem; letter-spacing:.34em; color:var(--accent);
-  margin:4.4rem 0 1.2rem;
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:1.7rem; letter-spacing:.32em; color:var(--accent);
+  margin:4.2rem 0 1.1rem;
 }
 .intro .cd{
   font-weight:700; font-variant-numeric:tabular-nums;
-  font-size:11rem; line-height:1; letter-spacing:-.02em;
+  font-size:10.5rem; line-height:1; letter-spacing:.01em;
 }
-.intro .rule{ height:.4rem; width:26rem; background:var(--accent); margin-top:3rem }
+.intro .rule{ height:.4rem; width:25rem; background:var(--accent); margin-top:2.8rem }
 
 .sound-hint{
   position:absolute; left:50%; bottom:8%; transform:translateX(-50%);
-  font-family:'Barlow Condensed',sans-serif; font-weight:600; text-transform:uppercase;
-  font-size:1.5rem; letter-spacing:.12em; color:var(--white);
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:1.45rem; letter-spacing:.1em; color:var(--white);
   background:rgba(0,0,0,.55); border:.1rem solid var(--accent);
-  padding:.8rem 2rem; border-radius:3rem; opacity:0; pointer-events:none;
+  padding:.75rem 1.9rem; border-radius:3rem; opacity:0; pointer-events:none;
   transition:opacity .4s ease; z-index:70; white-space:nowrap;
 }
 .sound-hint.show{ opacity:1 }
@@ -209,89 +201,100 @@ body:not(.imperial) .imp{ display:none }
 <body>
 <div class="stage">
 
-  <!-- 1 · Restzeit -->
-  <div class="hero" id="hero">
-    <div class="label" id="hero-label">Restzeit</div>
-    <div class="value" id="hero-timer">00:00:00</div>
+  <!-- 1 · Zeit + Temperatur -->
+  <div class="stack">
+    <div class="timer panel chamfer-tl" id="hero">
+      <div class="label" id="hero-label">Restzeit</div>
+      <div class="value" id="hero-timer">00:00:00</div>
+    </div>
+
+    <div class="temp panel" id="blk-temp">
+      <div>
+        <div class="label">Temperatur</div>
+        <div class="value" id="temp-c">--.- &deg;C</div>
+        <div class="value sub imp" id="temp-f">--.- &deg;F</div>
+      </div>
+      <div class="icon" id="wx-icon"></div>
+    </div>
+
+    <div class="accent-bar"></div>
   </div>
 
-  <!-- 2 · Uhrzeit + Wetter -->
-  <div class="env">
-    <div class="cell">
+  <!-- 2 · Strecken-Daten -->
+  <aside class="course">
+    <h1>Strecken-<br>Daten</h1>
+
+    <div class="block">
       <div class="label">Uhrzeit</div>
       <div class="value" id="clock">--:--</div>
     </div>
-    <div class="cell" id="blk-weather">
+
+    <div class="block" id="blk-weather">
       <div class="label">Wetter</div>
-      <div class="wx">
-        <div class="value" id="temp-c">--.-&deg;</div>
-        <div class="icon" id="wx-icon"></div>
-      </div>
+      <div class="value" id="temp-c2">--.- &deg;C</div>
+      <div class="value sub imp" id="temp-f2">--.- &deg;F</div>
     </div>
-  </div>
 
-  <!-- 3 · Datenleiste -->
-  <section class="bar">
-    <div class="progress"><div class="fill" id="progress-fill"></div></div>
+    <div class="block">
+      <div class="label">Gelaufen</div>
+      <div class="value" id="dist-km">0.0 KM</div>
+      <div class="value sub imp" id="dist-mi">0.0 MI</div>
+    </div>
 
-    <div class="grid">
+    <div class="block" id="blk-remaining">
+      <div class="label">Rest-Distanz</div>
+      <div class="value" id="rem-km">0.0 KM</div>
+      <div class="value sub imp" id="rem-mi">0.0 MI</div>
+    </div>
+  </aside>
 
-      <div class="ident">
-        <div class="top" id="badge-title">Ultra</div>
-        <div class="bot" id="badge-sub">Live</div>
-      </div>
+  <!-- 3 · Leistungs-Daten -->
+  <section class="perf">
+    <h2>Leistungs-Daten</h2>
 
-      <div class="cellx">
-        <div class="label">Gelaufen</div>
-        <div>
-          <div class="main"><span class="value" id="dist-km">0.0</span><span class="unit">km</span></div>
-          <div class="second imp"><span class="value" id="dist-mi">0.0</span><span class="unit">mi</span></div>
-        </div>
-      </div>
+    <div class="crest">
+      <svg viewBox="0 0 420 124" preserveAspectRatio="none" aria-hidden="true">
+        <path class="wave" d="M0,116 C80,116 108,78 186,78 C264,78 292,116 420,116"/>
+        <path class="wave" d="M0,104 C80,104 116,60 200,60 C284,60 304,104 420,104" opacity=".26"/>
+        <path class="wave" d="M0,92 C86,92 124,42 214,42 C304,42 320,92 420,92" opacity=".17"/>
+        <path class="wave" d="M0,80 C92,80 132,24 228,24 C324,24 336,80 420,80" opacity=".1"/>
+      </svg>
+    </div>
+    <div class="badge">
+      <div class="top" id="badge-title">Ultra</div>
+      <div class="rule"></div>
+      <div class="bot" id="badge-sub">Live</div>
+    </div>
 
-      <div class="cellx" id="blk-remaining">
-        <div class="label">Rest-Distanz</div>
-        <div>
-          <div class="main"><span class="value" id="rem-km">0.0</span><span class="unit">km</span></div>
-          <div class="second imp"><span class="value" id="rem-mi">0.0</span><span class="unit">mi</span></div>
-        </div>
-      </div>
+    <div class="metrics">
 
-      <div class="cellx">
+      <div class="metric">
         <div class="label">Akt. Pace</div>
-        <div>
-          <div class="main"><span class="value" id="pace-km">--:--</span><span class="unit">/ km</span></div>
-          <div class="second imp"><span class="value" id="pace-mi">--:--</span><span class="unit">/ mi</span></div>
-        </div>
+        <div class="row"><span class="value" id="pace-km">--:--</span><span class="unit">/ KM</span></div>
+        <div class="row imp"><span class="value sub" id="pace-mi">--:--</span><span class="unit">/ MI</span></div>
       </div>
 
-      <div class="cellx">
+      <div class="metric">
         <div class="label">&Oslash; Pace</div>
-        <div>
-          <div class="main"><span class="value" id="apace-km">--:--</span><span class="unit">/ km</span></div>
-          <div class="second imp"><span class="value" id="apace-mi">--:--</span><span class="unit">/ mi</span></div>
-        </div>
+        <div class="row"><span class="value" id="apace-km">--:--</span><span class="unit">/ KM</span></div>
+        <div class="row imp"><span class="value sub" id="apace-mi">--:--</span><span class="unit">/ MI</span></div>
       </div>
 
-      <div class="cellx">
+      <div class="metric">
         <div class="label">H&ouml;henmeter</div>
-        <div>
-          <div class="main"><span class="value" id="ele-m">0</span><span class="unit">m</span></div>
-          <div class="second imp"><span class="value" id="ele-ft">0</span><span class="unit">ft</span></div>
-        </div>
+        <div class="row"><span class="value" id="ele-m">0</span><span class="unit">M</span></div>
+        <div class="row imp"><span class="value sub" id="ele-ft">0</span><span class="unit">FT</span></div>
       </div>
 
-      <div class="cellx">
+      <div class="metric">
         <div class="label">Laufzeit</div>
-        <div>
-          <div class="main"><span class="value" id="perf-timer">00:00</span></div>
-        </div>
+        <div class="row"><span class="value" id="perf-timer">00:00</span></div>
       </div>
 
     </div>
   </section>
 
-  <!-- 4 · Intro -->
+  <!-- 5 · Intro -->
   <div class="intro" id="intro">
     <div class="kicker" id="intro-kicker">Live</div>
     <div class="title" id="intro-title">Ultra</div>
@@ -308,14 +311,8 @@ body:not(.imperial) .imp{ display:none }
 <script>
 /* ================================================================
    KONFIGURATION — auch per URL-Parameter setzbar.
-   Zwei getrennte Zeitpunkte:
-
-   start      = wann das Foto/der Countdown verschwindet und die
-                Kamera sichtbar wird (z. B. Vorlauf, Aufwaermen)
-   racestart  = wann die 6-Stunden-Uhr und alle Streckendaten
-                (km, Pace, Hoehenmeter) tatsaechlich zu zaehlen
-                beginnen (der offizielle Startschuss)
-
+   start      = wann Foto/Countdown endet und die Kamera erscheint
+   racestart  = wann die Renn-Uhr und Streckendaten zu zaehlen beginnen
    Beispiel:
    overlay.html?target=52.5&duration=6&title=6H%20ULTRA
      &start=2026-09-12T10:00:00%2B02:00
@@ -323,20 +320,19 @@ body:not(.imperial) .imp{ display:none }
      &image=start.jpg&audio=musik.mp3
    ================================================================ */
 const CONFIG = {
-  targetKm:    0,        // Zieldistanz in km. 0 = Rest-Distanz und Fortschritt aus
-  durationH:   0,        // Dauer in Stunden. >0 = grosse Uhr laeuft rueckwaerts
-  startAt:     null,     // wann Foto/Countdown endet und die Kamera erscheint
-  raceStartAt: null,     // wann die 6h-Uhr und Streckendaten zu zaehlen beginnen
-  title:       "Ultra",  // Text links in der Leiste / Intro-Titel
+  targetKm:    0,
+  durationH:   0,
+  startAt:     null,
+  raceStartAt: null,
+  title:       "Ultra",
   subtitle:    "Live",
-  weather:     true,     // Wetter ueber Open-Meteo (kein API-Key noetig)
-  imperial:    false,    // true = zusaetzlich Meilen und Fuss
-  demo:        false,    // true = simulierte Werte zum Testen
+  weather:     true,
+  imperial:    false,
+  demo:        false,
 
-  /* --- Intro vor dem Lauf --- */
-  introImage:  "",       // Dateiname des Standbilds, z. B. "start.jpg"
-  introAudio:  "",       // Dateiname der Musik waehrend des Countdowns, z. B. "musik.mp3"
-  introKicker: "Live"    // kleine Zeile ueber dem Titel
+  introImage:  "",
+  introAudio:  "",
+  introKicker: "Live"
 };
 
 (function(){
@@ -355,20 +351,71 @@ const CONFIG = {
 const $ = id => document.getElementById(id);
 
 const revealMs = CONFIG.startAt ? new Date(CONFIG.startAt).getTime() : 0;
-// Ohne eigenen racestart-Parameter faellt der Rennstart mit der Kamera-Enthuellung zusammen
 const raceStartMs = CONFIG.raceStartAt ? new Date(CONFIG.raceStartAt).getTime() : (revealMs || Date.now());
 
-const state = {
-  meters: 0, gain: 0, last: null, baseAlt: null, trail: [], fix: 0
-};
+const state = { meters:0, gain:0, last:null, baseAlt:null, trail:[], fix:0 };
+
+/* ================================================================
+   ZWISCHENSPEICHER
+   Die Uhr rechnet gegen einen festen Zeitpunkt und ist nach einem
+   Neuladen immer korrekt. Die Kilometer werden dagegen Meter fuer
+   Meter aufaddiert -- die waeren nach einem Neustart weg.
+   Deshalb werden sie laufend im Handy gesichert und beim Laden
+   wieder aufgenommen. Das greift auch, wenn die App abstuerzt,
+   der Bildschirm sperrt oder die Szene gewechselt wird.
+
+   Der Speicher gehoert zu genau einem Rennstart. Ein anderer
+   Termin bekommt automatisch einen frischen Zaehler.
+   ================================================================ */
+const SAVE_KEY = 'vvy_lauf_' + raceStartMs;
+
+function loadState(){
+  if (CONFIG.demo) return;                       // im Testmodus nie laden
+  try{
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+
+    // Sicherung: nach dem Ende des Wettkampfs nicht mehr wiederherstellen
+    const maxAlter = (CONFIG.durationH > 0 ? CONFIG.durationH : 12) * 3600000 + 7200000;
+    if (!d.t || Date.now() - d.t > maxAlter) { localStorage.removeItem(SAVE_KEY); return; }
+
+    if (isFinite(d.meters)) state.meters = d.meters;
+    if (isFinite(d.gain))   state.gain   = d.gain;
+    // last/baseAlt bewusst nicht laden -- der erste neue Fix setzt sie sauber neu
+  }catch(_){}
+}
+
+let saveAt = 0;
+function saveState(){
+  if (CONFIG.demo) return;
+  const now = Date.now();
+  if (now - saveAt < 5000) return;               // hoechstens alle 5 Sekunden
+  saveAt = now;
+  try{
+    localStorage.setItem(SAVE_KEY, JSON.stringify({
+      meters: state.meters, gain: state.gain, t: now
+    }));
+  }catch(_){}
+}
+
+/* Mit ?reset=1 im Link laesst sich der Zaehler von Hand leeren */
+if (new URLSearchParams(location.search).has('reset')){
+  try{ localStorage.removeItem(SAVE_KEY); }catch(_){}
+} else {
+  loadState();
+}
+
+/* Beim Schliessen oder Wegschalten noch einmal sichern */
+['pagehide','visibilitychange','beforeunload'].forEach(ev =>
+  window.addEventListener(ev, () => { saveAt = 0; saveState(); })
+);
 
 $('badge-title').textContent = CONFIG.title;
 $('badge-sub').textContent   = CONFIG.subtitle;
-if (!CONFIG.targetKm){
-  $('blk-remaining').style.visibility = 'hidden';
-  document.querySelector('.progress').style.display = 'none';
-}
-if (!CONFIG.weather) $('blk-weather').style.display = 'none';
+$('hero-label').textContent  = CONFIG.durationH > 0 ? 'Restzeit' : 'Laufzeit';
+if (!CONFIG.targetKm) $('blk-remaining').style.display = 'none';
+if (!CONFIG.weather){ $('blk-weather').style.display='none'; $('blk-temp').style.display='none'; }
 if (CONFIG.imperial) document.body.classList.add('imperial');
 
 /* ---- Wettersymbole ---- */
@@ -416,16 +463,16 @@ function distM(a, b){
 
 /* ---- Standort ---- */
 function onFix(p){
-  if (Date.now() < raceStartMs) return;              // vor dem Rennstart zaehlt nichts
+  if (Date.now() < raceStartMs) return;               // vor dem Rennstart zaehlt nichts
   const c = p.coords;
-  if (c.accuracy > 30) return;                        // unsaubere Fixes verwerfen
+  if (c.accuracy > 30) return;
   const now = p.timestamp || Date.now();
   const pt = { lat:c.latitude, lon:c.longitude, t:now, alt:c.altitude };
 
   if (state.last){
     const d = distM(state.last, pt);
     const dt = (now - state.last.t)/1000;
-    if (d >= 4 && dt > 0 && d/dt < 12){               // Jitter- und Ausreisserfilter
+    if (d >= 4 && dt > 0 && d/dt < 12){
       state.meters += d;
       state.trail.push({ t: now, m: state.meters });
       state.last = pt;
@@ -441,6 +488,7 @@ function onFix(p){
     else if (d < -4){ state.baseAlt = pt.alt; }
   }
   state.fix = Date.now();
+  saveState();
 }
 
 if (!CONFIG.demo && 'geolocation' in navigator){
@@ -459,17 +507,22 @@ async function updateWeather(){
       state.last.lat.toFixed(3) + '&longitude=' + state.last.lon.toFixed(3) +
       '&current=temperature_2m,weather_code');
     const j = await r.json();
-    $('temp-c').textContent = j.current.temperature_2m.toFixed(1) + '\u00B0';
+    const c = j.current.temperature_2m;
+    const cs = c.toFixed(1) + ' \u00B0C', fs = (c*9/5+32).toFixed(1) + ' \u00B0F';
+    $('temp-c').textContent = cs;  $('temp-c2').textContent = cs;
+    $('temp-f').textContent = fs;  $('temp-f2').textContent = fs;
     setIcon(j.current.weather_code);
-  }catch(_){ weatherAt = Date.now() - 540000; }       // in 60 s erneut versuchen
+  }catch(_){ weatherAt = Date.now() - 540000; }
 }
 
 /* ---- Demo ---- */
 if (CONFIG.demo){
-  $('temp-c').textContent = '15.8\u00B0';
+  const cs = '15.8 \u00B0C', fs = '60.4 \u00B0F';
+  $('temp-c').textContent = cs; $('temp-c2').textContent = cs;
+  $('temp-f').textContent = fs; $('temp-f2').textContent = fs;
   setIcon(0);
   setInterval(() => {
-    if (Date.now() < raceStartMs) return;             // vor dem Rennstart zaehlt nichts
+    if (Date.now() < raceStartMs) return;
     state.meters += 2.5 + Math.random();
     state.gain   += Math.random() * .6;
     state.fix     = Date.now();
@@ -480,7 +533,7 @@ if (CONFIG.demo){
 /* ---- Render ---- */
 function render(){
   const now = Date.now();
-  const elapsed = Math.max(0, now - raceStartMs);     // vor Rennstart konstant 0
+  const elapsed = Math.max(0, now - raceStartMs);
 
   if (CONFIG.durationH > 0){
     const left = Math.max(0, CONFIG.durationH*3600000 - elapsed);
@@ -495,14 +548,13 @@ function render(){
   $('clock').textContent = pad(t.getHours()) + ':' + pad(t.getMinutes());
 
   const km = state.meters/1000;
-  $('dist-km').textContent = km.toFixed(1);
-  $('dist-mi').textContent = (km/1.609344).toFixed(1);
+  $('dist-km').textContent = km.toFixed(1) + ' KM';
+  $('dist-mi').textContent = (km/1.609344).toFixed(1) + ' MI';
 
   if (CONFIG.targetKm){
     const rk = Math.max(0, CONFIG.targetKm - km);
-    $('rem-km').textContent = rk.toFixed(1);
-    $('rem-mi').textContent = (rk/1.609344).toFixed(1);
-    $('progress-fill').style.width = Math.min(100, km/CONFIG.targetKm*100).toFixed(1) + '%';
+    $('rem-km').textContent = rk.toFixed(1) + ' KM';
+    $('rem-mi').textContent = (rk/1.609344).toFixed(1) + ' MI';
   }
 
   const aSec = km > .05 ? (elapsed/1000)/km : 0;
@@ -522,11 +574,6 @@ function render(){
   $('ele-m').textContent  = Math.round(state.gain).toLocaleString('de-DE');
   $('ele-ft').textContent = Math.round(state.gain*3.28084).toLocaleString('de-DE');
 
-  const stale = now >= raceStartMs && (!state.fix || now - state.fix > 25000);
-  document.querySelectorAll('.cellx').forEach((el, i) => {
-    if (i < 5) el.classList.toggle('stale', stale);
-  });
-
   updateWeather();
   requestAnimationFrame(render);
 }
@@ -534,7 +581,6 @@ render();
 
 /* ================================================================
    INTRO: Standbild + Musik -> Countdown -> Kamerabild
-   Nur aktiv, wenn ?start= in der Zukunft liegt.
    ================================================================ */
 (function(){
   const intro = $('intro'), music = $('intro-audio'), hint = $('sound-hint');
@@ -545,9 +591,6 @@ render();
 
   if (!revealMs || Date.now() >= revealMs){ intro.classList.add('gone'); return; }
 
-  /* Ton: iOS erlaubt Audio nur nach einer echten Beruehrung der Seite.
-     Ein einziges Antippen (irgendwo) schaltet die Musik fuer den Rest
-     der Sitzung frei. Ohne Antippen bleibt es stumm -- nichts bricht ab. */
   let unlocked = false;
   function unlock(){
     if (unlocked) return;

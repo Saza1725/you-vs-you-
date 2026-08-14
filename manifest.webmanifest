@@ -1,0 +1,23 @@
+{
+  "name": "You vs You — Ultralauf live",
+  "short_name": "You vs You",
+  "description": "Countdown, Live-Stream und alle Infos zum nächsten Ultralauf.",
+  "lang": "de",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0D0620",
+  "theme_color": "#0D0620",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ],
+  "shortcuts": [
+    { "name": "Live-Stream", "short_name": "Stream", "url": "./#stream" },
+    { "name": "Events", "short_name": "Events", "url": "./#events" }
+  ]
+}
