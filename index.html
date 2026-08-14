@@ -2165,12 +2165,12 @@ function buildIcs(e){
   if (!btn) return;
 
   btn.addEventListener('click', async () => {
-    const title = 'You vs You';
-    const text  = EVT ? (EVT.title + ' — live am ' + dateText(EVT.stream)) : 'Ultralauf live';
-
-    /* Auf dem Handy oeffnet das die systemeigene Teilen-Auswahl. */
+    /* Bewusst NUR Titel und Adresse weitergeben.
+       Gibt man zusaetzlich ein Textfeld mit, haengen manche Ziele
+       (WhatsApp, Kopieren unter macOS) Text und Adresse aneinander --
+       dann steht die Adresse zweimal in der Nachricht. */
     if (navigator.share){
-      try{ await navigator.share({ title, text, url: SITE_URL }); return; }
+      try{ await navigator.share({ title:'You vs You', url: SITE_URL }); return; }
       catch(_){ return; }                       // abgebrochen -- keine Meldung noetig
     }
     /* Am Rechner: Adresse in die Zwischenablage */
