@@ -669,6 +669,8 @@ body{
   margin-bottom:.7em;
 }
 .live-goal .top b{ color:var(--accent); font-weight:600 }
+.live-goal.reached .top b{ color:var(--green) }
+.live-goal.reached .bar span{ background:var(--green) }
 .live-goal .bar{
   position:relative; height:.7rem; width:100%;
   background:rgba(255,255,255,.14); overflow:hidden;
@@ -2552,7 +2554,13 @@ function paintLive(){
     $('live-goal').classList.remove('hidden');
     const pct = Math.min(100, (d.km || 0) / target * 100);
     $('live-goal-bar').style.width = pct.toFixed(1) + '%';
-    setText($('live-goal-pct'), Math.round(pct) + ' % von ' + nf(target,1) + ' km');
+    /* Ist das Pflichtziel erreicht, hoert der Countdown auf --
+       ab da zaehlt nur noch, wie viel obendrauf kommt. */
+    const ueber = (d.km || 0) - target;
+    setText($('live-goal-pct'), ueber >= 0
+      ? 'Ziel erreicht · +' + nf(ueber,1) + ' km'
+      : Math.round(pct) + ' % von ' + nf(target,1) + ' km');
+    $('live-goal').classList.toggle('reached', ueber >= 0);
   } else {
     $('live-goal').classList.add('hidden');
   }

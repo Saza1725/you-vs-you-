@@ -93,6 +93,8 @@ body:not(.imperial) .imp{ display:none }
 .course .label{ font-size:1.55rem; margin-bottom:.5rem }
 .course .value{ font-size:2.15rem }
 .course .value + .value{ margin-top:.15rem }
+.course .block.reached .label{ color:#4ADE80 }
+.course .block.reached .value{ color:#4ADE80 }
 
 /* ---------- 3 · Leistungs-Leiste unten ---------- */
 
@@ -255,7 +257,7 @@ body:not(.imperial) .imp{ display:none }
     </div>
 
     <div class="block" id="blk-remaining">
-      <div class="label">Rest-Distanz</div>
+      <div class="label" id="rem-label">Rest-Distanz</div>
       <div class="value" id="rem-km">0.0 KM</div>
       <div class="value sub imp" id="rem-mi">0.0 MI</div>
     </div>
@@ -584,9 +586,22 @@ function render(){
   $('dist-mi').textContent = (km/1.609344).toFixed(1) + ' MI';
 
   if (CONFIG.targetKm){
-    const rk = Math.max(0, CONFIG.targetKm - km);
-    $('rem-km').textContent = rk.toFixed(1) + ' KM';
-    $('rem-mi').textContent = (rk/1.609344).toFixed(1) + ' MI';
+    /* Bis zum Ziel zaehlt die Anzeige rueckwaerts. Ist das Ziel erreicht,
+       bleibt sie nicht auf 0.0 stehen, sondern zeigt den Ueberschuss --
+       gelaufen wird ja weiter, solange die Uhr laeuft. */
+    if (km >= CONFIG.targetKm){
+      const ue = km - CONFIG.targetKm;
+      $('rem-label').textContent = 'Über Ziel';
+      $('rem-km').textContent = '+' + ue.toFixed(1) + ' KM';
+      $('rem-mi').textContent = '+' + (ue/1.609344).toFixed(1) + ' MI';
+      $('blk-remaining').classList.add('reached');
+    } else {
+      const rk = CONFIG.targetKm - km;
+      $('rem-label').textContent = 'Rest-Distanz';
+      $('rem-km').textContent = rk.toFixed(1) + ' KM';
+      $('rem-mi').textContent = (rk/1.609344).toFixed(1) + ' MI';
+      $('blk-remaining').classList.remove('reached');
+    }
   }
 
   const aSec = km > .05 ? (elapsed/1000)/km : 0;
