@@ -2524,7 +2524,10 @@ function paintLive(){
   if (!LIVE.url || !liveData){ box.classList.add('hidden'); $('cd-live').classList.add('hidden'); return; }
 
   const d      = liveData;
-  const ageSec = Math.max(0, Math.round((Date.now() - (d.t || liveTs)) / 1000));
+  /* Maßgeblich ist das Alter des letzten Punktes von der Uhr (pt),
+     nicht der Zeitpunkt, zu dem die Brücke geantwortet hat (t).
+     Sonst sähen eingefrorene Werte ewig frisch aus. */
+  const ageSec = Math.max(0, Math.round((Date.now() - (d.pt || d.t || liveTs)) / 1000));
   const stale  = ageSec > (LIVE.staleSec || 180);
   const phase  = phaseOf(EVT);
   const ended  = phase === 'after';

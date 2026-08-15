@@ -49,6 +49,11 @@ body{
 .sub{ color:var(--dim); font-weight:600; font-variant-numeric:tabular-nums }
 body:not(.imperial) .imp{ display:none }
 
+/* Kommen laenger keine frischen Werte von der Uhr, werden die
+   Zahlen blass. Die Renn-Uhr bleibt hell -- die laeuft weiter. */
+body.stale .value:not(#hero-timer):not(#clock),
+body.stale .sub{ opacity:.42; transition:opacity .6s ease }
+
 .panel{ background:var(--panel); border:.1rem solid var(--hairline) }
 .chamfer-tl{ clip-path: polygon(var(--chamfer) 0, 100% 0, 100% 100%, 0 100%, 0 var(--chamfer)) }
 
@@ -357,7 +362,22 @@ const CONFIG = {
        &live=https://vvy-live.DEINNAME.workers.dev&key=DEINKENNWORT
      Fehlt eine der beiden, wird nichts gesendet.                  */
   liveUrl:     "",
-  liveKey:     ""
+  liveKey:     "",
+
+  /* ---- Betriebsart ----
+       "show" (Standard)  Die Werte kommen von der Bruecke, also von
+                          der Garmin-Uhr. So laeuft das Overlay im
+                          Cloud-OBS, wo es kein GPS gibt.
+       "send"             Rueckfallebene: die Werte kommen aus dem
+                          GPS des Geraets und werden zur Bruecke
+                          geschickt. Nur sinnvoll, wenn das Overlay
+                          auf dem mitgetragenen Handy laeuft.
+     Umschalten ueber den Link:  &mode=send                          */
+  mode:        "show",
+
+  /* Ohne GPS braucht das Wetter einen festen Ort.
+     Ueber den Link aenderbar:  &wx=51.5547,7.9139   (Werl)          */
+  wxAt:        "51.5547,7.9139"
 };
 
 (function(){
@@ -365,7 +385,7 @@ const CONFIG = {
   const map = { target:'targetKm', start:'startAt', racestart:'raceStartAt',
                 title:'title', sub:'subtitle',
                 image:'introImage', audio:'introAudio', kicker:'introKicker',
-                live:'liveUrl', key:'liveKey' };
+                live:'liveUrl', key:'liveKey', mode:'mode', wx:'wxAt' };
   for (const [k,v] of Object.entries(map)) if (q.has(k)) CONFIG[v] = q.get(k);
   if (q.has('target'))   CONFIG.targetKm  = parseFloat(String(q.get('target')).replace(',','.')) || 0;
   if (q.has('duration')) CONFIG.durationH = parseFloat(String(q.get('duration')).replace(',','.')) || 0;
@@ -373,6 +393,7 @@ const CONFIG = {
   if (q.has('weather'))  CONFIG.weather  = q.get('weather') !== '0';
   if (q.has('imperial')) CONFIG.imperial = q.get('imperial') !== '0';
   if (q.has('debug'))    CONFIG.debug    = q.get('debug')    !== '0';
+  CONFIG.mode = CONFIG.mode === 'send' ? 'send' : 'show';
 })();
 
 const $ = id => document.getElementById(id);
@@ -380,8 +401,17 @@ const $ = id => document.getElementById(id);
 const revealMs = CONFIG.startAt ? new Date(CONFIG.startAt).getTime() : 0;
 const raceStartMs = CONFIG.raceStartAt ? new Date(CONFIG.raceStartAt).getTime() : (revealMs || Date.now());
 
+/* Nur in dieser Betriebsart wird das GPS des Geraets benutzt. */
+const SENDET = CONFIG.mode === 'send' && !CONFIG.demo;
+
 const state = { meters:0, gain:0, last:null, baseAlt:null, trail:[], fix:0,
-                tempC:null, wxCode:null };
+                tempC:null, wxCode:null, hr:null };
+
+/* Was von der Bruecke hereinkommt. pace/apace werden bevorzugt
+   uebernommen, damit Overlay und Website exakt dieselben Zahlen
+   zeigen -- beide rechnen dann nicht getrennt. */
+const feed = { an: CONFIG.mode === 'show' && !CONFIG.demo,
+               pace:null, apace:null, pAge:null, ok:false };
 
 /* Zwischenergebnisse aus render() -- der Live-Sender liest sie ab,
    damit Website und Stream exakt dieselben Zahlen zeigen. */
@@ -523,20 +553,103 @@ function onFix(p){
   saveState();
 }
 
-if (!CONFIG.demo && 'geolocation' in navigator){
+if (SENDET && 'geolocation' in navigator){
   navigator.geolocation.watchPosition(onFix, () => {},
     { enableHighAccuracy:true, maximumAge:2000, timeout:15000 });
 }
 
+/* ================================================================
+   EMPFAENGER  --  Werte von der Uhr abholen
+   ================================================================
+
+   Im Anzeige-Betrieb (Standard) holt sich das Overlay die Zahlen
+   alle 5 Sekunden von der Bruecke bei Cloudflare. Die Bruecke
+   wiederum liest sie bei Garmin LiveTrack aus. Damit braucht das
+   Overlay selbst kein GPS und laeuft auch auf einem Rechner im
+   Rechenzentrum.
+
+   Bleiben die Werte laenger als STALE_MS stehen, wird die Anzeige
+   blass. Eine eingefrorene Zahl, die frisch aussieht, waere
+   schlimmer als eine, die zugibt dass sie alt ist.
+   ================================================================ */
+const STALE_MS = 45000;
+
+const Feed = (function(){
+  const aus = { tick(){} };
+  if (!feed.an) return aus;
+
+  if (!CONFIG.liveUrl){
+    console.log('[Feed] AUS — live= fehlt im Link');
+    return aus;
+  }
+
+  const url    = String(CONFIG.liveUrl).replace(/\/+$/, '') + '/';
+  const HOL_MS = 5000;
+  let holAt = 0, busy = false;
+
+  async function hol(){
+    if (busy) return;
+    busy = true;
+    try{
+      const r = await fetch(url + '?t=' + Date.now(), { cache:'no-store' });
+      const j = await r.json();
+      const d = j && j.data;
+
+      if (d){
+        /* Der Zaehler geht nur vorwaerts. */
+        const m = (Number(d.km) || 0) * 1000;
+        if (m > state.meters) state.meters = m;
+        if (Number(d.gain) > state.gain) state.gain = Number(d.gain);
+        if (d.hr != null) state.hr = Number(d.hr);
+
+        feed.pace  = d.pace  != null ? Number(d.pace)  : null;
+        feed.apace = d.apace != null ? Number(d.apace) : null;
+        feed.pAge  = j.pAge != null ? Number(j.pAge) : null;
+        feed.ok    = true;
+        state.fix  = Date.now();
+      } else {
+        feed.ok = false;
+      }
+      console.log('[Feed] ' + (d ? (Number(d.km)||0).toFixed(2) + ' km · ' +
+                  (j.pAge != null ? Math.round(j.pAge/1000) + ' s alt' : 'ohne Zeitstempel')
+                  : 'noch keine Werte'));
+    }catch(e){
+      feed.ok = false;
+      console.log('[Feed] kein Netz — ' + (e && e.message ? e.message : e));
+    }
+    busy = false;
+  }
+
+  hol();
+  return {
+    tick(){
+      const now = Date.now();
+      if (now - holAt < HOL_MS) return;
+      holAt = now;
+      hol();
+    }
+  };
+})();
+
 /* ---- Wetter ---- */
 let weatherAt = 0;
+/* Ohne GPS wird der feste Ort aus dem Link benutzt. */
+function wxOrt(){
+  if (state.last) return [state.last.lat, state.last.lon];
+  const p = String(CONFIG.wxAt || '').split(',');
+  const la = parseFloat(p[0]), lo = parseFloat(p[1]);
+  return isFinite(la) && isFinite(lo) ? [la, lo] : null;
+}
+
 async function updateWeather(){
-  if (!CONFIG.weather || !state.last) return;
+  if (!CONFIG.weather) return;
+  const ort = wxOrt();
+  if (!ort) return;
   if (Date.now() - weatherAt < 600000) return;
   weatherAt = Date.now();
   try{
     const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' +
-      state.last.lat.toFixed(3) + '&longitude=' + state.last.lon.toFixed(3) +
+      ort[0].toFixed(3) + '&longitude=' + ort[1].toFixed(3) +
       '&current=temperature_2m,weather_code');
     const j = await r.json();
     const c = j.current.temperature_2m;
@@ -604,7 +717,10 @@ function render(){
     }
   }
 
-  const aSec = km > .05 ? (elapsed/1000)/km : 0;
+  /* Durchschnittstempo: kommt es von der Bruecke, wird es
+     uebernommen -- dann steht auf der Website dieselbe Zahl. */
+  let aSec = km > .05 ? (elapsed/1000)/km : 0;
+  if (feed.an && feed.apace != null) aSec = feed.apace;
   $('apace-km').textContent = pace(aSec);
   $('apace-mi').textContent = pace(aSec*1.609344);
 
@@ -615,6 +731,7 @@ function render(){
     const dKm = (b.m - a.m)/1000, dS = (b.t - a.t)/1000;
     if (dKm > .02) cSec = dS/dKm;
   }
+  if (feed.an) cSec = feed.pace != null ? feed.pace : 0;
   $('pace-km').textContent = pace(cSec);
   $('pace-mi').textContent = pace(cSec*1.609344);
 
@@ -628,7 +745,14 @@ function render(){
   calc.pace    = cSec;
   calc.apace   = aSec;
 
+  /* Stehen die Werte, wird die Anzeige blass statt zu luegen. */
+  if (feed.an){
+    const alt = feed.pAge === null ? Infinity : feed.pAge;
+    document.body.classList.toggle('stale', !feed.ok || alt > STALE_MS);
+  }
+
   updateWeather();
+  Feed.tick();
   Live.tick();
   requestAnimationFrame(render);
 }
@@ -668,6 +792,14 @@ const Live = (function(){
   }
 
   const off = { tick(){}, flush(){} };
+
+  /* Im Anzeige-Betrieb wird nichts gesendet -- die Werte kommen
+     dort ja bereits von der Uhr ueber die Bruecke. */
+  if (!SENDET){
+    melde('ok', CONFIG.demo ? 'DEMO\nerfundene Werte'
+                            : 'ANZEIGE\nWerte kommen von der Uhr');
+    return off;
+  }
 
   if (!CONFIG.liveUrl || !CONFIG.liveKey){
     melde('err', 'AUS\n' + (!CONFIG.liveUrl ? 'live= fehlt im Link' : 'key= fehlt im Link'));
