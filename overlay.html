@@ -313,8 +313,32 @@ const HOLT    = CONFIG.mode === 'show' && !CONFIG.demo;
 const STALE_MS = 45000;
 
 const revealMs    = CONFIG.startAt ? new Date(CONFIG.startAt).getTime() : 0;
-const raceStartMs = CONFIG.raceStartAt ? new Date(CONFIG.raceStartAt).getTime()
+let   raceStartMs = CONFIG.raceStartAt ? new Date(CONFIG.raceStartAt).getTime()
                                        : (revealMs || Date.now());
+const geplantMs   = raceStartMs;            /* Rueckfallwert aus dem Zeitplan */
+const SYNC        = q.get('sync') !== '0';  /* Start von der Uhr uebernehmen  */
+let   startFest   = false;                  /* Anker steht, nicht mehr ruecken */
+
+/* Der einmal gefundene Startpunkt wird im Browser hinterlegt. Startet
+   die Quelle mitten im Rennen neu -- Absturz, Szenenwechsel, Netz weg --
+   nimmt sie exakt denselben Anker wieder auf und springt nicht. */
+const SKEY = 'vvy-start:' + String(CONFIG.raceStartAt || 'frei');
+function ankerLesen(){
+  try{
+    const v = Number(localStorage.getItem(SKEY));
+    if (!isFinite(v) || v <= 0) return null;
+    const alter = Date.now() - v;
+    const fenster = ((CONFIG.durationH > 0 ? CONFIG.durationH : 6) * 3600000) + 7200000;
+    return (alter > -3600000 && alter < fenster) ? v : null;
+  }catch(_){ return null; }
+}
+function ankerSchreiben(ms){ try{ localStorage.setItem(SKEY, String(ms)); }catch(_){} }
+
+if (q.get('reset') === '1'){ try{ localStorage.removeItem(SKEY); }catch(_){} }
+else {
+  const gemerkt = ankerLesen();
+  if (gemerkt !== null){ raceStartMs = gemerkt; startFest = true; }
+}
 
 const state = { meter:0, gain:0, hr:null, fix:0, tempC:null, wxCode:null,
                 last:null, baseAlt:null, spur:[] };
@@ -423,6 +447,22 @@ const Feed = (function(){
   const url = String(CONFIG.liveUrl).replace(/\/+$/,'') + '/';
   let holAt = 0, busy = false, n = 0;
 
+  /* Die Uhr am Handgelenk gibt den Start vor.
+     Sobald die Bruecke eine laufende Stoppuhr meldet, wird der
+     Countdown genau dorthin gelegt -- egal, was im Zeitplan steht.
+     Das geschieht genau einmal. Stoppe ich die Aktivitaet spaeter
+     versehentlich und starte sie neu, faellt die Rennzeit dadurch
+     nicht auf null zurueck. */
+  function syncStart(d){
+    if (!SYNC || startFest || d.elapsed == null) return;
+    const e = Number(d.elapsed);
+    if (!isFinite(e) || e <= 0) return;
+    raceStartMs = Date.now() - e;
+    startFest = true;
+    ankerSchreiben(raceStartMs);
+    melde('ok','Start von der Uhr uebernommen');
+  }
+
   async function hol(){
     if (busy) return;
     busy = true;
@@ -431,6 +471,7 @@ const Feed = (function(){
       const j = await r.json();
       const d = j && j.data;
       if (d){
+        syncStart(d);
         const m = (Number(d.km)||0) * 1000;
         if (m > state.meter) state.meter = m;
         if (Number(d.gain) > state.gain) state.gain = Number(d.gain);
