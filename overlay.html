@@ -9,159 +9,131 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   FARBSCHEMA — Broadcast-Vorlage: Violett + Gold
+   YOU VS YOU -- Live-Overlay fuer den Stream
+   Farben aus dem Logo: Glut-Orange auf fast schwarzer Platte.
    ============================================================ */
 :root{
-  --violet-hi: #3A1E63;
-  --violet-lo: #170B2C;
-  --accent:    #FFD400;
-  --white:     #FFFFFF;
-  --alert:     #FF4D4D;
-  --dim:       rgba(255,255,255,.48);
-
-  --panel:     linear-gradient(180deg, rgba(58,30,99,.94) 0%, rgba(23,11,44,.95) 100%);
-  --hairline:  rgba(255,212,0,.28);
-  --chamfer:   1.5rem;
+  --glut:    #FF7A18;
+  --glut-hi: #FFB25E;
+  --weiss:   #FFFFFF;
+  --dim:     rgba(255,255,255,.58);
+  --alarm:   #FF3B30;
+  --platte:  linear-gradient(180deg, rgba(18,12,9,.88) 0%, rgba(8,6,6,.93) 100%);
+  --rand:    rgba(255,122,24,.50);
 }
-
 *{margin:0;padding:0;box-sizing:border-box}
 html{ font-size: min(calc(100vw / 192), calc(100vh / 108)); }
-
 body{
-  background: transparent;                 /* PFLICHT für Overlay-Nutzung */
+  background:transparent;                       /* PFLICHT fuer Overlay */
   font-family:'Rajdhani','Arial Narrow',Arial,sans-serif;
-  color:var(--white); overflow:hidden; width:100vw; height:100vh;
-  -webkit-font-smoothing: antialiased;
+  color:var(--weiss); overflow:hidden; width:100vw; height:100vh;
+  -webkit-font-smoothing:antialiased;
 }
-.stage{position:fixed; inset:0}
 
-/* ---------- Typo-Bausteine ---------- */
+/* Sichtfeld. Standard: ganze Breite (Twitch ist 16:9).
+   Mit ?hoch=1 rutscht alles in den hochformat-sicheren Bereich. */
+.feld{ position:absolute; inset:0 }
+body.hoch .feld{ left:50%; transform:translateX(-50%); width:56.25vh; right:auto }
 
-.label{
-  font-family:'Oswald','Arial Narrow',sans-serif;
-  font-weight:600; text-transform:uppercase;
-  letter-spacing:.07em; color:var(--accent); line-height:1;
+/* ---- LIVE oben links ---- */
+.live{
+  position:absolute; top:2.4rem; left:2.4rem;
+  display:inline-flex; align-items:center; gap:.7rem;
+  padding:.55rem 1.15rem .65rem;
+  background:rgba(8,6,6,.88); border:.15rem solid var(--rand); border-radius:.5rem;
+  box-shadow:0 .3rem 1.2rem rgba(0,0,0,.6);
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  letter-spacing:.2em; font-size:1.5rem;
 }
-.value{
-  font-weight:700; font-variant-numeric:tabular-nums;
-  letter-spacing:.005em; line-height:1; white-space:nowrap;
+.live.aus{ display:none }
+.live i{
+  width:.9rem; height:.9rem; border-radius:50%; background:var(--alarm);
+  box-shadow:0 0 .9rem var(--alarm); display:block;
+  animation:puls 2s ease-in-out infinite;
 }
-.sub{ color:var(--dim); font-weight:600; font-variant-numeric:tabular-nums }
-body:not(.imperial) .imp{ display:none }
+@keyframes puls{ 0%,100%{opacity:1} 50%{opacity:.35} }
 
-/* Kommen laenger keine frischen Werte von der Uhr, werden die
-   Zahlen blass. Die Renn-Uhr bleibt hell -- die laeuft weiter. */
-body.stale .value:not(#hero-timer):not(#clock),
-body.stale .sub{ opacity:.42; transition:opacity .6s ease }
-
-.panel{ background:var(--panel); border:.1rem solid var(--hairline) }
-.chamfer-tl{ clip-path: polygon(var(--chamfer) 0, 100% 0, 100% 100%, 0 100%, 0 var(--chamfer)) }
-
-/* ---------- 1 · Stapel oben links: Zeit + Temperatur ---------- */
-
-.stack{ position:absolute; top:1.8rem; left:1.8rem; width:24rem }
-
-.timer{ padding:.75rem 1.6rem 1.05rem; border-color:var(--accent); border-width:.2rem }
-.timer .label{ font-size:1.2rem; letter-spacing:.16em; margin-bottom:.4rem }
-.timer .value{ font-size:4.3rem; letter-spacing:.01em }
-.timer.final{ border-color:var(--alert) }
-.timer.final .value{ color:var(--alert) }
-
-.temp{
-  margin-top:.65rem; padding:.75rem 1.6rem .95rem;
-  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+/* ---- Datenspalte links ---- */
+.spalte{
+  position:absolute; top:7.6rem; left:2.4rem; width:21rem;
+  background:var(--platte); border:.16rem solid var(--rand); border-radius:.6rem;
+  overflow:hidden; box-shadow:0 .5rem 2rem rgba(0,0,0,.6);
 }
-.temp .label{ font-size:1.2rem; letter-spacing:.16em; margin-bottom:.4rem }
-.temp .value{ font-size:1.85rem }
-.temp .value + .value{ margin-top:.2rem }
-.temp .icon{ width:4rem; height:4rem; flex:none }
-.temp .icon svg{ width:100%; height:100%; display:block }
-.temp .icon path, .temp .icon circle, .temp .icon line{
-  stroke:var(--accent); stroke-width:1.8; fill:none;
+.spalte .titel{
+  padding:.8rem 1.2rem .85rem; text-align:center;
+  background:linear-gradient(180deg, rgba(255,122,24,.24), rgba(255,122,24,.06));
+  border-bottom:.16rem solid var(--rand);
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  letter-spacing:.2em; font-size:1.35rem; color:var(--glut-hi);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.zeile{ padding:.8rem 1.2rem .85rem }
+.zeile + .zeile{ border-top:.1rem solid rgba(255,122,24,.20) }
+.zeile.gross .val{ font-size:3.9rem }
+.zeile .lab{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  letter-spacing:.13em; font-size:1.15rem; color:var(--glut);
+}
+.zeile .row{ display:flex; align-items:baseline; gap:.5rem; margin-top:.32rem }
+.zeile .val{
+  font-weight:700; font-size:2.75rem; line-height:1;
+  font-variant-numeric:tabular-nums; white-space:nowrap;
+  text-shadow:0 .12rem .5rem rgba(0,0,0,.85);
+}
+.zeile .unit{
+  font-family:'Oswald',sans-serif; font-weight:600; font-size:1.1rem;
+  color:var(--dim); letter-spacing:.08em;
+}
+.zeile.hidden{ display:none }
+
+/* Endspurt: letzte 10 Minuten */
+.zeile.final .val{ color:var(--alarm) }
+.zeile.final .lab{ color:var(--alarm) }
+/* Pflichtziel geschafft */
+.zeile.erreicht .val{ color:var(--glut-hi) }
+
+/* Fusszeile: Uhrzeit + Wetter */
+.fusszeile{
+  padding:.7rem 1.2rem .75rem; border-top:.16rem solid var(--rand);
+  background:rgba(255,122,24,.08);
+  display:flex; align-items:center; justify-content:center; gap:.7rem;
+  font-size:1.35rem; font-weight:700; font-variant-numeric:tabular-nums;
+}
+.fusszeile .tr{ color:var(--glut); opacity:.65 }
+.fusszeile svg{ width:1.7rem; height:1.7rem; display:block }
+.fusszeile svg path,.fusszeile svg circle,.fusszeile svg line{
+  stroke:var(--glut-hi); stroke-width:2.4; fill:none;
   stroke-linecap:round; stroke-linejoin:round;
 }
+#blk-wetter{ display:none; align-items:center; gap:.4rem }
 
-.accent-bar{ height:.5rem; width:60%; background:var(--accent); margin-top:.65rem }
+/* Kommen keine frischen Werte, werden die Zahlen blass.
+   Die Renn-Uhr bleibt hell -- die laeuft weiter. */
+body.stale .zeile:not(#z-uhr) .val,
+body.stale .zeile:not(#z-uhr) .unit{ opacity:.40; transition:opacity .6s ease }
 
-/* ---------- 2 · Strecken-Daten oben rechts ---------- */
-
-.course{
-  position:absolute; top:0; right:0; bottom:0; width:28rem;
-  padding:4.3rem 2.2rem 15rem 2.6rem;
-  background: linear-gradient(90deg, rgba(23,11,44,0) 0%, rgba(23,11,44,.88) 24%, rgba(58,30,99,.94) 100%);
+/* ---- Signet unten rechts ---- */
+.signet{ position:absolute; right:2.4rem; bottom:2.4rem; text-align:right }
+.signet img{ display:block; height:7rem; width:auto; margin-left:auto;
+             filter:drop-shadow(0 .3rem 1rem rgba(0,0,0,.8)) }
+.wortmarke{
+  font-family:'Oswald',sans-serif; font-weight:700; font-style:italic;
+  text-transform:uppercase; font-size:3.4rem; line-height:.95; color:#1a1310;
+  -webkit-text-stroke:.11rem var(--glut);
+  text-shadow:0 0 1.1rem rgba(255,122,24,.85), 0 0 2.6rem rgba(255,122,24,.45),
+              0 .2rem .6rem rgba(0,0,0,.9);
 }
-.course h1{
-  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:3.05rem; letter-spacing:.02em; line-height:1; margin-bottom:2.3rem;
+.wortmarke .vs{ color:var(--glut-hi); -webkit-text-stroke:.11rem var(--glut-hi) }
+.mail{
+  margin-top:.5rem; font-family:'Oswald',sans-serif; font-weight:600;
+  letter-spacing:.13em; font-size:1.3rem; color:var(--glut-hi);
+  text-shadow:0 .15rem .6rem rgba(0,0,0,.95);
 }
-.course .block{ margin-bottom:2.15rem }
-.course .label{ font-size:1.55rem; margin-bottom:.5rem }
-.course .value{ font-size:2.15rem }
-.course .value + .value{ margin-top:.15rem }
-.course .block.reached .label{ color:#4ADE80 }
-.course .block.reached .value{ color:#4ADE80 }
+.signet.aus{ display:none }
 
-/* ---------- 3 · Leistungs-Leiste unten ---------- */
-
-.perf{
-  position:absolute; left:0; right:0; bottom:0; height:12.4rem;
-  padding:1.25rem 2.4rem 0 2.2rem;
-  background: linear-gradient(180deg, rgba(58,30,99,.92) 0%, rgba(23,11,44,.96) 100%);
-  border-top:.2rem solid var(--accent);
-}
-.perf h2{
-  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:2.45rem; letter-spacing:.02em; line-height:1; margin-bottom:1rem;
-}
-.metrics{ display:flex; align-items:flex-start; position:relative; z-index:2 }
-.metric{ padding:0 2.3rem; border-left:.1rem solid rgba(255,255,255,.18) }
-.metric:first-child{ padding-left:0; border-left:0 }
-.metric .label{ font-size:1.55rem; margin-bottom:.6rem }
-.metric .row{ display:flex; align-items:baseline; gap:.65rem }
-.metric .value{ font-size:2.15rem }
-.metric .unit{ font-family:'Oswald',sans-serif; font-size:1.4rem; color:var(--dim); font-weight:600; letter-spacing:.09em }
-.metric .row + .row{ margin-top:.2rem }
-
-/* ---------- 4 · Signet unten rechts ---------- */
-
-.crest{
-  position:absolute; right:0; bottom:0; width:42rem; height:12.4rem;
-  pointer-events:none; z-index:1;
-}
-.crest svg{ width:100%; height:100%; display:block }
-.crest .wave{ fill:none; stroke:var(--accent); stroke-width:1.4; opacity:.32 }
-
-.badge{
-  position:absolute; right:2.6rem; bottom:1.6rem;
-  width:11.5rem; padding:1rem .8rem 1.1rem; text-align:center;
-  font-family:'Oswald',sans-serif; text-transform:uppercase;
-  border:.2rem solid var(--accent); background:var(--panel);
-  clip-path: polygon(1.2rem 0, 100% 0, 100% calc(100% - 1.2rem), calc(100% - 1.2rem) 100%, 0 100%, 0 1.2rem);
-  z-index:2;
-}
-.badge .top{ font-size:1.75rem; font-weight:700; color:var(--accent); letter-spacing:.04em; line-height:1 }
-.badge .rule{ height:.15rem; background:var(--accent); margin:.55rem auto; width:58% }
-.badge .bot{ font-size:1rem; font-weight:600; color:var(--white); letter-spacing:.28em }
-
-/* ---------- Hochformat / schmale Fenster ---------- */
-
-@media (max-aspect-ratio: 4/5){
-  html{ font-size: calc(100vw / 62); }
-  .stack{ top:1.4rem; left:1.4rem; width:20rem }
-  .timer .value{ font-size:3.6rem }
-  .course{ display:none }               /* Strecken-Spalte weicht am Handy der Leiste */
-  .perf{ height:auto; padding-bottom:1.4rem }
-  .metrics{ flex-wrap:wrap }
-  .metric{ width:50%; padding:1rem 1.2rem; border-left:0; border-top:.1rem solid rgba(255,255,255,.14) }
-  .badge{ position:static; margin:1rem auto 0 }
-  .crest{ display:none }
-}
-
-/* ---------- 5 · Intro: Standbild mit Countdown ---------- */
-
+/* ---- Intro: Standbild mit Countdown ---- */
 .intro{
-  position:fixed; inset:0; z-index:50;
-  background:#0D0620 center/cover no-repeat;
+  position:fixed; inset:0; z-index:50; background:#0a0605 center/cover no-repeat;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   transition:opacity .9s ease;
 }
@@ -169,427 +141,287 @@ body.stale .sub{ opacity:.42; transition:opacity .6s ease }
 .intro.gone{ display:none }
 .intro::after{
   content:''; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(13,6,32,.55) 0%, rgba(13,6,32,.82) 100%);
+  background:linear-gradient(180deg, rgba(8,5,4,.55) 0%, rgba(8,5,4,.86) 100%);
 }
 .intro > *{ position:relative; z-index:1 }
-
 .intro .kicker{
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:2.1rem; letter-spacing:.5em; color:var(--accent); margin-bottom:1.5rem;
+  font-size:2rem; letter-spacing:.5em; color:var(--glut); margin-bottom:1.4rem;
 }
-.intro .title{
+.intro .titel{
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:6.6rem; line-height:.95; letter-spacing:.02em; text-align:center;
+  font-size:6.4rem; line-height:.95; text-align:center;
 }
-.intro .cd-label{
+.intro .cd-lab{
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
-  font-size:1.7rem; letter-spacing:.32em; color:var(--accent);
-  margin:4.2rem 0 1.1rem;
+  font-size:1.7rem; letter-spacing:.32em; color:var(--glut); margin-top:3.4rem;
 }
 .intro .cd{
-  font-weight:700; font-variant-numeric:tabular-nums;
-  font-size:10.5rem; line-height:1; letter-spacing:.01em;
+  font-size:7.4rem; font-weight:700; font-variant-numeric:tabular-nums;
+  line-height:1; margin-top:.7rem;
 }
-.intro .rule{ height:.4rem; width:25rem; background:var(--accent); margin-top:2.8rem }
-
-
-/* ---- Diagnose-Schild (nur mit &debug=1 sichtbar) ---- */
-.sendbadge{
-  position:fixed; left:12px; bottom:12px; z-index:9999;
-  font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px; line-height:1.35;
-  padding:8px 12px; border-radius:6px; cursor:pointer;
-  background:rgba(0,0,0,.82); color:#fff; border:2px solid #888;
-  max-width:70vw; word-break:break-word; white-space:pre-line;
+.hinweis{
+  position:fixed; left:50%; bottom:3rem; transform:translateX(-50%); z-index:51;
+  font-family:'Oswald',sans-serif; letter-spacing:.2em; font-size:1.3rem;
+  color:var(--glut-hi); opacity:0; transition:opacity .5s;
 }
-.sendbadge b{ display:block; font-size:11px; letter-spacing:.12em; opacity:.65; font-weight:600 }
-.sendbadge.ok{   border-color:#4ADE80; color:#4ADE80 }
-.sendbadge.err{  border-color:#FF6B6B; color:#FF6B6B }
-.sendbadge.wait{ border-color:#FFD400; color:#FFD400 }
-.sound-hint{
-  position:absolute; left:50%; bottom:8%; transform:translateX(-50%);
-  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
-  font-size:1.45rem; letter-spacing:.1em; color:var(--white);
-  background:rgba(0,0,0,.55); border:.1rem solid var(--accent);
-  padding:.75rem 1.9rem; border-radius:3rem; opacity:0; pointer-events:none;
-  transition:opacity .4s ease; z-index:70; white-space:nowrap;
-}
-.sound-hint.show{ opacity:1 }
+.hinweis.show{ opacity:.9 }
 
-@media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+/* ---- Diagnose ---- */
+#dbg{
+  position:absolute; right:2.4rem; top:2.4rem; z-index:9; max-width:34rem;
+  font-family:'Oswald',monospace; font-size:1.25rem; line-height:1.35;
+  padding:.6rem 1rem; white-space:pre-wrap;
+  background:rgba(0,0,0,.82); border:.12rem solid var(--glut); color:var(--glut-hi);
+}
+#dbg.hidden{ display:none }
+#dbg.err{ border-color:var(--alarm); color:#ffb3ae }
 </style>
 </head>
 <body>
-<div class="stage">
 
-  <!-- 1 · Zeit + Temperatur -->
-  <div class="stack">
-    <div class="timer panel chamfer-tl" id="hero">
-      <div class="label" id="hero-label">Restzeit</div>
-      <div class="value" id="hero-timer">00:00:00</div>
+<div class="feld">
+
+  <div class="live" id="k-live"><i></i><span>Live</span></div>
+
+  <div class="spalte">
+    <div class="titel" id="k-titel">Rennen</div>
+
+    <div class="zeile gross" id="z-uhr">
+      <div class="lab" id="lab-uhr">Restzeit</div>
+      <div class="row"><span class="val" id="t-uhr">--:--:--</span></div>
     </div>
 
-    <div class="temp panel" id="blk-temp">
-      <div>
-        <div class="label">Temperatur</div>
-        <div class="value" id="temp-c">--.- &deg;C</div>
-        <div class="value sub imp" id="temp-f">--.- &deg;F</div>
-      </div>
-      <div class="icon" id="wx-icon"></div>
+    <div class="zeile">
+      <div class="lab">Gelaufen</div>
+      <div class="row"><span class="val" id="t-km">0,00</span><span class="unit">km</span></div>
     </div>
 
-    <div class="accent-bar"></div>
+    <div class="zeile" id="z-rest">
+      <div class="lab" id="lab-rest">Rest-Distanz</div>
+      <div class="row"><span class="val" id="t-rest">--</span><span class="unit">km</span></div>
+    </div>
+
+    <div class="zeile">
+      <div class="lab">Pace</div>
+      <div class="row"><span class="val" id="t-pace">--:--</span><span class="unit">/km</span></div>
+    </div>
+
+    <div class="zeile">
+      <div class="lab">&#216; Pace</div>
+      <div class="row"><span class="val" id="t-apace">--:--</span><span class="unit">/km</span></div>
+    </div>
+
+    <div class="zeile" id="z-hf">
+      <div class="lab">HF</div>
+      <div class="row"><span class="val" id="t-hr">--</span><span class="unit">bpm</span></div>
+    </div>
+
+    <div class="zeile">
+      <div class="lab">H&ouml;henmeter</div>
+      <div class="row"><span class="val" id="t-hm">0</span><span class="unit">hm</span></div>
+    </div>
+
+    <div class="fusszeile uhr">
+      <span id="t-clock">--:--</span>
+      <span class="tr" id="tr-wx" style="display:none">|</span>
+      <span id="blk-wetter"><span id="wx-icon"></span><span id="t-temp">--,-&nbsp;°C</span></span>
+    </div>
   </div>
 
-  <!-- 2 · Strecken-Daten -->
-  <aside class="course">
-    <h1>Strecken-<br>Daten</h1>
-
-    <div class="block">
-      <div class="label">Uhrzeit</div>
-      <div class="value" id="clock">--:--</div>
-    </div>
-
-    <div class="block" id="blk-weather">
-      <div class="label">Wetter</div>
-      <div class="value" id="temp-c2">--.- &deg;C</div>
-      <div class="value sub imp" id="temp-f2">--.- &deg;F</div>
-    </div>
-
-    <div class="block">
-      <div class="label">Gelaufen</div>
-      <div class="value" id="dist-km">0.0 KM</div>
-      <div class="value sub imp" id="dist-mi">0.0 MI</div>
-    </div>
-
-    <div class="block" id="blk-remaining">
-      <div class="label" id="rem-label">Rest-Distanz</div>
-      <div class="value" id="rem-km">0.0 KM</div>
-      <div class="value sub imp" id="rem-mi">0.0 MI</div>
-    </div>
-  </aside>
-
-  <!-- 3 · Leistungs-Daten -->
-  <section class="perf">
-    <h2>Leistungs-Daten</h2>
-
-    <div class="crest">
-      <svg viewBox="0 0 420 124" preserveAspectRatio="none" aria-hidden="true">
-        <path class="wave" d="M0,116 C80,116 108,78 186,78 C264,78 292,116 420,116"/>
-        <path class="wave" d="M0,104 C80,104 116,60 200,60 C284,60 304,104 420,104" opacity=".26"/>
-        <path class="wave" d="M0,92 C86,92 124,42 214,42 C304,42 320,92 420,92" opacity=".17"/>
-        <path class="wave" d="M0,80 C92,80 132,24 228,24 C324,24 336,80 420,80" opacity=".1"/>
-      </svg>
-    </div>
-    <div class="badge">
-      <div class="top" id="badge-title">Ultra</div>
-      <div class="rule"></div>
-      <div class="bot" id="badge-sub">Live</div>
-    </div>
-
-    <div class="metrics">
-
-      <div class="metric">
-        <div class="label">Akt. Pace</div>
-        <div class="row"><span class="value" id="pace-km">--:--</span><span class="unit">/ KM</span></div>
-        <div class="row imp"><span class="value sub" id="pace-mi">--:--</span><span class="unit">/ MI</span></div>
-      </div>
-
-      <div class="metric">
-        <div class="label">&Oslash; Pace</div>
-        <div class="row"><span class="value" id="apace-km">--:--</span><span class="unit">/ KM</span></div>
-        <div class="row imp"><span class="value sub" id="apace-mi">--:--</span><span class="unit">/ MI</span></div>
-      </div>
-
-      <div class="metric">
-        <div class="label">H&ouml;henmeter</div>
-        <div class="row"><span class="value" id="ele-m">0</span><span class="unit">M</span></div>
-        <div class="row imp"><span class="value sub" id="ele-ft">0</span><span class="unit">FT</span></div>
-      </div>
-
-      <div class="metric">
-        <div class="label">Laufzeit</div>
-        <div class="row"><span class="value" id="perf-timer">00:00</span></div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- 5 · Intro -->
-  <div class="intro" id="intro">
-    <div class="kicker" id="intro-kicker">Live</div>
-    <div class="title" id="intro-title">Ultra</div>
-    <div class="cd-label">Start in</div>
-    <div class="cd" id="intro-cd">--:--:--</div>
-    <div class="rule"></div>
+  <div class="signet" id="k-signet">
+    <img id="k-logo" src="logo.png" alt="">
+    <div class="wortmarke" id="k-wort">You <span class="vs">vs</span> You</div>
+    <div class="mail" id="k-mail">kontakt@you-vs-you.online</div>
   </div>
-
-  <audio id="intro-audio" loop preload="auto"></audio>
-  <div class="sendbadge" id="sendbadge" hidden><b>Senden an Website</b><span id="sendbadge-txt">–</span></div>
-  <div class="sound-hint" id="sound-hint">Zum Aktivieren des Tons antippen</div>
 
 </div>
 
+<div class="intro gone" id="intro">
+  <div class="kicker" id="i-kicker">Live</div>
+  <div class="titel" id="i-titel">You vs You</div>
+  <div class="cd-lab">Start in</div>
+  <div class="cd" id="i-cd">--:--:--</div>
+</div>
+<audio id="i-audio" preload="none"></audio>
+<div class="hinweis" id="i-hinweis">Zum Starten tippen</div>
+
+<div id="dbg" class="hidden">--</div>
+
 <script>
 /* ================================================================
-   KONFIGURATION — auch per URL-Parameter setzbar.
-   start      = wann Foto/Countdown endet und die Kamera erscheint
-   racestart  = wann die Renn-Uhr und Streckendaten zu zaehlen beginnen
-   Beispiel:
-   overlay.html?target=52.5&duration=6&title=6H%20ULTRA
-     &start=2026-09-12T10:00:00%2B02:00
-     &racestart=2026-09-12T10:15:00%2B02:00
-     &image=start.jpg&audio=musik.mp3
+   YOU VS YOU -- Live-Overlay
+
+   Woher die Werte kommen:
+     Standard ("show")  von der Bruecke bei Cloudflare, die sie
+                        bei Garmin LiveTrack abholt.
+     ?mode=send         Notbetrieb: GPS des Geraets, auf dem das
+                        Overlay laeuft, und Versand an die Bruecke.
+
+   Ueber die Adresse steuerbar:
+     &live=…      Adresse der Bruecke
+     &key=…       Kennwort, nur im Notbetrieb noetig
+     &target=52.5 Pflichtziel in Kilometern
+     &duration=6  Renndauer in Stunden
+     &racestart=2026-09-12T10:00:00%2B02:00
+     &start=…     Zeitpunkt, ab dem das Standbild verschwindet
+     &title=…     Ueberschrift der Spalte
+     &hoch=1      alles in den hochformat-sicheren Bereich
+     &livebadge=0 LIVE-Kennzeichen ausblenden
+     &mail=…      andere Adresse, leer = ausblenden
+     &signet=0    Signet unten rechts weg
+     &wx=51.5547,7.9139   Ort fuers Wetter
+     &debug=1     Diagnose-Schild
+     &demo=1      erfundene Werte zum Ausprobieren
    ================================================================ */
+
 const CONFIG = {
-  /* ---- Fest eingebaut fuer den 6H Ultra Werl ----
-     Damit reicht im Cloud-OBS die kurze Adresse
-       https://www.you-vs-you.online/overlay.html
-     Jeder Wert laesst sich ueber den Link weiterhin ueberschreiben.  */
   targetKm:    52.5,
   durationH:   6,
-  startAt:     null,
   raceStartAt: "2026-09-12T10:00:00+02:00",
+  startAt:     null,
   title:       "6H Ultra Werl",
-  subtitle:    "Live",
-  weather:     true,
-  imperial:    false,
-  demo:        false,
-  debug:       false,
-
+  liveUrl:     "https://vvy-live.527nv2tghb.workers.dev",
+  liveKey:     "",
+  mode:        "show",
+  wxAt:        "51.5547,7.9139",
   introImage:  "",
   introAudio:  "",
   introKicker: "Live",
-
-  /* ---- Live-Werte an die Website senden ----
-     Beide Angaben kommen ueber den Link, damit das Kennwort
-     nicht in der oeffentlichen Datei steht:
-       &live=https://vvy-live.DEINNAME.workers.dev&key=DEINKENNWORT
-     Fehlt eine der beiden, wird nichts gesendet.                  */
-  liveUrl:     "https://vvy-live.527nv2tghb.workers.dev",
-  liveKey:     "",
-
-  /* ---- Betriebsart ----
-       "show" (Standard)  Die Werte kommen von der Bruecke, also von
-                          der Garmin-Uhr. So laeuft das Overlay im
-                          Cloud-OBS, wo es kein GPS gibt.
-       "send"             Rueckfallebene: die Werte kommen aus dem
-                          GPS des Geraets und werden zur Bruecke
-                          geschickt. Nur sinnvoll, wenn das Overlay
-                          auf dem mitgetragenen Handy laeuft.
-     Umschalten ueber den Link:  &mode=send                          */
-  mode:        "show",
-
-  /* Ohne GPS braucht das Wetter einen festen Ort.
-     Ueber den Link aenderbar:  &wx=51.5547,7.9139   (Werl)          */
-  wxAt:        "51.5547,7.9139"
+  demo:        false,
+  debug:       false
 };
 
 (function(){
   const q = new URLSearchParams(location.search);
-  const map = { target:'targetKm', start:'startAt', racestart:'raceStartAt',
-                title:'title', sub:'subtitle',
-                image:'introImage', audio:'introAudio', kicker:'introKicker',
-                live:'liveUrl', key:'liveKey', mode:'mode', wx:'wxAt' };
+  const map = { racestart:'raceStartAt', start:'startAt', title:'title',
+                live:'liveUrl', key:'liveKey', mode:'mode', wx:'wxAt',
+                image:'introImage', audio:'introAudio', kicker:'introKicker' };
   for (const [k,v] of Object.entries(map)) if (q.has(k)) CONFIG[v] = q.get(k);
   if (q.has('target'))   CONFIG.targetKm  = parseFloat(String(q.get('target')).replace(',','.')) || 0;
   if (q.has('duration')) CONFIG.durationH = parseFloat(String(q.get('duration')).replace(',','.')) || 0;
-  if (q.has('demo'))     CONFIG.demo     = q.get('demo') !== '0';
-  if (q.has('weather'))  CONFIG.weather  = q.get('weather') !== '0';
-  if (q.has('imperial')) CONFIG.imperial = q.get('imperial') !== '0';
-  if (q.has('debug'))    CONFIG.debug    = q.get('debug')    !== '0';
+  if (q.has('demo'))     CONFIG.demo  = q.get('demo')  !== '0';
+  if (q.has('debug'))    CONFIG.debug = q.get('debug') !== '0';
   CONFIG.mode = CONFIG.mode === 'send' ? 'send' : 'show';
 })();
 
+const q = new URLSearchParams(location.search);
 const $ = id => document.getElementById(id);
 
-const revealMs = CONFIG.startAt ? new Date(CONFIG.startAt).getTime() : 0;
-const raceStartMs = CONFIG.raceStartAt ? new Date(CONFIG.raceStartAt).getTime() : (revealMs || Date.now());
+const SENDET  = CONFIG.mode === 'send' && !CONFIG.demo;
+const HOLT    = CONFIG.mode === 'show' && !CONFIG.demo;
+const STALE_MS = 45000;
 
-/* Nur in dieser Betriebsart wird das GPS des Geraets benutzt. */
-const SENDET = CONFIG.mode === 'send' && !CONFIG.demo;
+const revealMs    = CONFIG.startAt ? new Date(CONFIG.startAt).getTime() : 0;
+const raceStartMs = CONFIG.raceStartAt ? new Date(CONFIG.raceStartAt).getTime()
+                                       : (revealMs || Date.now());
 
-const state = { meters:0, gain:0, last:null, baseAlt:null, trail:[], fix:0,
-                tempC:null, wxCode:null, hr:null };
+const state = { meter:0, gain:0, hr:null, fix:0, tempC:null, wxCode:null,
+                last:null, baseAlt:null, spur:[] };
+const feed  = { pace:null, apace:null, pAge:null, ok:false };
 
-/* Was von der Bruecke hereinkommt. pace/apace werden bevorzugt
-   uebernommen, damit Overlay und Website exakt dieselben Zahlen
-   zeigen -- beide rechnen dann nicht getrennt. */
-const feed = { an: CONFIG.mode === 'show' && !CONFIG.demo,
-               pace:null, apace:null, pAge:null, ok:false };
+/* ---- Anzeige einrichten ---- */
+if (q.get('hoch') === '1')      document.body.classList.add('hoch');
+if (q.get('livebadge') === '0') $('k-live').classList.add('aus');
+if (q.get('signet') === '0')    $('k-signet').classList.add('aus');
+if (CONFIG.debug)               $('dbg').classList.remove('hidden');
+$('k-titel').textContent = CONFIG.title;
+$('i-titel').textContent = CONFIG.title;
+$('i-kicker').textContent = CONFIG.introKicker;
+if (!CONFIG.targetKm) $('z-rest').classList.add('hidden');
+if (CONFIG.durationH <= 0) $('lab-uhr').textContent = 'Laufzeit';
 
-/* Zwischenergebnisse aus render() -- der Live-Sender liest sie ab,
-   damit Website und Stream exakt dieselben Zahlen zeigen. */
-const calc = { km:0, elapsed:0, left:null, pace:0, apace:0 };
+$('k-logo').style.display = 'none';
+$('k-logo').onload  = function(){ this.style.display='block'; $('k-wort').style.display='none'; };
+$('k-logo').onerror = function(){ this.remove(); };
+
+(function(){
+  const m = q.get('mail');
+  const txt = m !== null ? m : 'kontakt@you-vs-you.online';
+  if (!txt.trim()) $('k-mail').style.display = 'none'; else $('k-mail').textContent = txt;
+})();
+
+function melde(art, txt){
+  console.log('[Overlay] ' + art + ' — ' + txt);
+  if (!CONFIG.debug) return;
+  $('dbg').className = art === 'err' ? 'err' : '';
+  $('dbg').textContent = txt;
+}
 
 /* ================================================================
-   ZWISCHENSPEICHER
-   Die Uhr rechnet gegen einen festen Zeitpunkt und ist nach einem
-   Neuladen immer korrekt. Die Kilometer werden dagegen Meter fuer
-   Meter aufaddiert -- die waeren nach einem Neustart weg.
-   Deshalb werden sie laufend im Handy gesichert und beim Laden
-   wieder aufgenommen. Das greift auch, wenn die App abstuerzt,
-   der Bildschirm sperrt oder die Szene gewechselt wird.
-
-   Der Speicher gehoert zu genau einem Rennstart. Ein anderer
-   Termin bekommt automatisch einen frischen Zaehler.
+   Werkzeug
    ================================================================ */
-const SAVE_KEY = 'vvy_lauf_' + raceStartMs;
-
-function loadState(){
-  if (CONFIG.demo) return;                       // im Testmodus nie laden
-  try{
-    const raw = localStorage.getItem(SAVE_KEY);
-    if (!raw) return;
-    const d = JSON.parse(raw);
-
-    // Sicherung: nach dem Ende des Wettkampfs nicht mehr wiederherstellen
-    const maxAlter = (CONFIG.durationH > 0 ? CONFIG.durationH : 12) * 3600000 + 7200000;
-    if (!d.t || Date.now() - d.t > maxAlter) { localStorage.removeItem(SAVE_KEY); return; }
-
-    if (isFinite(d.meters)) state.meters = d.meters;
-    if (isFinite(d.gain))   state.gain   = d.gain;
-    // last/baseAlt bewusst nicht laden -- der erste neue Fix setzt sie sauber neu
-  }catch(_){}
+const pad = n => String(n).padStart(2,'0');
+const hms = s => pad(Math.floor(s/3600)) + ':' + pad(Math.floor(s/60)%60) + ':' + pad(Math.floor(s)%60);
+const komma = (n,k) => n.toFixed(k).replace('.', ',');
+function paceTxt(s){
+  if (!isFinite(s) || s <= 0 || s > 3600) return '--:--';
+  return pad(Math.floor(s/60)) + ':' + pad(Math.round(s)%60);
+}
+function distM(a,b){
+  const R = 6371000, r = Math.PI/180;
+  const p1 = a.lat*r, p2 = b.lat*r;
+  const dp = p2-p1, dl = (b.lon-a.lon)*r;
+  const h = Math.sin(dp/2)**2 + Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
 }
 
-let saveAt = 0;
-function saveState(){
-  if (CONFIG.demo) return;
-  const now = Date.now();
-  if (now - saveAt < 5000) return;               // hoechstens alle 5 Sekunden
-  saveAt = now;
-  try{
-    localStorage.setItem(SAVE_KEY, JSON.stringify({
-      meters: state.meters, gain: state.gain, t: now
-    }));
-  }catch(_){}
-}
-
-/* Mit ?reset=1 im Link laesst sich der Zaehler von Hand leeren */
-if (new URLSearchParams(location.search).has('reset')){
-  try{ localStorage.removeItem(SAVE_KEY); }catch(_){}
-} else {
-  loadState();
-}
-
-/* Beim Schliessen oder Wegschalten noch einmal sichern */
-['pagehide','visibilitychange','beforeunload'].forEach(ev =>
-  window.addEventListener(ev, () => { saveAt = 0; saveState(); })
-);
-
-$('badge-title').textContent = CONFIG.title;
-$('badge-sub').textContent   = CONFIG.subtitle;
-$('hero-label').textContent  = CONFIG.durationH > 0 ? 'Restzeit' : 'Laufzeit';
-if (!CONFIG.targetKm) $('blk-remaining').style.display = 'none';
-if (!CONFIG.weather){ $('blk-weather').style.display='none'; $('blk-temp').style.display='none'; }
-if (CONFIG.imperial) document.body.classList.add('imperial');
-
-/* ---- Wettersymbole ---- */
+/* ================================================================
+   Wetter
+   ================================================================ */
 const ICONS = {
-  sun:   '<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="8"/><line x1="20" y1="3" x2="20" y2="8"/><line x1="20" y1="32" x2="20" y2="37"/><line x1="3" y1="20" x2="8" y2="20"/><line x1="32" y1="20" x2="37" y2="20"/><line x1="8" y1="8" x2="11.5" y2="11.5"/><line x1="28.5" y1="28.5" x2="32" y2="32"/><line x1="32" y1="8" x2="28.5" y2="11.5"/><line x1="11.5" y1="28.5" x2="8" y2="32"/></svg>',
-  cloud: '<svg viewBox="0 0 40 40"><path d="M11 29h18a6 6 0 0 0 .4-12 9 9 0 0 0-17.3 2.2A5.5 5.5 0 0 0 11 29z"/></svg>',
-  rain:  '<svg viewBox="0 0 40 40"><path d="M11 24h18a6 6 0 0 0 .4-12 9 9 0 0 0-17.3 2.2A5.5 5.5 0 0 0 11 24z"/><line x1="14" y1="29" x2="12" y2="35"/><line x1="21" y1="29" x2="19" y2="35"/><line x1="28" y1="29" x2="26" y2="35"/></svg>',
-  snow:  '<svg viewBox="0 0 40 40"><path d="M11 24h18a6 6 0 0 0 .4-12 9 9 0 0 0-17.3 2.2A5.5 5.5 0 0 0 11 24z"/><line x1="13" y1="31" x2="17" y2="31"/><line x1="15" y1="29" x2="15" y2="33"/><line x1="23" y1="31" x2="27" y2="31"/><line x1="25" y1="29" x2="25" y2="33"/></svg>',
-  storm: '<svg viewBox="0 0 40 40"><path d="M11 24h18a6 6 0 0 0 .4-12 9 9 0 0 0-17.3 2.2A5.5 5.5 0 0 0 11 24z"/><path d="M21 27l-5 6h5l-3 5"/></svg>'
+  sun:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="8"/><line x1="20" y1="3" x2="20" y2="7"/><line x1="20" y1="33" x2="20" y2="37"/><line x1="3" y1="20" x2="7" y2="20"/><line x1="33" y1="20" x2="37" y2="20"/><line x1="8" y1="8" x2="11" y2="11"/><line x1="29" y1="29" x2="32" y2="32"/><line x1="32" y1="8" x2="29" y2="11"/><line x1="11" y1="29" x2="8" y2="32"/></svg>',
+  cloud:'<svg viewBox="0 0 40 40"><path d="M11 29h18a6 6 0 0 0 .4-12 9 9 0 0 0-17.3 2.2A5.5 5.5 0 0 0 11 29z"/></svg>',
+  rain:'<svg viewBox="0 0 40 40"><path d="M11 24h18a6 6 0 0 0 .4-12 9 9 0 0 0-17.3 2.2A5.5 5.5 0 0 0 11 24z"/><line x1="14" y1="29" x2="12" y2="35"/><line x1="21" y1="29" x2="19" y2="35"/><line x1="28" y1="29" x2="26" y2="35"/></svg>',
+  snow:'<svg viewBox="0 0 40 40"><path d="M11 24h18a6 6 0 0 0 .4-12 9 9 0 0 0-17.3 2.2A5.5 5.5 0 0 0 11 24z"/><line x1="13" y1="31" x2="17" y2="31"/><line x1="15" y1="29" x2="15" y2="33"/><line x1="23" y1="31" x2="27" y2="31"/><line x1="25" y1="29" x2="25" y2="33"/></svg>',
+  storm:'<svg viewBox="0 0 40 40"><path d="M11 24h18a6 6 0 0 0 .4-12 9 9 0 0 0-17.3 2.2A5.5 5.5 0 0 0 11 24z"/><path d="M21 27l-5 6h5l-3 5"/></svg>'
 };
 function setIcon(code){
   let k;
-  if (code <= 1) k = 'sun';
-  else if (code <= 48) k = 'cloud';
-  else if ((code >= 71 && code <= 77) || code === 85 || code === 86) k = 'snow';
-  else if (code >= 95) k = 'storm';
-  else k = 'rain';
+  if (code <= 1) k='sun';
+  else if (code <= 48) k='cloud';
+  else if ((code>=71&&code<=77)||code===85||code===86) k='snow';
+  else if (code >= 95) k='storm';
+  else k='rain';
   $('wx-icon').innerHTML = ICONS[k];
 }
 setIcon(3);
 
-/* ---- Formatierung ---- */
-const pad = n => String(n).padStart(2,'0');
-function hms(ms){
-  const s = Math.max(0, Math.floor(ms/1000));
-  return pad(Math.floor(s/3600)) + ':' + pad(Math.floor(s%3600/60)) + ':' + pad(s%60);
+function wxOrt(){
+  if (state.last) return [state.last.lat, state.last.lon];
+  const p = String(CONFIG.wxAt||'').split(',');
+  const la = parseFloat(p[0]), lo = parseFloat(p[1]);
+  return isFinite(la) && isFinite(lo) ? [la,lo] : null;
 }
-function hm(ms){
-  const s = Math.max(0, Math.floor(ms/1000));
-  return pad(Math.floor(s/3600)) + ':' + pad(Math.floor(s%3600/60));
-}
-function pace(secPerUnit){
-  if (!isFinite(secPerUnit) || secPerUnit <= 0 || secPerUnit > 5999) return '--:--';
-  return pad(Math.floor(secPerUnit/60)) + ':' + pad(Math.round(secPerUnit%60));
-}
-
-/* ---- Haversine ---- */
-function distM(a, b){
-  const R = 6371000, rad = Math.PI/180;
-  const dLat = (b.lat-a.lat)*rad, dLon = (b.lon-a.lon)*rad;
-  const s = Math.sin(dLat/2)**2 +
-            Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin(dLon/2)**2;
-  return 2*R*Math.asin(Math.min(1, Math.sqrt(s)));
-}
-
-/* ---- Standort ---- */
-function onFix(p){
-  if (Date.now() < raceStartMs) return;               // vor dem Rennstart zaehlt nichts
-  const c = p.coords;
-  if (c.accuracy > 30) return;
-  const now = p.timestamp || Date.now();
-  const pt = { lat:c.latitude, lon:c.longitude, t:now, alt:c.altitude };
-
-  if (state.last){
-    const d = distM(state.last, pt);
-    const dt = (now - state.last.t)/1000;
-    if (d >= 4 && dt > 0 && d/dt < 12){
-      state.meters += d;
-      state.trail.push({ t: now, m: state.meters });
-      state.last = pt;
-    }
-  } else {
-    state.last = pt;
-  }
-
-  if (typeof pt.alt === 'number' && !isNaN(pt.alt)){
-    if (state.baseAlt === null) state.baseAlt = pt.alt;
-    const d = pt.alt - state.baseAlt;
-    if (d > 4){ state.gain += d; state.baseAlt = pt.alt; }
-    else if (d < -4){ state.baseAlt = pt.alt; }
-  }
-  state.fix = Date.now();
-  saveState();
-}
-
-if (SENDET && 'geolocation' in navigator){
-  navigator.geolocation.watchPosition(onFix, () => {},
-    { enableHighAccuracy:true, maximumAge:2000, timeout:15000 });
+let wxAt = 0;
+async function updateWeather(){
+  const ort = wxOrt();
+  if (!ort || Date.now() - wxAt < 600000) return;
+  wxAt = Date.now();
+  try{
+    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' +
+      ort[0].toFixed(3) + '&longitude=' + ort[1].toFixed(3) +
+      '&current=temperature_2m,weather_code');
+    const j = await r.json();
+    state.tempC  = j.current.temperature_2m;
+    state.wxCode = j.current.weather_code;
+    $('t-temp').textContent = komma(state.tempC, 1) + ' °C';
+    setIcon(state.wxCode);
+    $('blk-wetter').style.display = 'inline-flex';
+    $('tr-wx').style.display = '';
+  }catch(_){ wxAt = Date.now() - 540000; }
 }
 
 /* ================================================================
-   EMPFAENGER  --  Werte von der Uhr abholen
-   ================================================================
-
-   Im Anzeige-Betrieb (Standard) holt sich das Overlay die Zahlen
-   alle 5 Sekunden von der Bruecke bei Cloudflare. Die Bruecke
-   wiederum liest sie bei Garmin LiveTrack aus. Damit braucht das
-   Overlay selbst kein GPS und laeuft auch auf einem Rechner im
-   Rechenzentrum.
-
-   Bleiben die Werte laenger als STALE_MS stehen, wird die Anzeige
-   blass. Eine eingefrorene Zahl, die frisch aussieht, waere
-   schlimmer als eine, die zugibt dass sie alt ist.
+   Werte holen -- Standardbetrieb
    ================================================================ */
-const STALE_MS = 45000;
-
 const Feed = (function(){
   const aus = { tick(){} };
-  if (!feed.an) return aus;
+  if (!HOLT) return aus;
+  if (!CONFIG.liveUrl){ melde('err','AUS — live= fehlt im Link'); return aus; }
 
-  if (!CONFIG.liveUrl){
-    console.log('[Feed] AUS — live= fehlt im Link');
-    return aus;
-  }
-
-  const url    = String(CONFIG.liveUrl).replace(/\/+$/, '') + '/';
-  const HOL_MS = 5000;
-  let holAt = 0, busy = false;
+  const url = String(CONFIG.liveUrl).replace(/\/+$/,'') + '/';
+  let holAt = 0, busy = false, n = 0;
 
   async function hol(){
     if (busy) return;
@@ -598,159 +430,159 @@ const Feed = (function(){
       const r = await fetch(url + '?t=' + Date.now(), { cache:'no-store' });
       const j = await r.json();
       const d = j && j.data;
-
       if (d){
-        /* Der Zaehler geht nur vorwaerts. */
-        const m = (Number(d.km) || 0) * 1000;
-        if (m > state.meters) state.meters = m;
+        const m = (Number(d.km)||0) * 1000;
+        if (m > state.meter) state.meter = m;
         if (Number(d.gain) > state.gain) state.gain = Number(d.gain);
         if (d.hr != null) state.hr = Number(d.hr);
-
         feed.pace  = d.pace  != null ? Number(d.pace)  : null;
         feed.apace = d.apace != null ? Number(d.apace) : null;
         feed.pAge  = j.pAge != null ? Number(j.pAge) : null;
-        feed.ok    = true;
-        state.fix  = Date.now();
+        feed.ok = true; state.fix = Date.now(); n++;
+        melde('ok', 'OK ' + komma(state.meter/1000,2) + ' km\n' +
+                    (feed.pAge!=null ? Math.round(feed.pAge/1000)+' s alt' : 'ohne Zeitstempel') +
+                    ' · ' + n + '. Abruf' + (j.err ? '\nBruecke: '+j.err : ''));
       } else {
         feed.ok = false;
+        melde('err', 'noch keine Werte' + (j && j.err ? '\n' + j.err : ''));
       }
-      console.log('[Feed] ' + (d ? (Number(d.km)||0).toFixed(2) + ' km · ' +
-                  (j.pAge != null ? Math.round(j.pAge/1000) + ' s alt' : 'ohne Zeitstempel')
-                  : 'noch keine Werte'));
     }catch(e){
       feed.ok = false;
-      console.log('[Feed] kein Netz — ' + (e && e.message ? e.message : e));
+      melde('err', 'kein Netz\n' + (e && e.message ? e.message : e));
     }
     busy = false;
   }
-
   hol();
-  return {
-    tick(){
-      const now = Date.now();
-      if (now - holAt < HOL_MS) return;
-      holAt = now;
-      hol();
-    }
-  };
+  return { tick(){ const t = Date.now(); if (t - holAt < 5000) return; holAt = t; hol(); } };
 })();
 
-/* ---- Wetter ---- */
-let weatherAt = 0;
-/* Ohne GPS wird der feste Ort aus dem Link benutzt. */
-function wxOrt(){
-  if (state.last) return [state.last.lat, state.last.lon];
-  const p = String(CONFIG.wxAt || '').split(',');
-  const la = parseFloat(p[0]), lo = parseFloat(p[1]);
-  return isFinite(la) && isFinite(lo) ? [la, lo] : null;
+/* ================================================================
+   Notbetrieb -- eigenes GPS, Versand an die Bruecke
+   ================================================================ */
+if (SENDET && 'geolocation' in navigator){
+  navigator.geolocation.watchPosition(p => {
+    if (Date.now() < raceStartMs) return;
+    const c = p.coords;
+    if (c.accuracy > 30) return;
+    const now = p.timestamp || Date.now();
+    const pt = { lat:c.latitude, lon:c.longitude, t:now };
+    if (state.last){
+      const d = distM(state.last, pt), dt = (now - state.last.t)/1000;
+      if (d >= 4 && dt > 0 && d/dt < 12){
+        state.meter += d;
+        state.spur.push({ t:now, m:state.meter });
+        state.last = pt;
+      }
+    } else state.last = pt;
+    if (typeof c.altitude === 'number' && !isNaN(c.altitude)){
+      if (state.baseAlt === null) state.baseAlt = c.altitude;
+      const d = c.altitude - state.baseAlt;
+      if (d > 4){ state.gain += d; state.baseAlt = c.altitude; }
+      else if (d < -4) state.baseAlt = c.altitude;
+    }
+    state.fix = Date.now();
+  }, () => {}, { enableHighAccuracy:true, maximumAge:2000, timeout:15000 });
 }
 
-async function updateWeather(){
-  if (!CONFIG.weather) return;
-  const ort = wxOrt();
-  if (!ort) return;
-  if (Date.now() - weatherAt < 600000) return;
-  weatherAt = Date.now();
-  try{
-    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' +
-      ort[0].toFixed(3) + '&longitude=' + ort[1].toFixed(3) +
-      '&current=temperature_2m,weather_code');
-    const j = await r.json();
-    const c = j.current.temperature_2m;
-    state.tempC  = c;
-    state.wxCode = j.current.weather_code;
-    const cs = c.toFixed(1) + ' \u00B0C', fs = (c*9/5+32).toFixed(1) + ' \u00B0F';
-    $('temp-c').textContent = cs;  $('temp-c2').textContent = cs;
-    $('temp-f').textContent = fs;  $('temp-f2').textContent = fs;
-    setIcon(j.current.weather_code);
-  }catch(_){ weatherAt = Date.now() - 540000; }
-}
+const Live = (function(){
+  const aus = { tick(){} };
+  if (!SENDET) return aus;
+  if (!CONFIG.liveUrl || !CONFIG.liveKey){
+    melde('err','Notbetrieb ohne Versand — live= oder key= fehlt'); return aus;
+  }
+  const url = String(CONFIG.liveUrl).replace(/\/+$/,'');
+  const hist = []; let letzte = 0, histMin = -1, busy = false;
+  return { tick(){
+    const now = Date.now();
+    if (now < raceStartMs || now - letzte < 30000 || busy) return;
+    letzte = now; busy = true;
+    const el = Math.max(0, now - raceStartMs);
+    const min = Math.floor(el/60000);
+    if (Math.floor(min/5) > histMin){
+      histMin = Math.floor(min/5);
+      hist.push([min, Math.round(state.meter)/1000]);
+      if (hist.length > 200) hist.shift();
+    }
+    fetch(url, { method:'POST',
+      headers:{ 'Content-Type':'application/json', 'X-Token': CONFIG.liveKey },
+      body: JSON.stringify({ v:2, src:'handy', t:now, pt:now,
+        title:CONFIG.title, km:Math.round(state.meter)/1000, gain:Math.round(state.gain),
+        hr:state.hr, elapsed:el,
+        left: CONFIG.durationH>0 ? Math.max(0, CONFIG.durationH*3600000-el) : null,
+        dur:CONFIG.durationH||null, target:CONFIG.targetKm||null,
+        pace:null, apace:null, temp:state.tempC, wx:state.wxCode, hist:hist })
+    }).then(r => melde(r.ok?'ok':'err', r.ok ? 'gesendet' : 'Sendefehler ' + r.status))
+      .catch(() => melde('err','Senden fehlgeschlagen'))
+      .finally(() => { busy = false; });
+  }};
+})();
 
 /* ---- Demo ---- */
 if (CONFIG.demo){
-  const cs = '15.8 \u00B0C', fs = '60.4 \u00B0F';
-  $('temp-c').textContent = cs; $('temp-c2').textContent = cs;
-  $('temp-f').textContent = fs; $('temp-f2').textContent = fs;
-  setIcon(0);
   setInterval(() => {
     if (Date.now() < raceStartMs) return;
-    state.meters += 2.5 + Math.random();
-    state.gain   += Math.random() * .6;
-    state.fix     = Date.now();
-    state.trail.push({ t: Date.now(), m: state.meters });
+    state.meter += 2.6 + Math.random();
+    state.gain  += Math.random()*.5;
+    state.hr = 150 + Math.round(Math.random()*12);
+    state.spur.push({ t:Date.now(), m:state.meter });
+    state.fix = Date.now();
   }, 1000);
 }
 
-/* ---- Render ---- */
-function render(){
+/* ================================================================
+   Anzeige
+   ================================================================ */
+function zeichne(){
   const now = Date.now();
-  const elapsed = Math.max(0, now - raceStartMs);
+  const el  = Math.max(0, now - raceStartMs);
 
   if (CONFIG.durationH > 0){
-    const left = Math.max(0, CONFIG.durationH*3600000 - elapsed);
-    $('hero-timer').textContent = hms(left);
-    $('hero').classList.toggle('final', elapsed > 0 && left <= 600000);
+    const rest = Math.max(0, CONFIG.durationH*3600000 - el);
+    $('t-uhr').textContent = hms(rest/1000);
+    $('z-uhr').classList.toggle('final', el > 0 && rest <= 600000);
   } else {
-    $('hero-timer').textContent = hms(elapsed);
+    $('t-uhr').textContent = hms(el/1000);
   }
-  $('perf-timer').textContent = hm(elapsed);
 
   const t = new Date();
-  $('clock').textContent = pad(t.getHours()) + ':' + pad(t.getMinutes());
+  $('t-clock').textContent = pad(t.getHours()) + ':' + pad(t.getMinutes());
 
-  const km = state.meters/1000;
-  $('dist-km').textContent = km.toFixed(1) + ' KM';
-  $('dist-mi').textContent = (km/1.609344).toFixed(1) + ' MI';
+  const km = state.meter/1000;
+  $('t-km').textContent = komma(km, 2);
+  $('t-hm').textContent = String(Math.round(state.gain));
+  $('t-hr').textContent = state.hr ? state.hr : '--';
 
   if (CONFIG.targetKm){
-    /* Bis zum Ziel zaehlt die Anzeige rueckwaerts. Ist das Ziel erreicht,
-       bleibt sie nicht auf 0.0 stehen, sondern zeigt den Ueberschuss --
-       gelaufen wird ja weiter, solange die Uhr laeuft. */
     if (km >= CONFIG.targetKm){
-      const ue = km - CONFIG.targetKm;
-      $('rem-label').textContent = 'Über Ziel';
-      $('rem-km').textContent = '+' + ue.toFixed(1) + ' KM';
-      $('rem-mi').textContent = '+' + (ue/1.609344).toFixed(1) + ' MI';
-      $('blk-remaining').classList.add('reached');
+      $('lab-rest').textContent = 'Über Ziel';
+      $('t-rest').textContent = '+' + komma(km - CONFIG.targetKm, 2);
+      $('z-rest').classList.add('erreicht');
     } else {
-      const rk = CONFIG.targetKm - km;
-      $('rem-label').textContent = 'Rest-Distanz';
-      $('rem-km').textContent = rk.toFixed(1) + ' KM';
-      $('rem-mi').textContent = (rk/1.609344).toFixed(1) + ' MI';
-      $('blk-remaining').classList.remove('reached');
+      $('lab-rest').textContent = 'Rest-Distanz';
+      $('t-rest').textContent = komma(CONFIG.targetKm - km, 2);
+      $('z-rest').classList.remove('erreicht');
     }
   }
 
-  /* Durchschnittstempo: kommt es von der Bruecke, wird es
-     uebernommen -- dann steht auf der Website dieselbe Zahl. */
-  let aSec = km > .05 ? (elapsed/1000)/km : 0;
-  if (feed.an && feed.apace != null) aSec = feed.apace;
-  $('apace-km').textContent = pace(aSec);
-  $('apace-mi').textContent = pace(aSec*1.609344);
-
-  while (state.trail.length && now - state.trail[0].t > 90000) state.trail.shift();
-  let cSec = 0;
-  if (state.trail.length > 1){
-    const a = state.trail[0], b = state.trail[state.trail.length-1];
-    const dKm = (b.m - a.m)/1000, dS = (b.t - a.t)/1000;
-    if (dKm > .02) cSec = dS/dKm;
+  /* Tempo: bevorzugt von der Bruecke, damit Website und Stream
+     dieselben Zahlen zeigen. Sonst aus der eigenen Spur. */
+  let pace = 0, apace = 0;
+  if (HOLT){
+    pace  = feed.pace  != null ? feed.pace  : 0;
+    apace = feed.apace != null ? feed.apace : 0;
+  } else {
+    while (state.spur.length && now - state.spur[0].t > 90000) state.spur.shift();
+    if (state.spur.length > 1){
+      const a = state.spur[0], b = state.spur[state.spur.length-1];
+      const dKm = (b.m-a.m)/1000, dS = (b.t-a.t)/1000;
+      if (dKm > .02) pace = dS/dKm;
+    }
+    apace = km > .05 ? (el/1000)/km : 0;
   }
-  if (feed.an) cSec = feed.pace != null ? feed.pace : 0;
-  $('pace-km').textContent = pace(cSec);
-  $('pace-mi').textContent = pace(cSec*1.609344);
+  $('t-pace').textContent  = paceTxt(pace);
+  $('t-apace').textContent = paceTxt(apace);
 
-  $('ele-m').textContent  = Math.round(state.gain).toLocaleString('de-DE');
-  $('ele-ft').textContent = Math.round(state.gain*3.28084).toLocaleString('de-DE');
-
-  /* Werte für den Live-Sender merken */
-  calc.km      = km;
-  calc.elapsed = elapsed;
-  calc.left    = CONFIG.durationH > 0 ? Math.max(0, CONFIG.durationH*3600000 - elapsed) : null;
-  calc.pace    = cSec;
-  calc.apace   = aSec;
-
-  /* Stehen die Werte, wird die Anzeige blass statt zu luegen. */
-  if (feed.an){
+  if (HOLT){
     const alt = feed.pAge === null ? Infinity : feed.pAge;
     document.body.classList.toggle('stale', !feed.ok || alt > STALE_MS);
   }
@@ -758,204 +590,51 @@ function render(){
   updateWeather();
   Feed.tick();
   Live.tick();
-  requestAnimationFrame(render);
+  requestAnimationFrame(zeichne);
 }
+zeichne();
 
 /* ================================================================
-   LIVE-SENDER
-   Schickt alle 30 Sekunden einen kleinen Datensatz an die Brücke
-   bei Cloudflare, damit die Website die Werte anzeigen kann --
-   auch in den Runden, in denen der Stream pausiert.
-
-   Es werden ausschliesslich Kilometer, Zeiten, Hoehenmeter und
-   das Wetter uebertragen. KEINE Koordinaten.
-
-   Faellt das Netz aus, wird der Fehler verschluckt und beim
-   naechsten Versuch weitergemacht -- der Stream laeuft davon
-   voellig unbeeindruckt weiter.
-   ================================================================ */
-const Live = (function(){
-
-  /* ---- Diagnose-Schild ---- */
-  const badge = document.getElementById('sendbadge');
-  const btxt  = document.getElementById('sendbadge-txt');
-  const show  = !!CONFIG.debug;
-  if (show && badge) badge.hidden = false;
-
-  function uhr(){
-    const d = new Date();
-    return String(d.getHours()).padStart(2,'0') + ':' +
-           String(d.getMinutes()).padStart(2,'0') + ':' +
-           String(d.getSeconds()).padStart(2,'0');
-  }
-  function melde(zustand, text){
-    console.log('[Live] ' + zustand + ' — ' + text);
-    if (!show || !badge) return;
-    badge.className = 'sendbadge ' + zustand;
-    btxt.textContent = text;
-  }
-
-  const off = { tick(){}, flush(){} };
-
-  /* Im Anzeige-Betrieb wird nichts gesendet -- die Werte kommen
-     dort ja bereits von der Uhr ueber die Bruecke. */
-  if (!SENDET){
-    melde('ok', CONFIG.demo ? 'DEMO\nerfundene Werte'
-                            : 'ANZEIGE\nWerte kommen von der Uhr');
-    return off;
-  }
-
-  if (!CONFIG.liveUrl || !CONFIG.liveKey){
-    melde('err', 'AUS\n' + (!CONFIG.liveUrl ? 'live= fehlt im Link' : 'key= fehlt im Link'));
-    return off;
-  }
-
-  const url  = String(CONFIG.liveUrl).replace(/\/+$/, '');
-  const hist = [];                 // [Minuten seit Rennstart, Kilometer]
-  const SEND_MS = 30000;           // Sendetakt
-  const HIST_MIN = 5;              // Verlaufspunkt alle 5 Minuten
-
-  let lastSend = 0, lastHistMin = -1, busy = false, zaehler = 0;
-
-  melde('wait', 'bereit\n' + url.replace(/^https?:\/\//,''));
-
-  function payload(){
-    const min = Math.floor(calc.elapsed / 60000);
-
-    /* Verlauf höchstens alle 5 Minuten ergänzen -- ergibt bei
-       6 Stunden rund 72 Punkte und bleibt winzig. */
-    if (min >= 0 && Math.floor(min / HIST_MIN) > lastHistMin){
-      lastHistMin = Math.floor(min / HIST_MIN);
-      hist.push([min, Math.round(calc.km * 100) / 100]);
-      if (hist.length > 200) hist.shift();
-    }
-
-    return {
-      v:       1,
-      t:       Date.now(),
-      fix:     state.fix || null,
-      title:   CONFIG.title,
-      km:      Math.round(calc.km * 100) / 100,
-      gain:    Math.round(state.gain),
-      elapsed: Math.round(calc.elapsed),
-      left:    calc.left === null ? null : Math.round(calc.left),
-      dur:     CONFIG.durationH || null,
-      target:  CONFIG.targetKm  || null,
-      pace:    Math.round(calc.pace)  || null,
-      apace:   Math.round(calc.apace) || null,
-      temp:    state.tempC  === null ? null : Math.round(state.tempC * 10) / 10,
-      wx:      state.wxCode === null ? null : state.wxCode,
-      hist:    hist
-    };
-  }
-
-  async function send(keepalive){
-    if (busy) return;
-    busy = true;
-    melde('wait', 'sende …');
-    try{
-      const r = await fetch(url, {
-        method:  'POST',
-        headers: { 'Content-Type':'application/json', 'X-Token': CONFIG.liveKey },
-        body:    JSON.stringify(payload()),
-        keepalive: !!keepalive
-      });
-      if (r.ok){
-        zaehler++;
-        melde('ok', 'OK ' + uhr() + '\n' + calc.km.toFixed(2) + ' km · ' + zaehler + '. Sendung');
-      } else if (r.status === 401){
-        melde('err', 'FEHLER 401\nKennwort stimmt nicht mit\nTOKEN bei Cloudflare überein');
-      } else if (r.status === 503){
-        melde('err', 'FEHLER 503\nTOKEN bei Cloudflare fehlt');
-      } else if (r.status === 500){
-        melde('err', 'FEHLER 500\nDatenbank nicht verbunden\n(Bindung DB prüfen)');
-      } else {
-        melde('err', 'FEHLER ' + r.status + '\n' + uhr());
-      }
-    }catch(e){
-      melde('err', 'KEIN NETZ\n' + uhr() + '\n' + (e && e.message ? e.message : ''));
-    }
-    busy = false;
-  }
-
-  /* Antippen sendet sofort -- praktisch beim Einrichten */
-  if (badge) badge.addEventListener('click', () => { lastSend = Date.now(); send(false); });
-
-  return {
-    tick(){
-      const now = Date.now();
-      if (now < raceStartMs){
-        const s = Math.ceil((raceStartMs - now) / 1000);
-        melde('wait', 'wartet auf Rennstart\nnoch ' + s + ' s');
-        return;
-      }
-      if (now - lastSend < SEND_MS) return;
-      lastSend = now;
-      send(false);
-    },
-    flush(){ lastSend = Date.now(); send(true); }
-  };
-})();
-
-/* Beim Wegschalten oder Schliessen noch einmal den Endstand senden */
-['pagehide','beforeunload'].forEach(ev => window.addEventListener(ev, () => Live.flush()));
-
-render();
-
-/* ================================================================
-   INTRO: Standbild + Musik -> Countdown -> Kamerabild
+   Intro: Standbild + Countdown bis zum Rennstart
    ================================================================ */
 (function(){
-  const intro = $('intro'), music = $('intro-audio'), hint = $('sound-hint');
+  const intro = $('intro'), musik = $('i-audio'), hint = $('i-hinweis');
+  if (!revealMs || Date.now() >= revealMs) return;
 
-  $('intro-title').textContent  = CONFIG.title;
-  $('intro-kicker').textContent = CONFIG.introKicker;
+  intro.classList.remove('gone');
   if (CONFIG.introImage) intro.style.backgroundImage = 'url("' + CONFIG.introImage + '")';
 
-  if (!revealMs || Date.now() >= revealMs){ intro.classList.add('gone'); return; }
-
-  let unlocked = false;
-  function unlock(){
-    if (unlocked) return;
-    unlocked = true;
-    hint.classList.remove('show');
+  let frei = false;
+  function starte(){
+    if (frei) return;
+    frei = true; hint.classList.remove('show');
     if (CONFIG.introAudio){
-      music.src = CONFIG.introAudio;
-      music.volume = .55;
-      music.play().catch(() => {});
+      musik.src = CONFIG.introAudio; musik.volume = .55;
+      musik.play().catch(() => {});
     }
   }
-  document.addEventListener('pointerdown', unlock, { once:true, capture:true });
-
   if (CONFIG.introAudio){
-    setTimeout(() => { if (!unlocked) hint.classList.add('show'); }, 1200);
+    setTimeout(() => { if (!frei) hint.classList.add('show'); }, 1200);
+    document.addEventListener('pointerdown', starte, { once:true, capture:true });
   }
 
-  function reveal(){
-    music.pause();
-    hint.classList.remove('show');
-    intro.classList.add('hide');
-    setTimeout(() => intro.classList.add('gone'), 1000);
-  }
-
-  const tick = setInterval(() => {
-    const left = revealMs - Date.now();
-    if (left <= 0){
-      clearInterval(tick);
-      $('intro-cd').textContent = '00:00:00';
-      reveal();
+  (function tick(){
+    const rest = revealMs - Date.now();
+    if (rest <= 0){
+      intro.classList.add('hide');
+      setTimeout(() => intro.classList.add('gone'), 1000);
+      if (!musik.paused){
+        const w = setInterval(() => {
+          musik.volume = Math.max(0, musik.volume - .04);
+          if (musik.volume <= .01){ musik.pause(); clearInterval(w); }
+        }, 120);
+      }
       return;
     }
-    $('intro-cd').textContent = hms(left);
-  }, 250);
+    $('i-cd').textContent = hms(rest/1000);
+    setTimeout(tick, 250);
+  })();
 })();
-
-/* ---- Display wach halten ---- */
-if ('wakeLock' in navigator){
-  const hold = () => navigator.wakeLock.request('screen').catch(()=>{});
-  hold();
-  document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && hold());
-}
 </script>
 </body>
 </html>
