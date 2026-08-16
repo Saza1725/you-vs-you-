@@ -341,11 +341,15 @@ body.stale .sub{ opacity:.42; transition:opacity .6s ease }
      &image=start.jpg&audio=musik.mp3
    ================================================================ */
 const CONFIG = {
-  targetKm:    0,
-  durationH:   0,
+  /* ---- Fest eingebaut fuer den 6H Ultra Werl ----
+     Damit reicht im Cloud-OBS die kurze Adresse
+       https://www.you-vs-you.online/overlay.html
+     Jeder Wert laesst sich ueber den Link weiterhin ueberschreiben.  */
+  targetKm:    52.5,
+  durationH:   6,
   startAt:     null,
-  raceStartAt: null,
-  title:       "Ultra",
+  raceStartAt: "2026-09-12T10:00:00+02:00",
+  title:       "6H Ultra Werl",
   subtitle:    "Live",
   weather:     true,
   imperial:    false,
@@ -361,7 +365,7 @@ const CONFIG = {
      nicht in der oeffentlichen Datei steht:
        &live=https://vvy-live.DEINNAME.workers.dev&key=DEINKENNWORT
      Fehlt eine der beiden, wird nichts gesendet.                  */
-  liveUrl:     "",
+  liveUrl:     "https://vvy-live.527nv2tghb.workers.dev",
   liveKey:     "",
 
   /* ---- Betriebsart ----
