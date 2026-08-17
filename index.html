@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>YOU VS YOU — Ultralauf live: Countdown, Stream und Events</title>
 <meta name="description" content="Ultralauf live: Countdown, Live-Stream, Events, Disziplinen und Training. You vs You.">
-<meta name="theme-color" content="#0D0620">
+<meta name="theme-color" content="#08050F">
 <meta name="color-scheme" content="dark">
 <link rel="canonical" href="https://www.you-vs-you.online/">
 
@@ -87,14 +87,18 @@
 }
 
 :root{
-  --ink:      #0D0620;
-  --accent:   #FFD400;
+  /* Farbwelt "Glut" -- dieselbe Temperatur wie das Startfoto und das
+     Stream-Overlay. Violett bleibt nur noch als tiefer Schatten. */
+  --ink:      #08050F;
+  --accent:   #FF7A18;
+  --accent-hi:#FFB25E;
+  --signal:   #FFD400;
   --white:    #FFFFFF;
   --green:    #4ADE80;
   --red:      #FF6B6B;
   --dim:      rgba(255,255,255,.55);
-  --panel:    linear-gradient(180deg, rgba(58,30,99,.92) 0%, rgba(23,11,44,.95) 100%);
-  --hairline: rgba(255,212,0,.30);
+  --panel:    linear-gradient(180deg, rgba(30,18,40,.94) 0%, rgba(14,9,20,.96) 100%);
+  --hairline: rgba(255,122,24,.32);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -132,7 +136,7 @@ body{
 }
 .bg-photo::before{
   content:''; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(13,6,32,.62) 0%, rgba(13,6,32,.42) 42%, rgba(13,6,32,.92) 100%);
+  background:linear-gradient(180deg, rgba(8,5,15,.62) 0%, rgba(8,5,15,.42) 42%, rgba(8,5,15,.92) 100%);
 }
 .bg-photo > *{ position:relative; z-index:1 }
 
@@ -163,15 +167,18 @@ body{
   margin-top:clamp(.6rem,2vw,1.4rem);
   display:inline-flex; align-items:center; gap:.8em;
   padding:clamp(.9rem,1.8vw,1.2rem) clamp(2rem,4.5vw,3.4rem);
-  background:var(--accent); color:#170B2C; cursor:pointer; border:0;
+  /* Signalgelb, nicht Glut: der Knopf liegt auf den glühenden
+     Buchstaben und muss sich davon absetzen. Das ist der einzige
+     Ort auf der Seite, an dem Gelb noch vorkommt. */
+  background:var(--signal); color:#140800; cursor:pointer; border:0;
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
   font-size:clamp(1rem,2vw,1.5rem); letter-spacing:.18em;
   clip-path: polygon(1.1rem 0, 100% 0, 100% calc(100% - 1.1rem), calc(100% - 1.1rem) 100%, 0 100%, 0 1.1rem);
   transition:transform .2s ease, box-shadow .25s ease;
 }
-.enter-btn:hover{ transform:translateY(-3px); box-shadow:0 .8rem 2.4rem rgba(255,212,0,.32) }
+.enter-btn:hover{ transform:translateY(-3px); box-shadow:0 .8rem 2.4rem rgba(255,212,0,.34) }
 .enter-btn svg{ width:1.1em; height:1.1em; flex:none }
-.enter-btn svg path{ stroke:#170B2C; stroke-width:2.4; fill:none; stroke-linecap:round; stroke-linejoin:round }
+.enter-btn svg path{ stroke:#140800; stroke-width:2.4; fill:none; stroke-linecap:round; stroke-linejoin:round }
 #entry .hint{
   font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
   font-size:clamp(.6rem,1vw,.78rem); letter-spacing:.18em; color:var(--dim); margin-top:.4rem;
@@ -198,7 +205,7 @@ body{
 
 #menu{
   position:fixed; inset:0; z-index:90;
-  background:rgba(13,6,32,.97);
+  background:rgba(8,5,15,.97);
   backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
   display:flex; flex-direction:column;
   opacity:0; visibility:hidden; pointer-events:none;
@@ -350,7 +357,7 @@ body{
 .act{
   display:inline-flex; align-items:center; gap:.6em;
   padding:.65em 1.2em .7em;
-  background:rgba(58,30,99,.55); border:.12rem solid var(--hairline);
+  background:rgba(30,18,40,.55); border:.12rem solid var(--hairline);
   color:var(--white); cursor:pointer; text-decoration:none;
   font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
   font-size:clamp(.62rem,1vw,.78rem); letter-spacing:.14em;
@@ -373,7 +380,7 @@ body{
   margin:clamp(3rem,7vw,5.5rem) calc(50% - 50vw) 0;
   padding:clamp(2.8rem,6vw,4.6rem) clamp(1.2rem,4vw,2rem) clamp(1.4rem,3vw,2.2rem);
   background:linear-gradient(180deg,
-    rgba(13,6,32,0) 0%, rgba(13,6,32,.86) 15%, rgba(13,6,32,.95) 100%);
+    rgba(8,5,15,0) 0%, rgba(8,5,15,.86) 15%, rgba(8,5,15,.95) 100%);
 }
 .ihr-in{ max-width:80rem; margin:0 auto }
 .ihr-kicker{
@@ -472,7 +479,7 @@ body{
   padding:clamp(1rem,2.2vw,1.6rem) clamp(1rem,4vw,3rem);
   border-bottom:.1rem solid rgba(255,255,255,.12);
   position:sticky; top:0; z-index:20;
-  background:rgba(13,6,32,.94);
+  background:rgba(8,5,15,.94);
   backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
 }
 .back-btn{
@@ -613,7 +620,7 @@ body{
 
 .stream-frame{
   position:relative; width:100%; aspect-ratio:16/9;
-  background:linear-gradient(180deg, rgba(58,30,99,.55) 0%, rgba(23,11,44,.75) 100%);
+  background:linear-gradient(180deg, rgba(30,18,40,.55) 0%, rgba(14,9,20,.75) 100%);
   border:.2rem solid var(--hairline); overflow:hidden;
 }
 .stream-frame iframe{ width:100%; height:100%; border:0; display:block }
@@ -645,7 +652,7 @@ body{
   position:absolute; inset:0; z-index:3;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:clamp(.7rem,1.8vw,1.2rem); text-align:center; padding:clamp(1.2rem,3vw,2rem);
-  background:linear-gradient(180deg, rgba(58,30,99,.72) 0%, rgba(23,11,44,.88) 100%);
+  background:linear-gradient(180deg, rgba(30,18,40,.72) 0%, rgba(14,9,20,.88) 100%);
 }
 .consent .head{
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
@@ -658,7 +665,7 @@ body{
 .consent .sub a{ color:var(--accent); text-decoration:underline; text-underline-offset:.2em }
 .consent-btn{
   display:inline-flex; align-items:center; gap:.7em;
-  padding:.85em 2em .9em; background:var(--accent); color:#170B2C;
+  padding:.85em 2em .9em; background:var(--accent); color:#140800;
   border:0; cursor:pointer;
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
   font-size:clamp(.78rem,1.3vw,1rem); letter-spacing:.14em;
@@ -667,7 +674,7 @@ body{
 }
 .consent-btn:hover{ transform:translateY(-2px) }
 .consent-btn svg{ width:1.15em; height:1.15em; flex:none }
-.consent-btn svg path, .consent-btn svg polygon{ stroke:#170B2C; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round }
+.consent-btn svg path, .consent-btn svg polygon{ stroke:#140800; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round }
 
 /* ---------- Live-Werte aus dem Lauf ---------- */
 
@@ -705,7 +712,7 @@ body{
   grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));
 }
 .live-cell{
-  background:rgba(13,6,32,.45); border:.1rem solid rgba(255,255,255,.12);
+  background:rgba(8,5,15,.45); border:.1rem solid rgba(255,255,255,.12);
   padding:clamp(.8rem,1.6vw,1.1rem) clamp(.9rem,1.8vw,1.2rem);
 }
 .live-cell .k{
@@ -776,17 +783,17 @@ body{
 .live-chart .target-txt{ fill:rgba(255,255,255,.5); font-family:'Oswald',sans-serif; font-size:9px; letter-spacing:.08em }
 .live-chart .area{ fill:url(#kmFill) }
 .live-chart .line{ fill:none; stroke:var(--accent); stroke-width:2; stroke-linecap:round; stroke-linejoin:round }
-.live-chart .end{ fill:var(--accent); stroke:#170B2C; stroke-width:2 }
+.live-chart .end{ fill:var(--accent); stroke:#140800; stroke-width:2 }
 .live-chart .end-txt{
   fill:var(--white); font-family:'Oswald',sans-serif; font-weight:700;
   font-size:11px; letter-spacing:.04em;
 }
 .live-chart .cross{ stroke:rgba(255,255,255,.45); stroke-width:1 }
-.live-chart .hit{ fill:var(--accent); stroke:#170B2C; stroke-width:2 }
+.live-chart .hit{ fill:var(--accent); stroke:#140800; stroke-width:2 }
 .live-chart figure{ position:relative }
 .live-tip{
   position:absolute; bottom:calc(100% - 1.2rem); pointer-events:none;
-  background:rgba(13,6,32,.96); border:.1rem solid var(--hairline);
+  background:rgba(8,5,15,.96); border:.1rem solid var(--hairline);
   padding:.45em .8em .5em; white-space:nowrap; z-index:5;
 }
 .live-tip b{
@@ -905,7 +912,7 @@ body{
 }
 .field input, .field textarea{
   width:100%; padding:.85em 1em;
-  background:rgba(13,6,32,.6); border:.1rem solid rgba(255,255,255,.2);
+  background:rgba(8,5,15,.6); border:.1rem solid rgba(255,255,255,.2);
   color:var(--white); font-family:'Rajdhani',sans-serif; font-weight:600;
   font-size:clamp(.95rem,1.3vw,1.08rem); outline:none;
   transition:border-color .2s ease;
@@ -923,7 +930,7 @@ body{
 .gb-consent a{ color:var(--accent); text-decoration:underline; text-underline-offset:.2em }
 .send-btn{
   display:inline-flex; align-items:center; gap:.7em;
-  padding:.9em 2.2em .95em; background:var(--accent); color:#170B2C;
+  padding:.9em 2.2em .95em; background:var(--accent); color:#140800;
   border:0; cursor:pointer;
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
   font-size:clamp(.8rem,1.3vw,1rem); letter-spacing:.14em;
@@ -941,7 +948,7 @@ body{
 
 .gb-list{ display:grid; gap:clamp(.8rem,1.6vw,1.2rem) }
 .gb-entry{
-  background:rgba(58,30,99,.35); border:.1rem solid rgba(255,255,255,.14);
+  background:rgba(30,18,40,.35); border:.1rem solid rgba(255,255,255,.14);
   border-left:.3rem solid var(--accent);
   padding:clamp(1.1rem,2.2vw,1.6rem) clamp(1.2rem,2.4vw,1.8rem);
 }
@@ -994,7 +1001,7 @@ body{
   font-size:clamp(.7rem,1.05vw,.85rem); letter-spacing:.14em;
   transition:background .2s ease, color .2s ease;
 }
-.revoke-btn:hover{ background:var(--accent); color:#170B2C }
+.revoke-btn:hover{ background:var(--accent); color:#140800 }
 
 /* ============================================================
    FUSSZEILE + MUSIK
@@ -1029,7 +1036,7 @@ body{
   clip-path: polygon(.75rem 0, 100% 0, 100% calc(100% - .75rem), calc(100% - .75rem) 100%, 0 100%, 0 .75rem);
   transition:transform .2s ease, box-shadow .2s ease;
 }
-.sound-btn:hover{ transform:translateY(-2px); box-shadow:0 .4rem 1.5rem rgba(255,212,0,.25) }
+.sound-btn:hover{ transform:translateY(-2px); box-shadow:0 .4rem 1.5rem rgba(255,122,24,.25) }
 .sound-btn svg{ width:1.25em; height:1.25em; flex:none }
 .sound-btn svg path, .sound-btn svg line{
   stroke:var(--accent); stroke-width:1.9; fill:none; stroke-linecap:round; stroke-linejoin:round;
@@ -1050,8 +1057,8 @@ body{
     background-color:var(--ink);
   }
   .bg-photo::before{
-    background:linear-gradient(180deg, rgba(13,6,32,.20) 0%, rgba(13,6,32,.12) 32%,
-                                       rgba(13,6,32,.85) 50%, var(--ink) 62%);
+    background:linear-gradient(180deg, rgba(8,5,15,.20) 0%, rgba(8,5,15,.12) 32%,
+                                       rgba(8,5,15,.85) 50%, var(--ink) 62%);
   }
   #entry{ justify-content:flex-start; padding-top:calc(56.25vw + clamp(1.5rem,5vh,3.5rem)); gap:clamp(.9rem,2.4vh,1.6rem) }
   #entry h1{ font-size:clamp(2.4rem,13vw,4.2rem) }
@@ -2794,9 +2801,9 @@ function paintLiveChart(d){
   + Math.floor(last[0]/60) + ' Stunden ' + (last[0]%60) + ' Minuten">'
   + '<defs><linearGradient id="kmFill" gradientUnits="userSpaceOnUse" '
   + 'x1="0" y1="' + topY.toFixed(1) + '" x2="0" y2="' + (M.t+ih) + '">'
-  + '<stop offset="0%"   stop-color="#FFD400" stop-opacity=".42"/>'
-  + '<stop offset="55%"  stop-color="#FFD400" stop-opacity=".16"/>'
-  + '<stop offset="100%" stop-color="#FFD400" stop-opacity="0"/>'
+  + '<stop offset="0%"   stop-color="#FF7A18" stop-opacity=".42"/>'
+  + '<stop offset="55%"  stop-color="#FF7A18" stop-opacity=".16"/>'
+  + '<stop offset="100%" stop-color="#FF7A18" stop-opacity="0"/>'
   + '</linearGradient></defs>'
   + '<g class="grid">' + grid + '</g>'
   + tline
