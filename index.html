@@ -317,6 +317,19 @@ body{
   line-height:1; margin-bottom:.35em;
 }
 .cd-box .cd{ font-weight:700; font-variant-numeric:tabular-nums; font-size:clamp(2.2rem,6.5vw,4.6rem); line-height:1 }
+
+/* Ist das Rennen noch weiter als einen Tag weg, sind laufende Sekunden
+   nur Unruhe. Dann tragen die TAGE die Aussage, die Uhr wird zur
+   Nebenzeile -- und die Beschriftung Std/Min/Sek entfaellt ganz.
+   Ab dem letzten Tag schaltet die Anzeige von selbst zurueck. */
+.cd-box.fern .days{
+  font-size:clamp(2.6rem,7.5vw,5.2rem); letter-spacing:.02em; margin-bottom:.18em;
+}
+.cd-box.fern .cd{
+  font-size:clamp(.95rem,2.1vw,1.45rem); font-weight:600; color:var(--dim);
+  letter-spacing:.14em; font-family:'Oswald',sans-serif; text-transform:uppercase;
+}
+.cd-box.fern .cd-units{ display:none }
 .cd-box .cd-units{
   display:flex; justify-content:center; gap:clamp(1.1rem,3.4vw,3.2rem); margin-top:.55em;
   font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
@@ -382,6 +395,17 @@ body{
   background:linear-gradient(180deg,
     rgba(8,5,15,0) 0%, rgba(8,5,15,.86) 15%, rgba(8,5,15,.95) 100%);
 }
+/* Auf schmalen Geraeten ist der Bildausschnitt unter den Knoepfen fast
+   schwarz -- der grosse Abstand liest sich dort als Fehler, nicht als
+   Absicht. Enger stellen und den Verlauf frueher greifen lassen. */
+@media (max-width:52rem){
+  .ihr{
+    margin-top:1.6rem;
+    padding-top:2.2rem;
+    background:linear-gradient(180deg,
+      rgba(8,5,15,0) 0%, rgba(8,5,15,.90) 8%, rgba(8,5,15,.96) 100%);
+  }
+}
 .ihr-in{ max-width:80rem; margin:0 auto }
 .ihr-kicker{
   font-family:'Oswald','Arial Narrow',sans-serif; font-weight:600;
@@ -397,6 +421,8 @@ body{
   text-transform:uppercase; line-height:1.06;
   font-size:clamp(1.75rem,5.2vw,3.1rem); margin:clamp(.9rem,2vw,1.3rem) 0 0;
   max-width:22ch;
+  /* verhindert, dass ein einzelnes Wort allein in Zeile zwei landet */
+  text-wrap:balance;
 }
 .ihr-lead{
   margin-top:clamp(.9rem,2vw,1.2rem); max-width:56ch;
@@ -430,9 +456,12 @@ body{
 
 .nav-tiles{
   display:grid; gap:clamp(.7rem,1.6vw,1.2rem);
-  grid-template-columns:repeat(auto-fit, minmax(17rem,1fr));
+  /* Zwei gleich grosse Kacheln bedeuten keine Hierarchie. Der Stream
+     ist der Grund, warum jemand hier ist -- der bekommt das Gewicht. */
+  grid-template-columns:1.45fr 1fr;
   max-width:80rem; width:100%; margin:0 auto;
 }
+@media (max-width:52rem){ .nav-tiles{ grid-template-columns:1fr } }
 .tile{
   display:flex; align-items:center; gap:clamp(.9rem,2vw,1.4rem);
   padding:clamp(1.1rem,2.2vw,1.6rem) clamp(1.2rem,2.6vw,1.9rem);
@@ -466,6 +495,18 @@ body{
   font-size:clamp(.58rem,.95vw,.75rem); letter-spacing:.16em; margin-top:.65em; color:var(--dim);
 }
 .tile .state i{ width:.55em; height:.55em; border-radius:50%; background:var(--dim); display:block }
+/* Der Nebenweg: gleiche Bauform, leiser Auftritt. Keine Flaeche,
+   keine Glutkante, kleinere Schrift -- damit klar ist, was zuerst dran ist. */
+.tile.tile-zweit{
+  background:transparent; border-color:rgba(255,255,255,.14);
+  border-left-color:rgba(255,255,255,.22);
+}
+.tile.tile-zweit .t-head{ font-size:clamp(.9rem,1.5vw,1.1rem); color:rgba(255,255,255,.86) }
+.tile.tile-zweit .ico path, .tile.tile-zweit .ico rect,
+.tile.tile-zweit .ico circle, .tile.tile-zweit .ico line{ stroke:rgba(255,255,255,.55) }
+.tile.tile-zweit .arrow path{ stroke:rgba(255,255,255,.55) }
+.tile.tile-zweit:hover{ border-color:var(--hairline); background:var(--panel) }
+
 .tile.is-live{ border-left-color:var(--green) }
 .tile.is-live .state{ color:var(--green) }
 .tile.is-live .state i{ background:var(--green); box-shadow:0 0 .7em rgba(74,222,128,.9); animation:pulse 1.6s ease-in-out infinite }
@@ -1193,7 +1234,7 @@ body{
         </span>
         <span class="arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l7 7-7 7"/></svg></span>
       </a>
-      <a class="tile" href="#events">
+      <a class="tile tile-zweit" href="#events">
         <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="16" rx="2"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
         <span class="txt">
           <span class="t-head">Alle Infos</span>
@@ -2312,10 +2353,16 @@ function tick(){
   if (p === 'before'){
     const t = splitTime(ms(EVT.stream) - Date.now());
     const hms = pad(t.h) + ':' + pad(t.m) + ':' + pad(t.s);
+
+    /* Weiter als einen Tag weg: Tage gross, Stunden und Minuten klein,
+       keine Sekunden. Am letzten Tag zaehlt die Uhr wieder komplett. */
+    const fern = t.d >= 1;
+    $('cd-box').classList.toggle('fern', fern);
+
     setText($('cd-label'), 'Start in');
     setText($('cd-days'), t.d > 0 ? (t.d === 1 ? '1 Tag' : t.d + ' Tage') : '');
     $('cd-days').style.display = t.d > 0 ? '' : 'none';
-    setText($('cd'), hms);
+    setText($('cd'), fern ? (t.h + ' Std ' + pad(t.m) + ' Min') : hms);
     $('cd-units').classList.remove('hidden');
     $('cd-box').classList.remove('live');
     setText($('mini-cd'), (t.d > 0 ? t.d + ' Tage · ' : '') + hms);
@@ -2325,6 +2372,7 @@ function tick(){
     setText($('locked-sub'), 'Der Stream schaltet sich automatisch frei, sobald es losgeht. Diese Seite kann einfach offen bleiben.');
   }
   else if (p === 'live'){
+    $('cd-box').classList.remove('fern');
     $('cd-box').classList.add('live');
     setText($('cd-label'), 'Jetzt');
     $('cd-days').style.display = 'none';
@@ -2335,6 +2383,7 @@ function tick(){
     if ($('view-stream').classList.contains('on')) updateStreamPanel();
   }
   else if (p === 'after'){
+    $('cd-box').classList.remove('fern');
     setText($('cd-label'), 'Beendet');
     $('cd-days').style.display = 'none';
     setText($('cd'), 'Danke!');
