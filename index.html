@@ -1108,21 +1108,12 @@ body{
 
 @media (max-aspect-ratio: 1/1){
   .bg-photo{
-    /* ZWISCHENLOESUNG vom 18.08.2026 -- wieder auf eine Ebene
-       zurueckbauen, sobald start-hoch.webp live ausgeliefert wird.
-       Zwei Ebenen: oben der Hochkant-Ausschnitt, darunter das breite
-       Bild. Faellt die obere Datei aus -- weil sie noch nicht
-       ausgeliefert wird oder ein Upload fehlt --, malt der Browser
-       einfach die untere. Ohne sie waere dort Schwarz.
-       Kostet hochkant rund 136 KB zusaetzlich -- deshalb nicht dauerhaft. */
-    background-image:url("start-hoch.jpg"), url("start.jpg");
+    background-image:url("start-hoch.jpg");
     background-image:image-set(url("start-hoch.webp") type("image/webp"),
-                               url("start-hoch.jpg")  type("image/jpeg")),
-                     image-set(url("start.webp") type("image/webp"),
-                               url("start.jpg")  type("image/jpeg"));
-    background-size:100% auto, 100% auto;
-    background-position:center top, center top;
-    background-repeat:no-repeat, no-repeat;
+                               url("start-hoch.jpg")  type("image/jpeg"));
+    background-size:100% auto;
+    background-position:center top;
+    background-repeat:no-repeat;
     background-color:var(--ink);
   }
   .bg-photo::before{
