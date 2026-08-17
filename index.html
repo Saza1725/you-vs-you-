@@ -44,7 +44,12 @@
      der Besucher-IP in die USA.                                  -->
 <link rel="preload" href="fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/rajdhani-600-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="start.webp" as="image" type="image/webp" fetchpriority="high">
+<!-- Zwei Vorladungen, je nach Geraetehaltung genau eine davon.
+     Ohne das media-Merkmal laedt ein Handy beide Bilder. -->
+<link rel="preload" href="start.webp" as="image" type="image/webp"
+      media="(min-aspect-ratio: 1/1), (min-width: 34rem)" fetchpriority="high">
+<link rel="preload" href="start-hoch.webp" as="image" type="image/webp"
+      media="(max-aspect-ratio: 1/1) and (max-width: 33.99rem)" fetchpriority="high">
 
 <style>
 /* ============================================================
@@ -191,15 +196,22 @@ body{
 .menu-btn{
   position:fixed; top:clamp(.9rem,2.2vw,1.6rem); left:clamp(.9rem,2.2vw,1.6rem);
   z-index:70; display:flex; align-items:center; gap:.55em;
-  padding:.7em 1.1em .75em;
-  background:var(--panel); border:.12rem solid var(--hairline);
+  padding:.75em 1.25em .8em;
+  /* Der Knopf ist die einzige Navigation der Seite und war bisher das
+     leiseste Element darauf. Volle Glutkante statt Haarlinie, eigener
+     Grund statt durchscheinender Flaeche, dazu ein Schatten, damit er
+     auch ueber hellen Bildstellen steht. */
+  background:rgba(14,9,20,.86); border:.12rem solid var(--accent);
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  box-shadow:0 .5rem 1.4rem rgba(0,0,0,.45);
   color:var(--white); cursor:pointer;
   font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
-  font-size:clamp(.65rem,1vw,.8rem); letter-spacing:.14em;
+  font-size:clamp(.68rem,1.05vw,.85rem); letter-spacing:.16em;
   clip-path: polygon(.75rem 0, 100% 0, 100% calc(100% - .75rem), calc(100% - .75rem) 100%, 0 100%, 0 .75rem);
-  transition:border-color .2s ease;
+  transition:background .2s ease, transform .2s ease;
 }
-.menu-btn:hover{ border-color:var(--accent) }
+.menu-btn:hover{ background:var(--accent); color:#140800; transform:translateY(-1px) }
+.menu-btn:hover .bars line{ stroke:#140800 }
 .menu-btn .bars{ width:1.15em; height:1.15em; flex:none; display:block }
 .menu-btn .bars line{ stroke:var(--accent); stroke-width:2.2; stroke-linecap:round }
 
@@ -1086,12 +1098,19 @@ body{
 
 /* ============================================================
    HANDY HOCHKANT
-   Bild ist 16:9 -- hochkant wird es oben in voller Breite gezeigt,
-   der Inhalt liegt darunter. Bildhoehe = 56,25 % der Breite.
+   Hochkant wird ein eigener, quadratischer Ausschnitt gezeigt: ein
+   Laeufer, der Sonnenuntergang und das Wort YOU. Im breiten Bild
+   schrumpfen die Figuren auf Handybreite so weit, dass vom Motiv
+   nichts uebrig bleibt.
+   Das Bild liegt oben in voller Breite, der Inhalt darunter.
+   Bildhoehe = 100 % der Breite, weil der Ausschnitt quadratisch ist.
    ============================================================ */
 
 @media (max-aspect-ratio: 1/1){
   .bg-photo{
+    background-image:url("start-hoch.jpg");
+    background-image:image-set(url("start-hoch.webp") type("image/webp"),
+                               url("start-hoch.jpg")  type("image/jpeg"));
     background-size:100% auto;
     background-position:center top;
     background-repeat:no-repeat;
@@ -1101,13 +1120,13 @@ body{
     background:linear-gradient(180deg, rgba(8,5,15,.20) 0%, rgba(8,5,15,.12) 32%,
                                        rgba(8,5,15,.85) 50%, var(--ink) 62%);
   }
-  #entry{ justify-content:flex-start; padding-top:calc(56.25vw + clamp(1.5rem,5vh,3.5rem)); gap:clamp(.9rem,2.4vh,1.6rem) }
+  #entry{ justify-content:flex-start; padding-top:calc(100vw + clamp(1rem,4vh,2.6rem)); gap:clamp(.9rem,2.4vh,1.6rem) }
   #entry h1{ font-size:clamp(2.4rem,13vw,4.2rem) }
   #entry .kicker{ font-size:clamp(.58rem,2.6vw,.85rem); letter-spacing:.32em }
   #entry .date{ font-size:clamp(.7rem,3.2vw,1rem); letter-spacing:.14em }
   .enter-btn{ font-size:clamp(1rem,4.6vw,1.4rem); padding:1rem 2.6rem }
 
-  #view-home{ justify-content:flex-start; gap:clamp(1rem,2.6vh,2rem); padding-top:calc(56.25vw + .9rem) }
+  #view-home{ justify-content:flex-start; gap:clamp(1rem,2.6vh,2rem); padding-top:calc(100vw + .9rem) }
   .home-top{ padding-top:0 }
   .home-top h2{ font-size:clamp(1.6rem,7.5vw,2.6rem) }
   .home-top .kicker{ font-size:clamp(.52rem,2.4vw,.8rem); letter-spacing:.28em }
@@ -1115,6 +1134,23 @@ body{
   .cd-box{ width:100%; max-width:32rem }
   .cd-box .cd{ font-size:clamp(2.4rem,13vw,4rem) }
   .cd-box .days{ font-size:clamp(1rem,4.6vw,1.6rem) }
+
+}
+
+/* ------------------------------------------------------------
+   Tablet hochkant: dort ist der Bildschirm breit genug, dass das
+   breite Bild wieder traegt. Ein quadratisches Band waere hier
+   ueber 70 % der Hoehe -- der Countdown faellt dann unter die Kante.
+   ------------------------------------------------------------ */
+@media (max-aspect-ratio: 1/1) and (min-width: 34rem){
+  .bg-photo{
+    background-image:url("start.jpg");
+    background-image:image-set(url("start.webp") type("image/webp"),
+                               url("start.jpg")  type("image/jpeg"));
+  }
+  #entry{ padding-top:calc(56.25vw + clamp(1.5rem,5vh,3.5rem)) }
+  #view-home{ padding-top:calc(56.25vw + .9rem) }
+
   .cd-box .cd-units{ gap:clamp(1.4rem,7vw,3rem) }
   .nav-tiles{ margin-top:auto }
   .menu-list{ grid-template-columns:1fr }
