@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Seite nicht gefunden — YOU VS YOU</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#0D0620">
+<meta name="theme-color" content="#08050F">
 <link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -25,19 +25,19 @@ body{
   min-height:100vh; min-height:100dvh;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:clamp(1rem,2.5vw,1.8rem); text-align:center; padding:2rem;
-  background:#0D0620 center/cover no-repeat;
+  background:#08050F center/cover no-repeat;
   background-image:url("start.jpg");
   background-image:image-set(url("start.webp") type("image/webp"), url("start.jpg") type("image/jpeg"));
   color:#fff; font-family:'Rajdhani','Arial Narrow',Arial,sans-serif; position:relative;
 }
 body::before{
   content:''; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(13,6,32,.72) 0%, rgba(13,6,32,.62) 42%, rgba(13,6,32,.95) 100%);
+  background:linear-gradient(180deg, rgba(8,5,15,.72) 0%, rgba(8,5,15,.62) 42%, rgba(8,5,15,.95) 100%);
 }
 body > *{ position:relative; z-index:1 }
 .kicker{
   font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
-  font-size:clamp(.6rem,1.3vw,.95rem); letter-spacing:.5em; color:#FFD400;
+  font-size:clamp(.6rem,1.3vw,.95rem); letter-spacing:.5em; color:#FF7A18;
 }
 h1{
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
@@ -50,15 +50,15 @@ p{
 a.btn{
   margin-top:.6rem; display:inline-flex; align-items:center; gap:.8em;
   padding:clamp(.85rem,1.6vw,1.1rem) clamp(1.8rem,4vw,3rem);
-  background:#FFD400; color:#170B2C; text-decoration:none;
+  background:#FF7A18; color:#140800; text-decoration:none;
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
   font-size:clamp(.9rem,1.8vw,1.3rem); letter-spacing:.18em;
   clip-path: polygon(1.1rem 0, 100% 0, 100% calc(100% - 1.1rem), calc(100% - 1.1rem) 100%, 0 100%, 0 1.1rem);
   transition:transform .2s ease, box-shadow .25s ease;
 }
-a.btn:hover{ transform:translateY(-3px); box-shadow:0 .8rem 2.4rem rgba(255,212,0,.32) }
+a.btn:hover{ transform:translateY(-3px); box-shadow:0 .8rem 2.4rem rgba(255,122,24,.32) }
 a.btn svg{ width:1.1em; height:1.1em; flex:none }
-a.btn svg path{ stroke:#170B2C; stroke-width:2.4; fill:none; stroke-linecap:round; stroke-linejoin:round }
+a.btn svg path{ stroke:#140800; stroke-width:2.4; fill:none; stroke-linecap:round; stroke-linejoin:round }
 @media (prefers-reduced-motion: reduce){ *{transition:none !important} }
 </style>
 </head>
