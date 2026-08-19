@@ -606,6 +606,19 @@ body{
 }
 .card.past{ border-top-color:rgba(255,255,255,.25); opacity:.72 }
 .card.next{ border-top-color:var(--green) }
+/* Eventbild randlos oben in der Karte -- die negativen Raender heben
+   genau die Innenabstaende der Karte auf. */
+.card .bild{
+  display:block; margin:
+    calc(-1 * clamp(1.2rem,2.3vw,1.8rem))
+    calc(-1 * clamp(1.2rem,2.5vw,1.9rem))
+    clamp(1rem,2vw,1.35rem);
+  background:var(--ink);
+}
+.card .bild img{
+  display:block; width:100%; height:auto; aspect-ratio:1600/700; object-fit:cover;
+}
+.card.past .bild{ filter:grayscale(.55) }
 .card h3{
   display:flex; align-items:center; gap:.7em;
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
@@ -1692,6 +1705,9 @@ const CONFIG = {
       hours:  8,
       raceHours: 6,
       badge:  "6-Stunden-Lauf",
+      /* Bild: "event-werl" laedt event-werl.webp bzw. event-werl.jpg */
+      image:  "event-werl",
+      text:   "Sechs Stunden auf einem 7,5 Kilometer langen Rundkurs durch den Stadtwald. Gewertet wird die Strecke, nicht die Zeit — wer nach fünf Stunden noch eine Runde anfängt, muss sie auch zu Ende gehen. Die Werte im Stream kommen live von der Uhr.",
       facts: [
         { k:"Format",   v:"6 Stunden" },
         { k:"Runde",    v:"7,5 km" },
@@ -1704,6 +1720,36 @@ const CONFIG = {
         "Verpflegungspunkt im Start-/Zielbereich, Wasser zusätzlich bei km 2,5 und km 5",
         "Jede vollständige Runde zählt, Zwischenmessungen bei km 2,5 und km 5",
         "Medaille ab einer Runde, „Du bist Ultra“-Anhänger ab 6 Runden"
+      ]
+    },
+    {
+      title:  "Mammutmarsch Madrid",
+      place:  "Madrid",
+      /* ACHTUNG: Der Veranstalter hat die Startgruppen und damit die genaue
+         Uhrzeit noch nicht veroeffentlicht. 09:00 ist ein Platzhalter --
+         sobald das Startfenster feststeht, hier korrigieren, sonst zeigt
+         der Countdown die falsche Zeit. Spanien = MEZ, also +01:00. */
+      stream: "2027-02-20T09:00:00+01:00",
+      race:   "2027-02-20T09:00:00+01:00",
+      hours:  26,
+      raceHours: 24,
+      badge:  "100 km in 24 Stunden",
+      image:  "event-madrid",
+      text:   "Hundert Kilometer am Stück, zu Fuß, mit einem Zeitlimit von 24 Stunden und rund 3.000 Höhenmetern im Bergland um Madrid. Gestartet wird in Gruppen. Zehn bis zwölf Stunden davon sind Nacht — Stirnlampe und warme Kleidung sind Pflicht, nicht Empfehlung.",
+      facts: [
+        { k:"Distanz",   v:"100 km" },
+        { k:"Zeitlimit", v:"24 Stunden" },
+        { k:"Höhe",      v:"3.000 hm" },
+        { k:"Mein Ziel", v:"Ankommen" }
+      ],
+      info: [
+        "Start und Ziel am <strong>Paseo de María Teresa</strong> im Nordwesten von Madrid",
+        "Gestartet wird in Gruppen — die genauen Startfenster gibt der Veranstalter später bekannt",
+        "Mindestens vier Streckenposten mit Wasser, Snacks und teils warmem Essen",
+        "Pflicht im Rucksack: Wasserbehälter, Regenschutz, warme Kleidung, Handy mit Powerbank, geladene Stirnlampe",
+        "Ausstiegspunkte mit Shuttle oder Bahn sind eingerichtet",
+        "Anreise 19.02., Rückreise 21.02.2027",
+        "Alle Angaben ohne Gewähr — verbindlich ist der Veranstalter: <a href=\"https://mammutmarsch.de/50-km-marsch/mammutmarsch-madrid/\" target=\"_blank\" rel=\"noopener noreferrer\">mammutmarsch.de</a>"
       ]
     }
     /* Weiteres Event? Einfach als naechsten Block anhaengen:
@@ -1900,12 +1946,25 @@ function eventCard(e, isNext){
 
   const info = (e.info || []).map(t => '<li>' + t + '</li>').join('');
 
+  /* Eventbild: WebP mit JPG als Rueckfall. Beide Dateien liegen neben der
+     index.html. Fehlt "image", bleibt die Karte wie bisher. */
+  const bild = e.image
+    ? '<div class="bild"><picture>'
+      + '<source srcset="' + esc(e.image) + '.webp" type="image/webp">'
+      + '<img src="' + esc(e.image) + '.jpg" width="1600" height="700" loading="lazy" '
+      + 'decoding="async" alt="' + esc(e.title) + ' — ' + esc(e.place) + '"></picture></div>'
+    : '';
+
+  const text = e.text ? '<p>' + esc(e.text) + '</p>' : '';
+
   return '<article class="card ' + (p === 'after' ? 'past' : (isNext ? 'next' : '')) + '">'
+       + bild
        + badge
        + '<h3>' + esc(e.title) + '</h3>'
        + '<div class="meta">' + dateText(e.stream) + ' · ' + timeText(e.race || e.stream)
        + ' · ' + esc(e.place) + '</div>'
-       + (info ? '<ul>' + info + '</ul>' : '')
+       + text
+       + (info ? '<ul style="margin-top:' + (text ? '1em' : '0') + '">' + info + '</ul>' : '')
        + (facts ? '<div class="stat-row">' + facts + '</div>' : '')
        + '</article>';
 }
