@@ -994,6 +994,20 @@ body{
   font-size:clamp(.95rem,1.3vw,1.08rem); outline:none;
   transition:border-color .2s ease;
 }
+.field select{
+  width:100%; padding:.85em 2.4em .85em 1em;
+  background:rgba(8,5,15,.6); border:.1rem solid rgba(255,255,255,.2);
+  color:var(--white); font-family:'Rajdhani',sans-serif; font-weight:600;
+  font-size:clamp(.95rem,1.3vw,1.08rem); outline:none; cursor:pointer;
+  -webkit-appearance:none; appearance:none; border-radius:0;
+  background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),
+                   linear-gradient(135deg,var(--accent) 50%,transparent 50%);
+  background-position:calc(100% - 1.25em) 1.35em, calc(100% - .9em) 1.35em;
+  background-size:.38em .38em,.38em .38em; background-repeat:no-repeat;
+  transition:border-color .2s ease;
+}
+.field select:focus{ border-color:var(--accent) }
+.field select option{ background:#14091c; color:var(--white) }
 .field input:focus, .field textarea:focus{ border-color:var(--accent) }
 .field textarea{ min-height:8rem; resize:vertical; line-height:1.5 }
 /* Honigtopf gegen Spam-Roboter -- fuer Menschen unsichtbar */
@@ -1022,6 +1036,46 @@ body{
 }
 .form-msg.ok{ color:var(--green) }
 .form-msg.err{ color:var(--red) }
+
+/* ---------- Zusammenarbeit ---------- */
+.koop{
+  background:var(--panel); border:.1rem solid var(--hairline);
+  border-left:.35rem solid var(--accent);
+  padding:clamp(1.1rem,2.2vw,1.7rem) clamp(1.1rem,2.4vw,1.8rem);
+  margin-bottom:clamp(1.4rem,3vw,2.4rem);
+}
+.koop > p{ font-size:clamp(.95rem,1.3vw,1.06rem); line-height:1.6; color:rgba(255,255,255,.86) }
+.koop-grid{
+  display:grid; gap:clamp(1rem,2vw,1.6rem);
+  grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));
+  margin:clamp(1rem,2vw,1.5rem) 0;
+}
+.koop h4{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.72rem,1.05vw,.85rem); letter-spacing:.16em; color:var(--accent);
+  margin-bottom:.7em;
+}
+.koop ul{ list-style:none }
+.koop li{
+  position:relative; padding-left:1.4em;
+  font-size:clamp(.9rem,1.22vw,1rem); line-height:1.5; color:rgba(255,255,255,.84);
+}
+.koop li + li{ margin-top:.6em }
+.koop li::before{
+  content:''; position:absolute; left:0; top:.6em; width:.45em; height:.45em;
+  background:var(--accent); clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
+}
+.koop li strong{ color:var(--white) }
+.koop-nein{
+  border-top:.1rem solid rgba(255,255,255,.14); padding-top:clamp(.9rem,1.8vw,1.3rem);
+}
+.koop-nein h4{ color:rgba(255,255,255,.55) }
+.koop-nein p{ font-size:clamp(.9rem,1.22vw,1rem); line-height:1.55; color:rgba(255,255,255,.78) }
+.koop-fuss{
+  margin-top:clamp(.9rem,1.8vw,1.3rem); font-size:clamp(.88rem,1.15vw,.97rem);
+  line-height:1.55; color:rgba(255,255,255,.7);
+}
+.koop-fuss a{ color:var(--accent); text-decoration:underline; text-underline-offset:.2em }
 
 .gb-list{ display:grid; gap:clamp(.8rem,1.6vw,1.2rem) }
 .gb-entry{
@@ -1249,9 +1303,9 @@ body{
       <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8v8M17.5 8v8M3.5 10v4M20.5 10v4"/><line x1="6.5" y1="12" x2="17.5" y2="12"/></svg></span>
       <span class="txt"><span class="m-head">Training</span><span class="m-sub">Einheiten und Vorbereitung</span></span>
     </a>
-    <a class="menu-item" id="menu-gb" href="#gaestebuch">
+    <a class="menu-item" id="menu-gb" href="#kontakt">
       <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg></span>
-      <span class="txt"><span class="m-head">Gästebuch</span><span class="m-sub">Eintrag hinterlassen</span></span>
+      <span class="txt"><span class="m-head">Kontakt</span><span class="m-sub">Fragen und Zusammenarbeit</span></span>
     </a>
   </div>
 
@@ -1517,7 +1571,7 @@ body{
 <section class="view" id="view-gaestebuch">
   <div class="sub-head">
     <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
-    <h2>Gästebuch</h2>
+    <h2>Kontakt</h2>
     <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
       <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
       Menü
@@ -1526,17 +1580,36 @@ body{
   <div class="sub-body"><div class="inner">
 
     <form class="gb-form" id="gb-form" novalidate>
-      <div class="hint">Schreib gern etwas — eine Nachricht, ein Gruß, eine Frage.
-        Jeder Eintrag wird vorher gelesen und erscheint erst nach Freigabe auf der Seite.</div>
 
       <div class="field">
-        <label for="gb-name">Name</label>
-        <input type="text" id="gb-name" name="name" maxlength="40" autocomplete="name"
-               placeholder="Wie sollen wir dich nennen?" required>
+        <label for="gb-thema">Worum geht es?</label>
+        <select id="gb-thema" name="thema">
+          <option value="gruss" selected>Gruß oder Frage — darf im Gästebuch stehen</option>
+          <option value="koop">Zusammenarbeit — Marke, Verein, Veranstalter</option>
+        </select>
       </div>
+
+      <div class="hint" id="gb-hinweis">Schreib gern etwas — eine Nachricht, ein Gruß, eine Frage.
+        Jeder Eintrag wird vorher gelesen und erscheint erst nach Freigabe auf dieser Seite.</div>
+
+      <div class="field">
+        <label for="gb-name" id="gb-name-label">Name</label>
+        <input type="text" id="gb-name" name="name" maxlength="60" autocomplete="name"
+               placeholder="Wie soll ich dich nennen?" required>
+      </div>
+
+      <!-- Nur bei Zusammenarbeit sichtbar. Eine Antwort ohne Rueckadresse
+           waere sonst nicht moeglich. Bei Gruessen bleibt das Feld weg --
+           weniger Daten sind besser. -->
+      <div class="field hidden" id="gb-mail-feld">
+        <label for="gb-mail">E-Mail für die Antwort</label>
+        <input type="email" id="gb-mail" name="email" maxlength="120" autocomplete="email"
+               placeholder="name@firma.de">
+      </div>
+
       <div class="field">
         <label for="gb-text">Nachricht</label>
-        <textarea id="gb-text" name="nachricht" maxlength="600" placeholder="Deine Nachricht …" required></textarea>
+        <textarea id="gb-text" name="nachricht" maxlength="900" placeholder="Deine Nachricht …" required></textarea>
       </div>
 
       <!-- Honigtopf: Roboter fuellen ihn aus, Menschen sehen ihn nie -->
@@ -1547,7 +1620,7 @@ body{
 
       <label class="gb-consent" for="gb-ok">
         <input type="checkbox" id="gb-ok" required>
-        <span>Ich bin damit einverstanden, dass mein Name und meine Nachricht zur Prüfung
+        <span id="gb-ok-text">Ich bin damit einverstanden, dass mein Name und meine Nachricht zur Prüfung
           gespeichert und nach Freigabe auf dieser Seite veröffentlicht werden.
           Die Einwilligung kann jederzeit widerrufen werden.
           <a href="#datenschutz">Datenschutz</a></span>
@@ -1557,7 +1630,45 @@ body{
       <div class="form-msg" id="gb-msg" role="status" aria-live="polite"></div>
     </form>
 
-    <div class="sec-title">Einträge</div>
+    <!-- ---------- Zusammenarbeit ---------- -->
+    <div class="sec-title">Zusammenarbeit</div>
+    <div class="koop">
+      <p>Anfragen von Marken, Vereinen und Veranstaltern sind willkommen. Damit
+         wir beide keine Zeit verlieren, hier vorab, worum es gehen kann.</p>
+
+      <div class="koop-grid">
+        <div class="koop-box">
+          <h4>Was ich mache</h4>
+          <ul>
+            <li>Produkte testen, die für die Sportart wirklich etwas bringen — Getränke, Schuhe, Shirts, Ausrüstung</li>
+            <li>Rennen unter eurer Flagge, wenn Produkt oder Firma dabei genannt werden</li>
+            <li>Videos, in denen die Ausrüstung im Training und im Wettkampf zu sehen ist</li>
+            <li>Beiträge zu Einsatz und Erfahrung — ehrlich, auch wenn etwas nicht überzeugt</li>
+          </ul>
+        </div>
+        <div class="koop-box">
+          <h4>Wie es laufen kann</h4>
+          <ul>
+            <li><strong>Sponsoring</strong> — die klarste Form für beide Seiten</li>
+            <li><strong>Euer Aufdruck, mein Shirt</strong> — dafür Beiträge und Videos vom Training und vom Rennen</li>
+            <li>Produkt zum Testen, dafür eine ehrliche Rückmeldung</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="koop-nein">
+        <h4>Was nicht geht</h4>
+        <p>Glücksspiel. Und alles, wovon ich nicht selbst überzeugt bin — eine
+           gekaufte Empfehlung nützt am Ende keinem von uns.</p>
+      </div>
+
+      <p class="koop-fuss">Am schnellsten geht es, wenn in der ersten Nachricht schon
+         steht: <strong>welches Produkt</strong>, <strong>welcher Zeitraum</strong>,
+         <strong>was ihr euch vorstellt</strong>. Alternativ direkt an
+         <a href="mailto:kontakt@you-vs-you.online">kontakt@you-vs-you.online</a>.</p>
+    </div>
+
+    <div class="sec-title">Gästebuch</div>
     <div class="gb-list" id="gb-list"></div>
   </div></div>
 </section>
@@ -2076,25 +2187,88 @@ function paintGuestbook(){
   }
 }
 
-/* ---- Formular abschicken ---- */
+/* ---- Formular abschicken ----
+   Ein Formular, zwei Zwecke. Das Themenfeld steuert, welche Felder
+   erscheinen, welcher Einwilligungstext gilt und was in der Mail steht.
+   Zwei getrennte Formulare waeren zwar sauberer zu lesen, wuerden sich
+   bei Formspree aber dasselbe Monatskontingent teilen -- und doppelte
+   Wartung bedeuten. */
 (function(){
   const form = $('gb-form'), btn = $('gb-send'), msg = $('gb-msg');
   if (!form) return;
 
+  const thema   = $('gb-thema');
+  const mailBox = $('gb-mail-feld');
+  const mail    = $('gb-mail');
+  const hinweis = $('gb-hinweis');
+  const okText  = $('gb-ok-text');
+  const nameLbl = $('gb-name-label');
+
+  const TEXTE = {
+    gruss: {
+      hinweis: 'Schreib gern etwas — eine Nachricht, ein Gruß, eine Frage. '
+             + 'Jeder Eintrag wird vorher gelesen und erscheint erst nach Freigabe auf dieser Seite.',
+      label:   'Name',
+      platz:   'Wie soll ich dich nennen?',
+      ok:      'Ich bin damit einverstanden, dass mein Name und meine Nachricht zur Prüfung '
+             + 'gespeichert und nach Freigabe auf dieser Seite veröffentlicht werden. '
+             + 'Die Einwilligung kann jederzeit widerrufen werden. ',
+      knopf:   'Absenden',
+      danke:   'Danke! Dein Eintrag wird geprüft und dann veröffentlicht.'
+    },
+    koop: {
+      hinweis: 'Anfragen zu Zusammenarbeit werden <strong>nicht veröffentlicht</strong>. '
+             + 'Sie gehen direkt an kontakt@you-vs-you.online. Was in der ersten Nachricht '
+             + 'stehen sollte, steht weiter unten.',
+      label:   'Name und Firma',
+      platz:   'Name, Firma oder Verein',
+      ok:      'Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung dieser '
+             + 'Anfrage gespeichert und verarbeitet werden. Eine Veröffentlichung findet '
+             + 'nicht statt. Die Einwilligung kann jederzeit widerrufen werden. ',
+      knopf:   'Anfrage senden',
+      danke:   'Danke! Die Anfrage ist angekommen, ich melde mich.'
+    }
+  };
+
+  function umschalten(){
+    const t = TEXTE[thema.value] || TEXTE.gruss;
+    const koop = thema.value === 'koop';
+    hinweis.innerHTML = t.hinweis;
+    nameLbl.textContent = t.label;
+    $('gb-name').placeholder = t.platz;
+    okText.innerHTML = t.ok + '<a href="#datenschutz">Datenschutz</a>';
+    btn.textContent = t.knopf;
+    mailBox.classList.toggle('hidden', !koop);
+    mail.required = koop;
+    if (!koop) mail.value = '';
+    msg.textContent = '';
+  }
+  thema.addEventListener('change', umschalten);
+  umschalten();
+
   form.addEventListener('submit', async ev => {
     ev.preventDefault();
 
+    const koop = thema.value === 'koop';
+    const t    = TEXTE[thema.value] || TEXTE.gruss;
     const name = $('gb-name').value.trim();
     const text = $('gb-text').value.trim();
+    const adr  = mail.value.trim();
 
     if (name.length < 2 || text.length < 3){
       msg.className = 'form-msg err';
       msg.textContent = 'Bitte Name und Nachricht ausfüllen';
       return;
     }
+    if (koop && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(adr)){
+      msg.className = 'form-msg err';
+      msg.textContent = 'Bitte eine E-Mail-Adresse für die Antwort angeben';
+      return;
+    }
     if (!$('gb-ok').checked){
       msg.className = 'form-msg err';
-      msg.textContent = 'Bitte der Veröffentlichung zustimmen';
+      msg.textContent = koop ? 'Bitte der Verarbeitung zustimmen'
+                             : 'Bitte der Veröffentlichung zustimmen';
       return;
     }
     if ($('gb-website').value){ return; }        // Roboter -- still verwerfen
@@ -2108,24 +2282,33 @@ function paintGuestbook(){
     msg.className = 'form-msg';
     msg.textContent = 'Wird gesendet …';
 
+    /* Nur senden, was gebraucht wird. Bei Gruessen wird keine
+       E-Mail-Adresse uebertragen -- sie wird auch nicht erhoben. */
+    const daten = {
+      art: koop ? 'Zusammenarbeit' : 'Gruss oder Frage',
+      name: name,
+      nachricht: text,
+      _subject: koop ? 'Kooperationsanfrage von ' + name
+                     : 'Neuer Gästebuch-Eintrag von ' + name,
+      seite: 'you-vs-you.online'
+    };
+    if (koop){ daten.email = adr; daten._replyto = adr; }
+
     try{
       const r = await fetch(CONFIG.formEndpoint, {
         method:'POST',
         headers:{ 'Content-Type':'application/json', 'Accept':'application/json' },
-        body: JSON.stringify({
-          name: name,
-          nachricht: text,
-          _subject: 'Neuer Gästebuch-Eintrag von ' + name,
-          seite: 'Gästebuch you-vs-you.online'
-        })
+        body: JSON.stringify(daten)
       });
       if (!r.ok) throw new Error('HTTP ' + r.status);
-      msg.className = 'form-msg ok';
-      msg.textContent = 'Danke! Dein Eintrag wird geprüft und dann veröffentlicht.';
       form.reset();
+      umschalten();                 /* leert auch die Meldung ... */
+      msg.className = 'form-msg ok';
+      msg.textContent = t.danke;    /* ... deshalb steht der Dank danach */
     }catch(_){
       msg.className = 'form-msg err';
-      msg.textContent = 'Das hat nicht geklappt — bitte später nochmal versuchen';
+      msg.textContent = 'Das hat nicht geklappt — bitte später nochmal versuchen, '
+                      + 'oder direkt an kontakt@you-vs-you.online schreiben';
     }finally{
       btn.disabled = false;
     }
@@ -2278,13 +2461,23 @@ function paintLegal(){
     + 'für weitere Besuche.</p>'
     + '<p id="revoke-wrap"></p>'
 
-    + '<h3>' + (dsN(6)) + ' · Gästebuch</h3>'
-    + '<p>Nachrichten aus dem Gästebuch-Formular werden über den Dienst <strong>Formspree</strong> '
-    + '(Formspree Inc., USA) per E-Mail zugestellt. Übermittelt werden der eingegebene Name, die '
-    + 'Nachricht sowie technische Verbindungsdaten. Rechtsgrundlage ist die Einwilligung nach '
-    + 'Art. 6 Abs. 1 lit. a DSGVO, die beim Absenden ausdrücklich erteilt wird. Eine '
-    + 'Veröffentlichung erfolgt erst nach manueller Prüfung. Die Einwilligung kann jederzeit '
-    + 'formlos per E-Mail widerrufen werden; der Eintrag wird dann entfernt.</p>'
+    + '<h3>' + (dsN(6)) + ' · Kontaktformular und Gästebuch</h3>'
+    + '<p>Auf der Seite <em>Kontakt</em> steht ein Formular mit zwei Zwecken. Beide werden '
+    + 'über den Dienst <strong>Formspree</strong> (Formspree Inc., USA) per E-Mail '
+    + 'zugestellt; dabei werden zusätzlich technische Verbindungsdaten übertragen.</p>'
+    + '<p><strong>Gruß oder Frage.</strong> Übermittelt werden der eingegebene Name und die '
+    + 'Nachricht. Eine E-Mail-Adresse wird nicht erhoben. Rechtsgrundlage ist die Einwilligung '
+    + 'nach Art. 6 Abs. 1 lit. a DSGVO, die beim Absenden ausdrücklich erteilt wird. Eine '
+    + 'Veröffentlichung im Gästebuch erfolgt erst nach manueller Prüfung.</p>'
+    + '<p><strong>Zusammenarbeit.</strong> Übermittelt werden Name beziehungsweise Firma, die '
+    + 'angegebene E-Mail-Adresse und die Nachricht. Diese Anfragen werden <strong>nicht '
+    + 'veröffentlicht</strong>. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO bei der '
+    + 'Anbahnung eines Vertragsverhältnisses, sonst Art. 6 Abs. 1 lit. f DSGVO — das '
+    + 'berechtigte Interesse an der Beantwortung.</p>'
+    + '<p>Die Einwilligung kann jederzeit formlos per E-Mail widerrufen werden; ein '
+    + 'veröffentlichter Eintrag wird dann entfernt. Anfragen werden gelöscht, sobald das '
+    + 'Anliegen abschließend geklärt ist und keine gesetzlichen Aufbewahrungspflichten '
+    + 'entgegenstehen.</p>'
 
     + '<h3>' + (dsN(7)) + ' · Musik</h3>'
     + '<p>Die optionale Hintergrundmusik wird von diesem Server ausgeliefert. Es findet keine '
@@ -2400,7 +2593,10 @@ function paintJsonLd(){
 const VIEWS = {
   home:'view-home', stream:'view-stream', events:'view-events',
   disziplin:'view-disziplin', streams:'view-streams',
-  training:'view-training', gaestebuch:'view-gaestebuch',
+  training:'view-training',
+  /* "kontakt" ist der heutige Name. "gaestebuch" bleibt als Deckname
+     bestehen, damit alte geteilte Links weiter funktionieren. */
+  kontakt:'view-gaestebuch', gaestebuch:'view-gaestebuch',
   impressum:'view-impressum', datenschutz:'view-datenschutz'
 };
 
@@ -2451,7 +2647,12 @@ function render(){
   if (key === 'impressum'   && !hasAddress()) key = 'home';
   const name = VIEWS[key] ? key : 'home';
 
-  Object.entries(VIEWS).forEach(([k,id]) => $(id).classList.toggle('on', k === name));
+  /* Ueber die Abschnitts-Kennungen gehen, nicht ueber die Schluessel:
+     zwei Schluessel koennen auf denselben Abschnitt zeigen (kontakt und
+     gaestebuch). Ginge man ueber die Schluessel, wuerde der zweite
+     Durchlauf den ersten wieder ausschalten. */
+  const anId = VIEWS[name];
+  Object.values(VIEWS).forEach(id => $(id).classList.toggle('on', id === anId));
   /* Der schwebende Menue-Knopf gehoert nur auf die Startansicht --
      die Unterseiten haben ihn oben in der Kopfzeile. */
   $('menu-btn').classList.toggle('hidden', name !== 'home' || !entered);
