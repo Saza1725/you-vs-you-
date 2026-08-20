@@ -1,0 +1,3610 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>YOU VS YOU — Ultralauf live: Countdown, Stream und Events</title>
+<meta name="description" content="Ultralauf live: Countdown, Live-Stream, Events, Disziplinen und Training. You vs You.">
+<meta name="theme-color" content="#08050F">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://www.you-vs-you.online/">
+
+<!-- ---------- Teilen: Open Graph + Twitter ---------- -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="You vs You">
+<meta property="og:locale" content="de_DE">
+<meta property="og:url" content="https://www.you-vs-you.online/">
+<meta property="og:title" content="YOU VS YOU — Ultralauf live">
+<meta property="og:description" content="Countdown, Live-Stream und alle Infos zum nächsten Ultralauf.">
+<meta property="og:image" content="https://www.you-vs-you.online/og.jpg">
+<meta property="og:image:secure_url" content="https://www.you-vs-you.online/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Zwei Läufer auf leuchtenden Buchstaben: YOU VS YOU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="YOU VS YOU — Ultralauf live">
+<meta name="twitter:description" content="Countdown, Live-Stream und alle Infos zum nächsten Ultralauf.">
+<meta name="twitter:image" content="https://www.you-vs-you.online/og.jpg">
+
+<!-- ---------- Symbole ---------- -->
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<!-- ---------- Auf dem Handy als App speicherbar ---------- -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="You vs You">
+
+<!-- ---------- Schriften und Titelbild vorladen ----------
+     Die Schriften liegen auf dem eigenen Server. Es geht keine
+     Verbindung zu Google -- damit entfaellt die Uebermittlung
+     der Besucher-IP in die USA.                                  -->
+<link rel="preload" href="fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/rajdhani-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Zwei Vorladungen, je nach Geraetehaltung genau eine davon.
+     Ohne das media-Merkmal laedt ein Handy beide Bilder. -->
+<link rel="preload" href="start.webp" as="image" type="image/webp"
+      media="(min-aspect-ratio: 1/1), (min-width: 34rem)" fetchpriority="high">
+<link rel="preload" href="start-hoch.webp" as="image" type="image/webp"
+      media="(max-aspect-ratio: 1/1) and (max-width: 33.99rem)" fetchpriority="high">
+
+<style>
+/* ============================================================
+   YOU VS YOU
+   Aufbau:  Eintritt -> Start (Countdown) -> Menue mit Kategorien
+   Farben wie das Stream-Overlay: Violett + Gold
+   ============================================================ */
+
+/* ---------- Schriften (lokal) ---------- */
+
+@font-face{
+  font-family:'Oswald'; font-style:normal; font-weight:200 700; font-display:swap;
+  src:url(fonts/oswald-latin.woff2) format('woff2-variations');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Oswald'; font-style:normal; font-weight:200 700; font-display:swap;
+  src:url(fonts/oswald-latin-ext.woff2) format('woff2-variations');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+@font-face{
+  font-family:'Rajdhani'; font-style:normal; font-weight:600; font-display:swap;
+  src:url(fonts/rajdhani-600-latin.woff2) format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Rajdhani'; font-style:normal; font-weight:600; font-display:swap;
+  src:url(fonts/rajdhani-600-latin-ext.woff2) format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+@font-face{
+  font-family:'Rajdhani'; font-style:normal; font-weight:700; font-display:swap;
+  src:url(fonts/rajdhani-700-latin.woff2) format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Rajdhani'; font-style:normal; font-weight:700; font-display:swap;
+  src:url(fonts/rajdhani-700-latin-ext.woff2) format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
+:root{
+  /* Farbwelt "Glut" -- dieselbe Temperatur wie das Startfoto und das
+     Stream-Overlay. Violett bleibt nur noch als tiefer Schatten. */
+  --ink:      #08050F;
+  --accent:   #FF7A18;
+  --accent-hi:#FFB25E;
+  --signal:   #FFD400;
+  --white:    #FFFFFF;
+  --green:    #4ADE80;
+  --red:      #FF6B6B;
+  --dim:      rgba(255,255,255,.55);
+  --panel:    linear-gradient(180deg, rgba(30,18,40,.94) 0%, rgba(14,9,20,.96) 100%);
+  --hairline: rgba(255,122,24,.32);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  background:var(--ink); color:var(--white);
+  font-family:'Rajdhani','Arial Narrow',Arial,sans-serif;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+
+/* Nur fuer Vorleseprogramme und Suchmaschinen -- optisch nicht da */
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* Sichtbarer Fokus fuer Tastatur -- vorher fehlte er komplett */
+:focus-visible{ outline:.18rem solid var(--accent); outline-offset:.2rem }
+
+.label{
+  font-family:'Oswald','Arial Narrow',sans-serif;
+  font-weight:600; text-transform:uppercase;
+  letter-spacing:.22em; color:var(--accent); line-height:1;
+}
+.hidden{ display:none !important }
+
+/* Titelbild direkt im CSS -- so beginnt der Browser den Download
+   sofort beim Einlesen der Seite und nicht erst nach dem Skript.
+   Erste Zeile = Rueckfallebene fuer aeltere Browser ohne image-set. */
+.bg-photo{
+  background:var(--ink) center/cover no-repeat;
+  background-image:url("start.jpg");
+  background-image:image-set(url("start.webp") type("image/webp"), url("start.jpg") type("image/jpeg"));
+  position:relative;
+}
+.bg-photo::before{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(8,5,15,.62) 0%, rgba(8,5,15,.42) 42%, rgba(8,5,15,.92) 100%);
+}
+.bg-photo > *{ position:relative; z-index:1 }
+
+/* ============================================================
+   0 · EINTRITTSSEITE
+   ============================================================ */
+
+#entry{
+  position:fixed; inset:0; z-index:100;
+  display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+  gap:clamp(1.4rem,3vw,2.2rem); text-align:center; padding:2rem 2rem clamp(3rem,13vh,7rem);
+  transition:opacity .7s ease;
+}
+#entry.fade{ opacity:0; pointer-events:none }
+#entry .kicker{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.6rem,1.3vw,1rem); letter-spacing:.5em; color:var(--accent);
+}
+#entry h1{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(2.2rem,8vw,6rem); line-height:.95; letter-spacing:.02em;
+}
+#entry .date{
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.75rem,1.6vw,1.15rem); letter-spacing:.2em; color:var(--dim);
+}
+.enter-btn{
+  margin-top:clamp(.6rem,2vw,1.4rem);
+  display:inline-flex; align-items:center; gap:.8em;
+  padding:clamp(.9rem,1.8vw,1.2rem) clamp(2rem,4.5vw,3.4rem);
+  /* Signalgelb, nicht Glut: der Knopf liegt auf den glühenden
+     Buchstaben und muss sich davon absetzen. Das ist der einzige
+     Ort auf der Seite, an dem Gelb noch vorkommt. */
+  background:var(--signal); color:#140800; cursor:pointer; border:0;
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1rem,2vw,1.5rem); letter-spacing:.18em;
+  clip-path: polygon(1.1rem 0, 100% 0, 100% calc(100% - 1.1rem), calc(100% - 1.1rem) 100%, 0 100%, 0 1.1rem);
+  transition:transform .2s ease, box-shadow .25s ease;
+}
+.enter-btn:hover{ transform:translateY(-3px); box-shadow:0 .8rem 2.4rem rgba(255,212,0,.34) }
+.enter-btn svg{ width:1.1em; height:1.1em; flex:none }
+.enter-btn svg path{ stroke:#140800; stroke-width:2.4; fill:none; stroke-linecap:round; stroke-linejoin:round }
+#entry .hint{
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.6rem,1vw,.78rem); letter-spacing:.18em; color:var(--dim); margin-top:.4rem;
+}
+/* Zurueckhaltend, aber lesbar: Kontrast gegen das dunkle Bild reicht,
+   ohne dem Eintreten-Knopf die Aufmerksamkeit zu nehmen. */
+.entry-legal{
+  display:flex; gap:.6em; align-items:center; justify-content:center;
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.58rem,1vw,.74rem); letter-spacing:.2em;
+  color:rgba(255,255,255,.68); margin-top:-.4rem;
+}
+.entry-legal a{ color:inherit; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.32); padding-bottom:2px }
+.entry-legal a:hover,
+.entry-legal a:focus-visible{ color:var(--white); border-bottom-color:var(--accent) }
+#entry .entry-hint{
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.56rem,.95vw,.72rem); letter-spacing:.26em;
+  color:rgba(255,255,255,.5); margin-top:-.6rem;
+}
+
+/* ============================================================
+   TEASER ALS VORSPANN
+   ============================================================ */
+
+#intro{
+  position:fixed; inset:0; z-index:200; background:#000;
+  display:flex; align-items:center; justify-content:center;
+  opacity:1; transition:opacity .55s ease;
+}
+#intro.weg{ opacity:0; pointer-events:none }
+#intro video{
+  width:100%; height:100%; object-fit:contain; background:#000; display:block;
+}
+.intro-leiste{
+  position:absolute; left:0; right:0; bottom:0; height:.22rem;
+  background:rgba(255,255,255,.14);
+}
+.intro-leiste i{ display:block; height:100%; width:0; background:var(--accent) }
+.intro-skip{
+  position:absolute; right:clamp(1rem,3vw,2.4rem); bottom:clamp(1.6rem,4vw,3rem);
+  display:inline-flex; align-items:center; gap:.6em;
+  padding:.7em 1.3em .75em;
+  background:rgba(8,5,15,.62); border:.1rem solid rgba(255,255,255,.42);
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  color:var(--white); cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.66rem,1.1vw,.82rem); letter-spacing:.2em;
+  transition:border-color .2s ease, background .2s ease;
+}
+.intro-skip:hover, .intro-skip:focus-visible{
+  border-color:var(--accent); background:rgba(8,5,15,.85);
+}
+.intro-skip svg{ width:1.05em; height:1.05em; flex:none }
+.intro-skip svg path{ stroke:var(--accent); stroke-width:2.4; fill:none;
+  stroke-linecap:round; stroke-linejoin:round }
+
+/* ---------- Teaser auf der Startansicht ---------- */
+.teaser-box{
+  width:min(52rem,100%); margin:clamp(1.4rem,3vw,2.4rem) auto 0;
+  border:.1rem solid var(--hairline); border-top:.35rem solid var(--accent);
+  background:var(--panel);
+}
+.teaser-box video{
+  display:block; width:100%; height:auto; aspect-ratio:16/9;
+  background:#000; object-fit:contain;
+}
+.teaser-box .tb-fuss{
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  padding:.85rem clamp(.9rem,2vw,1.3rem) .95rem;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.6rem,1vw,.76rem); letter-spacing:.16em;
+}
+.teaser-box .tb-fuss span{ color:rgba(255,255,255,.72) }
+.teaser-box .tb-fuss b{ color:var(--accent); font-weight:600 }
+
+/* ============================================================
+   MENUE
+   ============================================================ */
+
+.menu-btn{
+  position:fixed; top:clamp(.9rem,2.2vw,1.6rem); left:clamp(.9rem,2.2vw,1.6rem);
+  z-index:70; display:flex; align-items:center; gap:.55em;
+  padding:.75em 1.25em .8em;
+  /* Der Knopf ist die einzige Navigation der Seite und war bisher das
+     leiseste Element darauf. Volle Glutkante statt Haarlinie, eigener
+     Grund statt durchscheinender Flaeche, dazu ein Schatten, damit er
+     auch ueber hellen Bildstellen steht. */
+  background:rgba(14,9,20,.86); border:.12rem solid var(--accent);
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  box-shadow:0 .5rem 1.4rem rgba(0,0,0,.45);
+  color:var(--white); cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.68rem,1.05vw,.85rem); letter-spacing:.16em;
+  clip-path: polygon(.75rem 0, 100% 0, 100% calc(100% - .75rem), calc(100% - .75rem) 100%, 0 100%, 0 .75rem);
+  transition:background .2s ease, transform .2s ease;
+}
+.menu-btn:hover{ background:var(--accent); color:#140800; transform:translateY(-1px) }
+.menu-btn:hover .bars line{ stroke:#140800 }
+.menu-btn .bars{ width:1.15em; height:1.15em; flex:none; display:block }
+.menu-btn .bars line{ stroke:var(--accent); stroke-width:2.2; stroke-linecap:round }
+
+#menu{
+  position:fixed; inset:0; z-index:90;
+  background:rgba(8,5,15,.97);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  display:flex; flex-direction:column;
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .3s ease, visibility 0s linear .3s;
+  overflow-y:auto;
+}
+/* visibility statt nur opacity: sonst bleiben die Links im
+   Tabulator-Verlauf erreichbar, obwohl das Menue zu ist. */
+#menu.open{ opacity:1; visibility:visible; pointer-events:auto; transition:opacity .3s ease }
+
+.menu-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:clamp(1rem,2.4vw,1.8rem) clamp(1rem,4vw,3rem);
+  border-bottom:.1rem solid rgba(255,255,255,.12);
+}
+.menu-head .brand{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.9rem,1.8vw,1.3rem); letter-spacing:.28em; color:var(--accent);
+}
+.close-btn{
+  background:transparent; border:.12rem solid var(--hairline); cursor:pointer;
+  width:2.6em; height:2.6em; display:flex; align-items:center; justify-content:center;
+  transition:border-color .2s ease, transform .2s ease;
+}
+.close-btn:hover{ border-color:var(--accent); transform:rotate(90deg) }
+.close-btn svg{ width:1.1em; height:1.1em }
+.close-btn svg line{ stroke:var(--accent); stroke-width:2.4; stroke-linecap:round }
+
+.menu-list{
+  flex:1; padding:clamp(1.2rem,3vw,2.4rem) clamp(1rem,4vw,3rem) clamp(2rem,5vw,4rem);
+  display:grid; gap:clamp(.6rem,1.4vw,1rem);
+  grid-template-columns:repeat(auto-fit,minmax(20rem,1fr));
+  align-content:start; max-width:100rem; margin:0 auto; width:100%;
+}
+.menu-item{
+  display:flex; align-items:center; gap:clamp(.9rem,2vw,1.3rem);
+  padding:clamp(1rem,2vw,1.4rem) clamp(1.1rem,2.4vw,1.7rem);
+  background:var(--panel); border:.12rem solid var(--hairline);
+  border-left:.4rem solid var(--accent);
+  color:var(--white); text-decoration:none; cursor:pointer;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.menu-item:hover{ transform:translateX(5px); box-shadow:0 .5rem 1.6rem rgba(0,0,0,.45) }
+.menu-item .ico{ width:clamp(1.8rem,3vw,2.4rem); height:clamp(1.8rem,3vw,2.4rem); flex:none }
+.menu-item .ico svg{ width:100%; height:100%; display:block }
+.menu-item .ico path, .menu-item .ico rect, .menu-item .ico circle,
+.menu-item .ico line, .menu-item .ico polyline{
+  stroke:var(--accent); stroke-width:1.7; fill:none; stroke-linecap:round; stroke-linejoin:round;
+}
+.menu-item .m-head{
+  display:block; font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.95rem,1.7vw,1.25rem); letter-spacing:.05em; line-height:1.15;
+}
+.menu-item .m-sub{
+  display:block; font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.58rem,.95vw,.75rem); letter-spacing:.14em; color:var(--dim); margin-top:.6em;
+}
+.menu-item .txt{ flex:1; min-width:0 }
+
+.menu-legal{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:clamp(1rem,3vw,2.2rem);
+  padding:0 clamp(1rem,4vw,3rem) clamp(2rem,4vw,3rem);
+}
+.menu-legal a{
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.65rem,1vw,.8rem); letter-spacing:.16em;
+  color:var(--dim); text-decoration:none; border-bottom:.1rem solid transparent;
+  transition:color .2s ease, border-color .2s ease;
+}
+.menu-legal a:hover{ color:var(--accent); border-bottom-color:var(--accent) }
+
+/* ============================================================
+   ANSICHTEN
+   ============================================================ */
+
+.view{ display:none; min-height:100vh; min-height:100dvh; flex-direction:column }
+.view.on{ display:flex }
+
+/* ---------- START ---------- */
+
+#view-home{ justify-content:space-between; padding:clamp(1.2rem,3vw,2.4rem) }
+
+.home-top{ text-align:center; padding-top:clamp(3rem,7vw,4.4rem) }
+.home-top .kicker{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.55rem,1.1vw,.9rem); letter-spacing:.42em; color:var(--accent);
+}
+.home-top h2{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1.5rem,4.5vw,3.2rem); line-height:1; letter-spacing:.02em; margin-top:.4em;
+}
+.home-top .place{
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.62rem,1.15vw,.9rem); letter-spacing:.2em; color:var(--dim); margin-top:.9em;
+}
+
+.cd-wrap{ display:flex; flex-direction:column; align-items:center; width:100% }
+.cd-box{
+  text-align:center;
+  padding:clamp(1rem,2vw,1.6rem) clamp(1.6rem,3.4vw,2.8rem) clamp(1.1rem,2.2vw,1.8rem);
+  background:var(--panel); border:.15rem solid var(--accent);
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  clip-path: polygon(1.4rem 0, 100% 0, 100% calc(100% - 1.4rem), calc(100% - 1.4rem) 100%, 0 100%, 0 1.4rem);
+}
+.cd-box .label{ font-size:clamp(.58rem,1vw,.85rem); margin-bottom:.7em }
+.cd-box .days{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1rem,2.4vw,1.9rem); letter-spacing:.08em; color:var(--accent);
+  line-height:1; margin-bottom:.35em;
+}
+.cd-box .cd{ font-weight:700; font-variant-numeric:tabular-nums; font-size:clamp(2.2rem,6.5vw,4.6rem); line-height:1 }
+
+/* Ist das Rennen noch weiter als einen Tag weg, sind laufende Sekunden
+   nur Unruhe. Dann tragen die TAGE die Aussage, die Uhr wird zur
+   Nebenzeile -- und die Beschriftung Std/Min/Sek entfaellt ganz.
+   Ab dem letzten Tag schaltet die Anzeige von selbst zurueck. */
+.cd-box.fern .days{
+  font-size:clamp(2.6rem,7.5vw,5.2rem); letter-spacing:.02em; margin-bottom:.18em;
+}
+.cd-box.fern .cd{
+  font-size:clamp(.95rem,2.1vw,1.45rem); font-weight:600; color:var(--dim);
+  letter-spacing:.14em; font-family:'Oswald',sans-serif; text-transform:uppercase;
+}
+.cd-box.fern .cd-units{ display:none }
+.cd-box .cd-units{
+  display:flex; justify-content:center; gap:clamp(1.1rem,3.4vw,3.2rem); margin-top:.55em;
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.5rem,.85vw,.75rem); letter-spacing:.22em; color:var(--dim);
+}
+.cd-box.live{ border-color:var(--green) }
+.cd-box.live .cd{ color:var(--green); font-size:clamp(1.8rem,5vw,3.6rem) }
+
+/* ---------- Fortschritt waehrend des Laufs ---------- */
+
+.cd-progress{
+  margin-top:clamp(.9rem,1.8vw,1.3rem); text-align:left;
+  width:100%; min-width:min(19rem,68vw);
+}
+.cd-progress .bar{
+  position:relative; height:.55rem; width:100%;
+  background:rgba(255,255,255,.16); overflow:hidden;
+}
+.cd-progress .bar span{
+  position:absolute; inset:0 auto 0 0; width:0%;
+  background:linear-gradient(90deg, var(--accent) 0%, var(--green) 100%);
+  transition:width .5s linear;
+}
+.cd-progress .marks{
+  display:flex; justify-content:space-between; gap:1.4em; margin-top:.7em;
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.55rem,.9vw,.72rem); letter-spacing:.14em; color:var(--dim);
+}
+.cd-progress .marks span{ white-space:nowrap }
+.cd-progress .marks b{ color:var(--green); font-weight:600 }
+
+/* ---------- Kalender + Teilen ---------- */
+
+.actions{
+  display:flex; flex-wrap:wrap; justify-content:center;
+  gap:clamp(.5rem,1.2vw,.9rem); margin-top:clamp(.9rem,2vw,1.4rem);
+}
+.act{
+  display:inline-flex; align-items:center; gap:.6em;
+  padding:.65em 1.2em .7em;
+  background:rgba(30,18,40,.55); border:.12rem solid var(--hairline);
+  color:var(--white); cursor:pointer; text-decoration:none;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.62rem,1vw,.78rem); letter-spacing:.14em;
+  clip-path: polygon(.65rem 0, 100% 0, 100% calc(100% - .65rem), calc(100% - .65rem) 100%, 0 100%, 0 .65rem);
+  transition:border-color .2s ease, transform .2s ease;
+}
+.act:hover{ border-color:var(--accent); transform:translateY(-2px) }
+.act svg{ width:1.15em; height:1.15em; flex:none }
+.act svg path, .act svg rect, .act svg circle, .act svg line, .act svg polyline{
+  stroke:var(--accent); stroke-width:1.9; fill:none; stroke-linecap:round; stroke-linejoin:round;
+}
+.act.done{ border-color:var(--green) }
+.act.done svg path, .act.done svg line{ stroke:var(--green) }
+
+/* ---- Startseite: Abschnitt "Wer ihr seid" ----------------------
+   Klassenpraefix "ihr-", weil "who" im Gaestebuch schon belegt ist. */
+.ihr{
+  /* Ueber die volle Breite, damit der dunkle Verlauf das Foto
+     abdeckt und der Text auch ueber hellen Bildstellen lesbar bleibt. */
+  margin:clamp(3rem,7vw,5.5rem) calc(50% - 50vw) 0;
+  padding:clamp(2.8rem,6vw,4.6rem) clamp(1.2rem,4vw,2rem) clamp(1.4rem,3vw,2.2rem);
+  background:linear-gradient(180deg,
+    rgba(8,5,15,0) 0%, rgba(8,5,15,.86) 15%, rgba(8,5,15,.95) 100%);
+}
+/* Auf schmalen Geraeten ist der Bildausschnitt unter den Knoepfen fast
+   schwarz -- der grosse Abstand liest sich dort als Fehler, nicht als
+   Absicht. Enger stellen und den Verlauf frueher greifen lassen. */
+@media (max-width:52rem){
+  .ihr{
+    margin-top:1.6rem;
+    padding-top:2.2rem;
+    background:linear-gradient(180deg,
+      rgba(8,5,15,0) 0%, rgba(8,5,15,.90) 8%, rgba(8,5,15,.96) 100%);
+  }
+}
+.ihr-in{ max-width:80rem; margin:0 auto }
+.ihr-kicker{
+  font-family:'Oswald','Arial Narrow',sans-serif; font-weight:600;
+  text-transform:uppercase; letter-spacing:.22em;
+  font-size:clamp(.72rem,1.5vw,.86rem); color:var(--accent);
+}
+.ihr-kicker::after{
+  content:''; display:block; width:2.6rem; height:.14rem;
+  background:var(--accent); margin-top:.55rem;
+}
+.ihr-head{
+  font-family:'Oswald','Arial Narrow',sans-serif; font-weight:700;
+  text-transform:uppercase; line-height:1.06;
+  font-size:clamp(1.75rem,5.2vw,3.1rem); margin:clamp(.9rem,2vw,1.3rem) 0 0;
+  max-width:22ch;
+  /* verhindert, dass ein einzelnes Wort allein in Zeile zwei landet */
+  text-wrap:balance;
+}
+.ihr-lead{
+  margin-top:clamp(.9rem,2vw,1.2rem); max-width:56ch;
+  font-size:clamp(1.02rem,2.1vw,1.24rem); line-height:1.62;
+  color:rgba(255,255,255,.8);
+}
+.ihr-grid{
+  display:grid; gap:clamp(.7rem,1.6vw,1.2rem);
+  grid-template-columns:repeat(auto-fit, minmax(15rem,1fr));
+  margin-top:clamp(1.6rem,3.5vw,2.6rem);
+}
+.ihr-card{
+  background:var(--panel); border:.12rem solid var(--hairline);
+  border-top:.28rem solid var(--accent);
+  padding:clamp(1.1rem,2.4vw,1.6rem) clamp(1.1rem,2.4vw,1.5rem);
+}
+.ihr-card h3{
+  font-family:'Oswald','Arial Narrow',sans-serif; font-weight:600;
+  text-transform:uppercase; letter-spacing:.05em; line-height:1.2;
+  font-size:clamp(.94rem,1.9vw,1.08rem); color:var(--accent);
+}
+.ihr-card p{
+  margin-top:.65rem; font-size:clamp(.96rem,1.9vw,1.06rem);
+  line-height:1.58; color:rgba(255,255,255,.76);
+}
+.ihr-close{
+  margin-top:clamp(1.4rem,3vw,2rem); padding-left:clamp(.9rem,2vw,1.2rem);
+  border-left:.24rem solid var(--accent); max-width:52ch;
+  font-size:clamp(1.06rem,2.3vw,1.34rem); line-height:1.5; font-weight:600;
+}
+
+.nav-tiles{
+  display:grid; gap:clamp(.7rem,1.6vw,1.2rem);
+  /* Zwei gleich grosse Kacheln bedeuten keine Hierarchie. Der Stream
+     ist der Grund, warum jemand hier ist -- der bekommt das Gewicht. */
+  grid-template-columns:1.45fr 1fr;
+  max-width:80rem; width:100%; margin:0 auto;
+}
+@media (max-width:52rem){ .nav-tiles{ grid-template-columns:1fr } }
+.tile{
+  display:flex; align-items:center; gap:clamp(.9rem,2vw,1.4rem);
+  padding:clamp(1.1rem,2.2vw,1.6rem) clamp(1.2rem,2.6vw,1.9rem);
+  background:var(--panel); border:.12rem solid var(--hairline);
+  border-left:.4rem solid var(--accent);
+  color:var(--white); text-decoration:none; cursor:pointer;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.tile:hover{ transform:translateY(-3px); box-shadow:0 .6rem 1.8rem rgba(0,0,0,.45) }
+.tile .ico{ width:clamp(2rem,3.4vw,2.7rem); height:clamp(2rem,3.4vw,2.7rem); flex:none }
+.tile .ico svg{ width:100%; height:100%; display:block }
+.tile .ico path, .tile .ico rect, .tile .ico circle, .tile .ico polyline, .tile .ico line{
+  stroke:var(--accent); stroke-width:1.7; fill:none; stroke-linecap:round; stroke-linejoin:round;
+}
+.tile .txt{ flex:1; min-width:0; display:block }
+.tile .t-head{
+  display:block; font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1rem,1.9vw,1.4rem); letter-spacing:.05em; line-height:1.1;
+}
+.tile .t-sub{
+  display:block; font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.6rem,1vw,.8rem); letter-spacing:.14em; color:var(--dim);
+  margin-top:.7em; line-height:1.45;
+}
+.tile .arrow{ width:1.4em; height:1.4em; flex:none; opacity:.7 }
+.tile .arrow svg{ width:100%; height:100% }
+.tile .arrow path{ stroke:var(--accent); stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round }
+.tile .state{
+  display:flex; align-items:center; gap:.45em;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.58rem,.95vw,.75rem); letter-spacing:.16em; margin-top:.65em; color:var(--dim);
+}
+.tile .state i{ width:.55em; height:.55em; border-radius:50%; background:var(--dim); display:block }
+/* Der Nebenweg: gleiche Bauform, leiser Auftritt. Keine Flaeche,
+   keine Glutkante, kleinere Schrift -- damit klar ist, was zuerst dran ist. */
+.tile.tile-zweit{
+  background:transparent; border-color:rgba(255,255,255,.14);
+  border-left-color:rgba(255,255,255,.22);
+}
+.tile.tile-zweit .t-head{ font-size:clamp(.9rem,1.5vw,1.1rem); color:rgba(255,255,255,.86) }
+.tile.tile-zweit .ico path, .tile.tile-zweit .ico rect,
+.tile.tile-zweit .ico circle, .tile.tile-zweit .ico line{ stroke:rgba(255,255,255,.55) }
+.tile.tile-zweit .arrow path{ stroke:rgba(255,255,255,.55) }
+.tile.tile-zweit:hover{ border-color:var(--hairline); background:var(--panel) }
+
+.tile.is-live{ border-left-color:var(--green) }
+.tile.is-live .state{ color:var(--green) }
+.tile.is-live .state i{ background:var(--green); box-shadow:0 0 .7em rgba(74,222,128,.9); animation:pulse 1.6s ease-in-out infinite }
+@keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* ---------- Unterseiten ---------- */
+
+.sub-head{
+  display:flex; align-items:center; gap:clamp(.8rem,2vw,1.4rem);
+  justify-content:flex-start;
+  padding:clamp(1rem,2.2vw,1.6rem) clamp(1rem,4vw,3rem);
+  border-bottom:.1rem solid rgba(255,255,255,.12);
+  position:sticky; top:0; z-index:20;
+  background:rgba(8,5,15,.94);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
+.back-btn{
+  display:inline-flex; align-items:center; gap:.6em; padding:.6em 1.1em .65em;
+  background:transparent; border:.12rem solid var(--hairline);
+  color:var(--white); cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.68rem,1.05vw,.82rem); letter-spacing:.16em;
+  transition:border-color .2s ease, transform .2s ease;
+}
+.back-btn:hover{ border-color:var(--accent); transform:translateX(-3px) }
+.back-btn svg{ width:1.1em; height:1.1em; flex:none }
+.back-btn svg path{ stroke:var(--accent); stroke-width:2.3; fill:none; stroke-linecap:round; stroke-linejoin:round }
+.sub-head h2{
+  flex:1; min-width:0;
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1rem,2.2vw,1.7rem); letter-spacing:.04em; line-height:1;
+}
+
+/* Menue-Knopf in der Kopfzeile der Unterseiten */
+.head-menu{
+  display:inline-flex; align-items:center; gap:.5em; padding:.6em 1em .65em;
+  background:transparent; border:.12rem solid var(--hairline);
+  color:var(--white); cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.66rem,1.05vw,.8rem); letter-spacing:.14em;
+  transition:border-color .2s ease;
+}
+.head-menu:hover{ border-color:var(--accent) }
+.head-menu svg{ width:1.05em; height:1.05em; flex:none }
+.head-menu svg line{ stroke:var(--accent); stroke-width:2.2; stroke-linecap:round }
+.sub-body{ flex:1; padding:clamp(1.4rem,3.5vw,3rem) clamp(1rem,4vw,3rem) clamp(3rem,6vw,5rem) }
+.inner{ max-width:110rem; margin:0 auto }
+
+.sec-title{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1.1rem,2.2vw,1.6rem); letter-spacing:.05em;
+  margin:clamp(1.8rem,3.4vw,2.8rem) 0 clamp(.9rem,1.8vw,1.4rem);
+  padding-bottom:.5em; border-bottom:.15rem solid var(--hairline);
+}
+.sec-title:first-child{ margin-top:0 }
+
+.empty{
+  padding:clamp(1.6rem,3vw,2.4rem); text-align:center;
+  border:.12rem dashed rgba(255,255,255,.2);
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.75rem,1.1vw,.9rem); letter-spacing:.14em; color:var(--dim);
+}
+
+/* ---------- Karten allgemein ---------- */
+
+.cards{
+  display:grid; gap:clamp(.9rem,1.8vw,1.4rem);
+  grid-template-columns:repeat(auto-fit, minmax(23rem,1fr)); align-items:start;
+}
+.card{
+  background:var(--panel); border:.1rem solid var(--hairline);
+  border-top:.35rem solid var(--accent);
+  padding:clamp(1.2rem,2.3vw,1.8rem) clamp(1.2rem,2.5vw,1.9rem) clamp(1.3rem,2.5vw,1.9rem);
+}
+.card.past{ border-top-color:rgba(255,255,255,.25); opacity:.72 }
+.card.next{ border-top-color:var(--green) }
+/* Eventbild randlos oben in der Karte -- die negativen Raender heben
+   genau die Innenabstaende der Karte auf. */
+.card .bild{
+  display:block; margin:
+    calc(-1 * clamp(1.2rem,2.3vw,1.8rem))
+    calc(-1 * clamp(1.2rem,2.5vw,1.9rem))
+    clamp(1rem,2vw,1.35rem);
+  background:var(--ink);
+}
+.card .bild img{
+  display:block; width:100%; height:auto; aspect-ratio:1600/700; object-fit:cover;
+}
+.card.past .bild{ filter:grayscale(.55) }
+.card h3{
+  display:flex; align-items:center; gap:.7em;
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1.05rem,1.9vw,1.4rem); letter-spacing:.05em; line-height:1.15;
+  margin-bottom:clamp(.7rem,1.4vw,1rem);
+}
+.card .meta{
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.66rem,1vw,.8rem); letter-spacing:.14em; color:var(--accent);
+  margin-bottom:clamp(.8rem,1.6vw,1.1rem);
+}
+.card p{ font-size:clamp(.95rem,1.3vw,1.08rem); line-height:1.6; color:rgba(255,255,255,.86) }
+.card p + p{ margin-top:.8em }
+.card ul{ list-style:none }
+.card li{
+  position:relative; padding-left:1.5em;
+  font-size:clamp(.95rem,1.3vw,1.08rem); line-height:1.55; color:rgba(255,255,255,.86);
+}
+.card li + li{ margin-top:.7em }
+.card li::before{
+  content:''; position:absolute; left:0; top:.62em; width:.5em; height:.5em;
+  background:var(--accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+.card li strong, .card p strong{ color:var(--white); font-weight:700 }
+
+.badge{
+  display:inline-block; padding:.35em .9em .4em; margin-bottom:1em;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.6rem,.95vw,.75rem); letter-spacing:.16em;
+  border:.1rem solid var(--accent); color:var(--accent);
+}
+.badge.g{ border-color:var(--green); color:var(--green) }
+.badge.d{ border-color:rgba(255,255,255,.3); color:var(--dim) }
+
+.stat-row{
+  display:grid; gap:clamp(.6rem,1.2vw,1rem);
+  grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));
+  margin-top:clamp(.9rem,1.8vw,1.3rem);
+  padding-top:clamp(.9rem,1.8vw,1.3rem);
+  border-top:.1rem solid rgba(255,255,255,.14);
+}
+.stat .k{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.58rem,.9vw,.72rem); letter-spacing:.14em; color:var(--dim);
+}
+.stat .v{
+  font-weight:700; font-variant-numeric:tabular-nums;
+  font-size:clamp(1.1rem,2vw,1.5rem); margin-top:.35em; line-height:1;
+}
+
+.facts{
+  display:grid; gap:clamp(.8rem,1.6vw,1.3rem);
+  grid-template-columns:repeat(auto-fit, minmax(13rem,1fr));
+  margin-bottom:clamp(1.6rem,3vw,2.4rem);
+}
+.fact{
+  background:var(--panel); border:.1rem solid var(--hairline);
+  border-left:.35rem solid var(--accent);
+  padding:clamp(1rem,2vw,1.5rem) clamp(1.1rem,2.2vw,1.7rem);
+}
+.fact .label{ font-size:clamp(.62rem,.95vw,.78rem); margin-bottom:.8em }
+.fact .val{ font-weight:700; font-variant-numeric:tabular-nums; font-size:clamp(1.3rem,2.5vw,1.9rem); line-height:1 }
+.fact .note{
+  font-family:'Oswald',sans-serif; font-weight:500;
+  font-size:clamp(.65rem,1vw,.8rem); color:var(--dim);
+  letter-spacing:.12em; text-transform:uppercase; margin-top:.7em;
+}
+.note-line{
+  margin-top:clamp(1.2rem,2.4vw,1.8rem); text-align:center;
+  font-family:'Oswald',sans-serif; font-weight:500;
+  font-size:clamp(.68rem,1vw,.8rem); letter-spacing:.1em;
+  text-transform:uppercase; color:var(--dim);
+}
+
+/* ---------- Stream-Ansicht ---------- */
+
+.stream-frame{
+  position:relative; width:100%; aspect-ratio:16/9;
+  background:linear-gradient(180deg, rgba(30,18,40,.55) 0%, rgba(14,9,20,.75) 100%);
+  border:.2rem solid var(--hairline); overflow:hidden;
+}
+.stream-frame iframe{ width:100%; height:100%; border:0; display:block }
+.locked{
+  position:absolute; inset:0; z-index:2;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:clamp(.8rem,2vw,1.5rem); text-align:center; padding:2rem;
+}
+.locked .lock-icon{ width:clamp(2.4rem,4.5vw,3.6rem); height:clamp(2.4rem,4.5vw,3.6rem) }
+.locked .lock-icon svg{ width:100%; height:100%; display:block }
+.locked .lock-icon path, .locked .lock-icon rect{
+  stroke:var(--accent); stroke-width:1.6; fill:none; stroke-linecap:round; stroke-linejoin:round;
+}
+.locked .head{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1rem,2.4vw,1.8rem); letter-spacing:.06em;
+}
+.locked .sub{ font-size:clamp(.88rem,1.4vw,1.1rem); color:var(--dim); max-width:32rem; line-height:1.5 }
+.locked .mini-cd{ font-weight:700; font-variant-numeric:tabular-nums; font-size:clamp(1.3rem,3vw,2.4rem); color:var(--accent) }
+.stream-note{
+  margin-top:clamp(1rem,2vw,1.4rem); text-align:center;
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.68rem,1.05vw,.82rem); letter-spacing:.14em; color:var(--dim);
+}
+
+/* ---------- Einwilligung fuer eingebettete Videos ---------- */
+
+.consent{
+  position:absolute; inset:0; z-index:3;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:clamp(.7rem,1.8vw,1.2rem); text-align:center; padding:clamp(1.2rem,3vw,2rem);
+  background:linear-gradient(180deg, rgba(30,18,40,.72) 0%, rgba(14,9,20,.88) 100%);
+}
+.consent .head{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.95rem,2vw,1.5rem); letter-spacing:.06em;
+}
+.consent .sub{
+  font-size:clamp(.8rem,1.25vw,1rem); color:rgba(255,255,255,.75);
+  max-width:38rem; line-height:1.55;
+}
+.consent .sub a{ color:var(--accent); text-decoration:underline; text-underline-offset:.2em }
+.consent-btn{
+  display:inline-flex; align-items:center; gap:.7em;
+  padding:.85em 2em .9em; background:var(--accent); color:#140800;
+  border:0; cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.78rem,1.3vw,1rem); letter-spacing:.14em;
+  clip-path: polygon(.8rem 0, 100% 0, 100% calc(100% - .8rem), calc(100% - .8rem) 100%, 0 100%, 0 .8rem);
+  transition:transform .2s ease;
+}
+.consent-btn:hover{ transform:translateY(-2px) }
+.consent-btn svg{ width:1.15em; height:1.15em; flex:none }
+.consent-btn svg path, .consent-btn svg polygon{ stroke:#140800; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round }
+
+/* ---------- Live-Werte aus dem Lauf ---------- */
+
+.live{
+  margin-top:clamp(1.4rem,2.8vw,2.2rem);
+  background:var(--panel);
+  border:.1rem solid var(--hairline);
+  border-left:.4rem solid var(--green);
+  padding:clamp(1.2rem,2.4vw,1.9rem) clamp(1.3rem,2.6vw,2rem);
+}
+.live.stale{ border-left-color:rgba(255,255,255,.3) }
+.live-head{
+  display:flex; align-items:center; gap:.7em; flex-wrap:wrap;
+  margin-bottom:clamp(1rem,2vw,1.4rem);
+}
+.live-head h3{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1rem,1.8vw,1.35rem); letter-spacing:.05em; line-height:1.15;
+}
+.live-dot{
+  display:inline-flex; align-items:center; gap:.45em; margin-left:auto;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.58rem,.95vw,.74rem); letter-spacing:.16em; color:var(--green);
+}
+.live-dot i{
+  width:.55em; height:.55em; border-radius:50%; background:var(--green);
+  box-shadow:0 0 .7em rgba(74,222,128,.9); animation:pulse 1.6s ease-in-out infinite;
+}
+.live.stale .live-dot{ color:var(--dim) }
+.live.stale .live-dot i{ background:var(--dim); box-shadow:none; animation:none }
+
+/* Kennzahlen */
+.live-grid{
+  display:grid; gap:clamp(.7rem,1.5vw,1.1rem);
+  grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));
+}
+.live-cell{
+  background:rgba(8,5,15,.45); border:.1rem solid rgba(255,255,255,.12);
+  padding:clamp(.8rem,1.6vw,1.1rem) clamp(.9rem,1.8vw,1.2rem);
+}
+.live-cell .k{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.55rem,.9vw,.7rem); letter-spacing:.14em; color:var(--dim);
+}
+.live-cell .v{
+  font-weight:700; font-size:clamp(1.25rem,2.4vw,1.8rem);
+  line-height:1; margin-top:.45em;
+}
+.live-cell .u{
+  font-family:'Oswald',sans-serif; font-weight:500;
+  font-size:.5em; letter-spacing:.1em; color:var(--dim); margin-left:.4em;
+}
+.live-cell.wide{ grid-column:span 2 }
+
+/* Fortschritt zum Tagesziel */
+.live-goal{ margin-top:clamp(1.1rem,2.2vw,1.6rem) }
+.live-goal .top{
+  display:flex; justify-content:space-between; align-items:baseline; gap:1em;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.6rem,1vw,.76rem); letter-spacing:.14em; color:var(--dim);
+  margin-bottom:.7em;
+}
+.live-goal .top b{ color:var(--accent); font-weight:600 }
+.live-goal.reached .top b{ color:var(--green) }
+.live-goal.reached .bar span{ background:var(--green) }
+.live-goal .bar{
+  position:relative; height:.7rem; width:100%;
+  background:rgba(255,255,255,.14); overflow:hidden;
+}
+.live-goal .bar span{
+  position:absolute; inset:0 auto 0 0; width:0%;
+  background:linear-gradient(90deg, var(--accent) 0%, var(--green) 100%);
+  transition:width .6s linear;
+}
+.live-laps{
+  display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.8em;
+}
+.live-laps i{
+  flex:1 1 1.4rem; height:.35rem; min-width:1rem;
+  background:rgba(255,255,255,.16); display:block;
+}
+.live-laps i.done{ background:var(--accent) }
+.live-laps i.part{ background:linear-gradient(90deg,var(--accent) 50%, rgba(255,255,255,.16) 50%) }
+.live-lap-txt{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.6rem,1vw,.76rem); letter-spacing:.14em; color:var(--dim); margin-top:.75em;
+}
+.live-lap-txt b{ color:var(--white); font-weight:700 }
+
+/* Verlaufskurve */
+.live-chart{ margin-top:clamp(1.2rem,2.4vw,1.8rem) }
+.live-chart .cap{
+  display:flex; justify-content:space-between; align-items:baseline; gap:1em;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.6rem,1vw,.76rem); letter-spacing:.14em; color:var(--dim);
+  margin-bottom:.8em;
+}
+.live-chart figure{ margin:0 }
+.live-chart svg{ width:100%; height:auto; display:block; overflow:visible }
+.live-chart .grid line{ stroke:rgba(255,255,255,.09); stroke-width:1 }
+.live-chart .axis text{
+  fill:rgba(255,255,255,.5); font-family:'Oswald',sans-serif; font-weight:500;
+  font-size:9px; letter-spacing:.08em;
+}
+.live-chart .target{ stroke:rgba(255,255,255,.35); stroke-width:1; stroke-dasharray:4 4 }
+.live-chart .target-txt{ fill:rgba(255,255,255,.5); font-family:'Oswald',sans-serif; font-size:9px; letter-spacing:.08em }
+.live-chart .area{ fill:url(#kmFill) }
+.live-chart .line{ fill:none; stroke:var(--accent); stroke-width:2; stroke-linecap:round; stroke-linejoin:round }
+.live-chart .end{ fill:var(--accent); stroke:#140800; stroke-width:2 }
+.live-chart .end-txt{
+  fill:var(--white); font-family:'Oswald',sans-serif; font-weight:700;
+  font-size:11px; letter-spacing:.04em;
+}
+.live-chart .cross{ stroke:rgba(255,255,255,.45); stroke-width:1 }
+.live-chart .hit{ fill:var(--accent); stroke:#140800; stroke-width:2 }
+.live-chart figure{ position:relative }
+.live-tip{
+  position:absolute; bottom:calc(100% - 1.2rem); pointer-events:none;
+  background:rgba(8,5,15,.96); border:.1rem solid var(--hairline);
+  padding:.45em .8em .5em; white-space:nowrap; z-index:5;
+}
+.live-tip b{
+  display:block; font-weight:700; font-variant-numeric:tabular-nums;
+  font-size:clamp(.9rem,1.3vw,1.05rem); line-height:1.1;
+}
+.live-tip span{
+  display:block; font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.55rem,.9vw,.68rem); letter-spacing:.12em; color:var(--dim); margin-top:.35em;
+}
+.live-table{ margin-top:.9em }
+.live-table summary{
+  cursor:pointer; font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.58rem,.95vw,.74rem); letter-spacing:.14em; color:var(--dim);
+}
+.live-table summary:hover{ color:var(--accent) }
+.live-table table{ width:100%; border-collapse:collapse; margin-top:.9em }
+.live-table th, .live-table td{
+  text-align:left; padding:.45em .6em; font-variant-numeric:tabular-nums;
+  font-size:clamp(.8rem,1.1vw,.92rem); border-bottom:.1rem solid rgba(255,255,255,.1);
+}
+.live-table th{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.58rem,.9vw,.72rem); letter-spacing:.14em; color:var(--dim);
+}
+.live-foot{
+  margin-top:clamp(1rem,2vw,1.3rem); padding-top:clamp(.8rem,1.6vw,1.1rem);
+  border-top:.1rem solid rgba(255,255,255,.14);
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.6rem,.95vw,.75rem); letter-spacing:.12em; color:var(--dim);
+}
+
+/* Kompakte Zeile unter dem Countdown auf der Startansicht */
+.cd-live{
+  margin-top:clamp(.8rem,1.6vw,1.1rem);
+  padding-top:clamp(.8rem,1.6vw,1.1rem);
+  border-top:.1rem solid rgba(255,255,255,.18);
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.65rem,1.1vw,.85rem); letter-spacing:.12em; color:var(--dim);
+  display:flex; flex-wrap:wrap; justify-content:center; gap:.5em 1.2em;
+}
+.cd-live b{ color:var(--accent); font-weight:700; font-size:1.25em; letter-spacing:.02em }
+
+/* ---------- Sendeplan-Hinweis in der Stream-Ansicht ---------- */
+
+.plan{
+  margin-top:clamp(1.4rem,2.8vw,2.2rem);
+  background:var(--panel);
+  border:.1rem solid var(--hairline);
+  border-left:.4rem solid var(--accent);
+  padding:clamp(1.2rem,2.4vw,1.9rem) clamp(1.3rem,2.6vw,2rem);
+}
+.plan h3{
+  display:flex; align-items:center; gap:.7em;
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1rem,1.8vw,1.35rem); letter-spacing:.05em; line-height:1.15;
+  margin-bottom:clamp(.9rem,1.8vw,1.3rem);
+}
+.plan h3 .ico{ width:1.5em; height:1.5em; flex:none }
+.plan h3 .ico svg{ width:100%; height:100%; display:block }
+.plan h3 .ico path, .plan h3 .ico circle, .plan h3 .ico polyline{
+  stroke:var(--accent); stroke-width:1.7; fill:none; stroke-linecap:round; stroke-linejoin:round;
+}
+.plan ul{ list-style:none }
+.plan li{
+  position:relative; padding-left:1.6em;
+  font-size:clamp(.95rem,1.3vw,1.08rem); line-height:1.55; color:rgba(255,255,255,.88);
+}
+.plan li + li{ margin-top:.8em }
+.plan li::before{
+  content:''; position:absolute; left:0; top:.6em; width:.55em; height:.55em;
+  background:var(--accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+.plan li strong{ color:var(--white); font-weight:700 }
+.plan .foot{
+  margin-top:clamp(1rem,2vw,1.4rem); padding-top:clamp(.9rem,1.8vw,1.2rem);
+  border-top:.1rem solid rgba(255,255,255,.14);
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.66rem,1vw,.8rem); letter-spacing:.12em; color:var(--dim); line-height:1.6;
+}
+
+/* ---------- Aufzeichnungen ---------- */
+
+.vod-grid{
+  display:grid; gap:clamp(.9rem,1.8vw,1.4rem);
+  grid-template-columns:repeat(auto-fit,minmax(24rem,1fr));
+}
+.vod{ background:var(--panel); border:.1rem solid var(--hairline) }
+.vod .frame{ position:relative; width:100%; aspect-ratio:16/9; background:#000; overflow:hidden }
+.vod .frame iframe{ width:100%; height:100%; border:0; display:block }
+.vod .body{ padding:clamp(1rem,2vw,1.4rem) clamp(1.1rem,2.2vw,1.6rem) clamp(1.1rem,2.2vw,1.6rem) }
+.vod .body h3{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.95rem,1.6vw,1.2rem); letter-spacing:.04em; line-height:1.2;
+}
+.vod .body .meta{
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.62rem,.95vw,.76rem); letter-spacing:.14em; color:var(--accent); margin-top:.7em;
+}
+
+/* ---------- Gaestebuch ---------- */
+
+.gb-form{
+  background:var(--panel); border:.1rem solid var(--hairline);
+  border-left:.35rem solid var(--accent);
+  padding:clamp(1.3rem,2.5vw,2rem); margin-bottom:clamp(1.6rem,3vw,2.6rem);
+}
+.gb-form .hint{
+  font-size:clamp(.9rem,1.25vw,1.05rem); line-height:1.6;
+  color:rgba(255,255,255,.8); margin-bottom:clamp(1rem,2vw,1.5rem);
+}
+.field{ margin-bottom:clamp(.8rem,1.6vw,1.1rem) }
+.field label{
+  display:block; font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.62rem,.95vw,.76rem); letter-spacing:.16em; color:var(--accent); margin-bottom:.6em;
+}
+.field input, .field textarea{
+  width:100%; padding:.85em 1em;
+  background:rgba(8,5,15,.6); border:.1rem solid rgba(255,255,255,.2);
+  color:var(--white); font-family:'Rajdhani',sans-serif; font-weight:600;
+  font-size:clamp(.95rem,1.3vw,1.08rem); outline:none;
+  transition:border-color .2s ease;
+}
+.field select{
+  width:100%; padding:.85em 2.4em .85em 1em;
+  background:rgba(8,5,15,.6); border:.1rem solid rgba(255,255,255,.2);
+  color:var(--white); font-family:'Rajdhani',sans-serif; font-weight:600;
+  font-size:clamp(.95rem,1.3vw,1.08rem); outline:none; cursor:pointer;
+  -webkit-appearance:none; appearance:none; border-radius:0;
+  background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),
+                   linear-gradient(135deg,var(--accent) 50%,transparent 50%);
+  background-position:calc(100% - 1.25em) 1.35em, calc(100% - .9em) 1.35em;
+  background-size:.38em .38em,.38em .38em; background-repeat:no-repeat;
+  transition:border-color .2s ease;
+}
+.field select:focus{ border-color:var(--accent) }
+.field select option{ background:#14091c; color:var(--white) }
+.field input:focus, .field textarea:focus{ border-color:var(--accent) }
+.field textarea{ min-height:8rem; resize:vertical; line-height:1.5 }
+/* Honigtopf gegen Spam-Roboter -- fuer Menschen unsichtbar */
+.hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden }
+.gb-consent{
+  display:flex; align-items:flex-start; gap:.8em;
+  margin-bottom:clamp(1rem,2vw,1.4rem);
+  font-size:clamp(.82rem,1.15vw,.95rem); line-height:1.55; color:rgba(255,255,255,.78);
+}
+.gb-consent input{ margin-top:.35em; width:1.1em; height:1.1em; flex:none; accent-color:var(--accent) }
+.gb-consent a{ color:var(--accent); text-decoration:underline; text-underline-offset:.2em }
+.send-btn{
+  display:inline-flex; align-items:center; gap:.7em;
+  padding:.9em 2.2em .95em; background:var(--accent); color:#140800;
+  border:0; cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.8rem,1.3vw,1rem); letter-spacing:.14em;
+  clip-path: polygon(.8rem 0, 100% 0, 100% calc(100% - .8rem), calc(100% - .8rem) 100%, 0 100%, 0 .8rem);
+  transition:transform .2s ease;
+}
+.send-btn:hover{ transform:translateY(-2px) }
+.send-btn:disabled{ opacity:.5; cursor:default; transform:none }
+.form-msg{
+  margin-top:1em; font-family:'Oswald',sans-serif; font-weight:600;
+  font-size:clamp(.75rem,1.1vw,.9rem); letter-spacing:.1em; text-transform:uppercase;
+}
+.form-msg.ok{ color:var(--green) }
+.form-msg.err{ color:var(--red) }
+
+/* ---------- Zusammenarbeit ---------- */
+.koop{
+  background:var(--panel); border:.1rem solid var(--hairline);
+  border-left:.35rem solid var(--accent);
+  padding:clamp(1.1rem,2.2vw,1.7rem) clamp(1.1rem,2.4vw,1.8rem);
+  margin-bottom:clamp(1.4rem,3vw,2.4rem);
+}
+.koop > p{ font-size:clamp(.95rem,1.3vw,1.06rem); line-height:1.6; color:rgba(255,255,255,.86) }
+.koop-grid{
+  display:grid; gap:clamp(1rem,2vw,1.6rem);
+  grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));
+  margin:clamp(1rem,2vw,1.5rem) 0;
+}
+.koop h4{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.72rem,1.05vw,.85rem); letter-spacing:.16em; color:var(--accent);
+  margin-bottom:.7em;
+}
+.koop ul{ list-style:none }
+.koop li{
+  position:relative; padding-left:1.4em;
+  font-size:clamp(.9rem,1.22vw,1rem); line-height:1.5; color:rgba(255,255,255,.84);
+}
+.koop li + li{ margin-top:.6em }
+.koop li::before{
+  content:''; position:absolute; left:0; top:.6em; width:.45em; height:.45em;
+  background:var(--accent); clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
+}
+.koop li strong{ color:var(--white) }
+.koop-nein{
+  border-top:.1rem solid rgba(255,255,255,.14); padding-top:clamp(.9rem,1.8vw,1.3rem);
+}
+.koop-nein h4{ color:rgba(255,255,255,.55) }
+.koop-nein p{ font-size:clamp(.9rem,1.22vw,1rem); line-height:1.55; color:rgba(255,255,255,.78) }
+.koop-fuss{
+  margin-top:clamp(.9rem,1.8vw,1.3rem); font-size:clamp(.88rem,1.15vw,.97rem);
+  line-height:1.55; color:rgba(255,255,255,.7);
+}
+.koop-fuss a{ color:var(--accent); text-decoration:underline; text-underline-offset:.2em }
+
+.gb-list{ display:grid; gap:clamp(.8rem,1.6vw,1.2rem) }
+.gb-entry{
+  background:rgba(30,18,40,.35); border:.1rem solid rgba(255,255,255,.14);
+  border-left:.3rem solid var(--accent);
+  padding:clamp(1.1rem,2.2vw,1.6rem) clamp(1.2rem,2.4vw,1.8rem);
+}
+.gb-entry .who{
+  display:flex; align-items:baseline; gap:.9em; flex-wrap:wrap;
+  margin-bottom:.7em;
+}
+.gb-entry .name{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(.9rem,1.5vw,1.1rem); letter-spacing:.06em;
+}
+.gb-entry .when{
+  font-family:'Oswald',sans-serif; font-weight:500;
+  font-size:clamp(.62rem,.95vw,.76rem); letter-spacing:.14em; color:var(--dim);
+}
+.gb-entry .text{
+  font-size:clamp(.95rem,1.3vw,1.08rem); line-height:1.6; color:rgba(255,255,255,.88);
+}
+
+/* ---------- Rechtstexte ---------- */
+
+.prose{ max-width:62rem }
+.prose h3{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1rem,1.8vw,1.3rem); letter-spacing:.05em; line-height:1.2;
+  margin:clamp(1.8rem,3vw,2.6rem) 0 clamp(.7rem,1.3vw,1rem); color:var(--accent);
+}
+.prose h3:first-child{ margin-top:0 }
+.prose p{
+  font-size:clamp(.95rem,1.3vw,1.05rem); line-height:1.7;
+  color:rgba(255,255,255,.84); margin-bottom:.9em;
+}
+.prose ul{ list-style:none; margin-bottom:.9em }
+.prose li{
+  position:relative; padding-left:1.5em;
+  font-size:clamp(.95rem,1.3vw,1.05rem); line-height:1.65; color:rgba(255,255,255,.84);
+}
+.prose li + li{ margin-top:.5em }
+.prose li::before{
+  content:''; position:absolute; left:0; top:.66em; width:.45em; height:.45em;
+  background:var(--accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+.prose strong{ color:var(--white); font-weight:700 }
+.prose a{ color:var(--accent); text-decoration:underline; text-underline-offset:.2em }
+.revoke-btn{
+  display:inline-flex; align-items:center; gap:.6em; margin-top:.4em;
+  padding:.7em 1.4em .75em; background:transparent;
+  border:.12rem solid var(--accent); color:var(--accent); cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.7rem,1.05vw,.85rem); letter-spacing:.14em;
+  transition:background .2s ease, color .2s ease;
+}
+.revoke-btn:hover{ background:var(--accent); color:#140800 }
+
+/* ============================================================
+   FUSSZEILE + MUSIK
+   ============================================================ */
+
+.home-foot{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:clamp(.8rem,2vw,1.6rem); margin-top:clamp(1rem,2vw,1.6rem);
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.62rem,.95vw,.78rem); letter-spacing:.18em; color:var(--dim);
+}
+.home-foot a{ color:var(--dim); text-decoration:none; border-bottom:.1rem solid transparent; transition:color .2s ease, border-color .2s ease }
+.home-foot a:hover{ color:var(--accent); border-bottom-color:var(--accent) }
+.visits{ display:inline-flex; align-items:center; gap:.55em; opacity:0; transition:opacity .5s ease }
+.visits.show{ opacity:1 }
+.visits .num{
+  font-family:'Rajdhani',sans-serif; font-weight:700;
+  font-variant-numeric:tabular-nums; color:var(--accent); font-size:1.4em;
+}
+.visits svg{ width:1.3em; height:1.3em; flex:none }
+.visits svg path, .visits svg circle{
+  stroke:var(--accent); stroke-width:1.8; fill:none; stroke-linecap:round; stroke-linejoin:round;
+}
+
+.sound-btn{
+  position:fixed; right:clamp(.9rem,2.2vw,1.6rem); bottom:clamp(.9rem,2.2vw,1.6rem); z-index:80;
+  display:flex; align-items:center; gap:.55em; padding:.7em 1.1em .75em;
+  background:var(--panel); border:.12rem solid var(--accent);
+  color:var(--white); cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.65rem,1vw,.8rem); letter-spacing:.14em;
+  clip-path: polygon(.75rem 0, 100% 0, 100% calc(100% - .75rem), calc(100% - .75rem) 100%, 0 100%, 0 .75rem);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.sound-btn:hover{ transform:translateY(-2px); box-shadow:0 .4rem 1.5rem rgba(255,122,24,.25) }
+.sound-btn svg{ width:1.25em; height:1.25em; flex:none }
+.sound-btn svg path, .sound-btn svg line{
+  stroke:var(--accent); stroke-width:1.9; fill:none; stroke-linecap:round; stroke-linejoin:round;
+}
+.sound-btn .txt{ white-space:nowrap }
+
+/* ============================================================
+   HANDY HOCHKANT
+   Im breiten 16:9-Bild schrumpfen beide Figuren auf Handybreite so
+   weit, dass vom Motiv nichts uebrig bleibt. Hochkant wird deshalb ein
+   eigener Ausschnitt gezeigt: links und rechts beschnitten, oben und
+   unten voll. Beide Laeufer bleiben drin, das Wort YOU VS YOU bleibt
+   lesbar, und alles ist rund ein Drittel groesser.
+   Das Bild liegt oben in voller Breite, der Inhalt darunter.
+   Ausschnitt 1327 x 1008 -> Bildhoehe = 76 % der Breite.
+   ============================================================ */
+
+@media (max-aspect-ratio: 1/1){
+  .bg-photo{
+    background-image:url("start-hoch.jpg");
+    background-image:image-set(url("start-hoch.webp") type("image/webp"),
+                               url("start-hoch.jpg")  type("image/jpeg"));
+    background-size:100% auto;
+    background-position:center top;
+    background-repeat:no-repeat;
+    background-color:var(--ink);
+  }
+  .bg-photo::before{
+    background:linear-gradient(180deg, rgba(8,5,15,.20) 0%, rgba(8,5,15,.12) 32%,
+                                       rgba(8,5,15,.85) 50%, var(--ink) 62%);
+  }
+  /* Der Knopf sass direkt unter dem Bild, darunter klaffte die halbe
+     Bildschirmhoehe schwarz. Mittig im freien Raum steht er ruhiger. */
+  #entry{ justify-content:center; padding-top:calc(76vw + clamp(1.2rem,4vh,3rem)); gap:clamp(.9rem,2.4vh,1.6rem) }
+  #entry h1{ font-size:clamp(2.4rem,13vw,4.2rem) }
+  #entry .kicker{ font-size:clamp(.58rem,2.6vw,.85rem); letter-spacing:.32em }
+  #entry .date{ font-size:clamp(.7rem,3.2vw,1rem); letter-spacing:.14em }
+  .enter-btn{ font-size:clamp(1rem,4.6vw,1.4rem); padding:1rem 2.6rem }
+
+  #view-home{ justify-content:flex-start; gap:clamp(1rem,2.6vh,2rem); padding-top:calc(76vw + .9rem) }
+  .home-top{ padding-top:0 }
+  .home-top h2{ font-size:clamp(1.6rem,7.5vw,2.6rem) }
+  .home-top .kicker{ font-size:clamp(.52rem,2.4vw,.8rem); letter-spacing:.28em }
+  .home-top .place{ font-size:clamp(.58rem,2.4vw,.8rem); letter-spacing:.12em; line-height:1.5 }
+  .cd-box{ width:100%; max-width:32rem }
+  .cd-box .cd{ font-size:clamp(2.4rem,13vw,4rem) }
+  .cd-box .days{ font-size:clamp(1rem,4.6vw,1.6rem) }
+
+}
+
+/* ------------------------------------------------------------
+   Tablet hochkant: dort ist der Bildschirm breit genug, dass das
+   breite Bild wieder traegt. Ein quadratisches Band waere hier
+   ueber 70 % der Hoehe -- der Countdown faellt dann unter die Kante.
+   ------------------------------------------------------------ */
+@media (max-aspect-ratio: 1/1) and (min-width: 34rem){
+  .bg-photo{
+    background-image:url("start.jpg");
+    background-image:image-set(url("start.webp") type("image/webp"),
+                               url("start.jpg")  type("image/jpeg"));
+  }
+  #entry{ padding-top:calc(56.25vw + clamp(1.5rem,5vh,3.5rem)) }
+  #view-home{ padding-top:calc(56.25vw + .9rem) }
+
+  .cd-box .cd-units{ gap:clamp(1.4rem,7vw,3rem) }
+  .nav-tiles{ margin-top:auto }
+  .menu-list{ grid-template-columns:1fr }
+
+  /* Unterseiten-Kopf auf schmalen Displays umbrechen lassen */
+  .sub-head{ flex-wrap:wrap; row-gap:.7rem }
+  .sub-head h2{ order:3; width:100%; flex:none }
+}
+
+@media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important} }
+</style>
+</head>
+<body>
+
+<!-- ============ EINTRITT ============ -->
+<div id="entry" class="bg-photo">
+  <!-- Bewusst nur Bild und ein Knopf. Die Ueberschrift bleibt fuer
+       Suchmaschinen und Vorleseprogramme erhalten, ist aber unsichtbar. -->
+  <h1 class="sr-only">You vs You — Ultralauf live</h1>
+  <button class="enter-btn" id="enter-btn" type="button">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 6l6 6-6 6"/></svg>
+    Eintreten
+  </button>
+
+  <div class="entry-hint hidden" id="entry-hint">mit Ton &middot; 30 Sekunden</div>
+
+  <!-- Pflichtangaben muessen ohne Umweg erreichbar sein. Deshalb stehen
+       sie schon hier und nicht erst hinter dem Eintritt. -->
+  <div class="entry-legal hidden" id="entry-legal">
+    <a href="#impressum" id="entry-imp" class="hidden">Impressum</a>
+    <span id="entry-sep" class="hidden">·</span>
+    <a href="#datenschutz">Datenschutz</a>
+  </div>
+</div>
+
+<!-- ============ TEASER ALS VORSPANN ============
+     Liegt ueber allem, schwarz, randlos. Wird nur eingeblendet, wenn
+     CONFIG.teaser.intro steht und das Abspielen wirklich anlaeuft --
+     scheitert es, geht es ohne Umweg auf die Startansicht weiter. -->
+<div id="intro" class="hidden" aria-hidden="true">
+  <video id="intro-video" playsinline preload="none"
+         disablepictureinpicture controlslist="nodownload noplaybackrate"></video>
+  <div class="intro-leiste"><i id="intro-fortschritt"></i></div>
+  <button class="intro-skip" id="intro-skip" type="button">
+    Überspringen
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 6l6 6-6 6"/></svg>
+  </button>
+</div>
+
+<!-- ============ MENUE ============ -->
+<button class="menu-btn hidden" id="menu-btn" type="button"
+        aria-label="Menü öffnen" aria-expanded="false" aria-controls="menu">
+  <svg class="bars" viewBox="0 0 24 24" aria-hidden="true">
+    <line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/>
+  </svg>
+  Menü
+</button>
+
+<nav id="menu" aria-label="Hauptmenü" aria-hidden="true" inert>
+  <div class="menu-head">
+    <span class="brand">You vs You</span>
+    <button class="close-btn" id="menu-close" type="button" aria-label="Menü schließen">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="menu-list">
+    <a class="menu-item" href="#home">
+      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5.5 9.5V20h13V9.5"/></svg></span>
+      <span class="txt"><span class="m-head">Start</span><span class="m-sub">Countdown zum nächsten Event</span></span>
+    </a>
+    <a class="menu-item" href="#events">
+      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="16" rx="2"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+      <span class="txt"><span class="m-head">Events</span><span class="m-sub">Termine · Daten · Ergebnisse</span></span>
+    </a>
+    <a class="menu-item" href="#disziplin">
+      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><line x1="12" y1="7.6" x2="12" y2="8.2"/></svg></span>
+      <span class="txt"><span class="m-head">Disziplinen</span><span class="m-sub">Was hinter den Formaten steckt</span></span>
+    </a>
+    <a class="menu-item" href="#streams">
+      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="14" height="14" rx="2"/><path d="M16.5 10l5-3v10l-5-3z"/></svg></span>
+      <span class="txt"><span class="m-head">Aufzeichnungen</span><span class="m-sub">Vergangene Streams ansehen</span></span>
+    </a>
+    <a class="menu-item" href="#training">
+      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8v8M17.5 8v8M3.5 10v4M20.5 10v4"/><line x1="6.5" y1="12" x2="17.5" y2="12"/></svg></span>
+      <span class="txt"><span class="m-head">Training</span><span class="m-sub">Einheiten und Vorbereitung</span></span>
+    </a>
+    <a class="menu-item" id="menu-gb" href="#kontakt">
+      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg></span>
+      <span class="txt"><span class="m-head">Kontakt</span><span class="m-sub">Fragen und Zusammenarbeit</span></span>
+    </a>
+  </div>
+
+  <div class="menu-legal hidden" id="menu-legal">
+    <a href="#impressum" id="menu-imp" class="hidden">Impressum</a>
+    <a href="#datenschutz">Datenschutz</a>
+  </div>
+</nav>
+
+<!-- ============ START ============ -->
+<section class="view bg-photo" id="view-home">
+  <div class="home-top">
+    <div class="kicker" id="home-kicker">Nächstes Event</div>
+    <h2 id="home-title">—</h2>
+    <div class="place" id="home-place">&nbsp;</div>
+  </div>
+
+  <div class="cd-wrap">
+  <div class="cd-box" id="cd-box">
+    <div class="label" id="cd-label">Start in</div>
+    <div class="days" id="cd-days">-- Tage</div>
+    <div class="cd" id="cd" role="timer" aria-live="off">--:--:--</div>
+    <div class="cd-units" id="cd-units"><span>Std</span><span>Min</span><span>Sek</span></div>
+    <div class="cd-progress hidden" id="cd-progress">
+      <div class="bar"><span id="cd-bar"></span></div>
+      <div class="marks"><span id="cd-elapsed">0:00 h</span><span id="cd-left">—</span></div>
+    </div>
+    <div class="cd-live hidden" id="cd-live"></div>
+  </div>
+
+    <div class="actions" id="actions">
+      <button class="act" type="button" id="act-cal">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="16" rx="2"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/><path d="M9.5 15l2 2 3.5-4"/></svg>
+        <span id="act-cal-txt">Zum Kalender</span>
+      </button>
+      <button class="act" type="button" id="act-share">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5.5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="18.5" r="2.6"/><line x1="8.3" y1="10.8" x2="15.7" y2="6.7"/><line x1="8.3" y1="13.2" x2="15.7" y2="17.3"/></svg>
+        <span id="act-share-txt">Teilen</span>
+      </button>
+    </div>
+  </div>
+
+  <div>
+
+    <!-- Teaser zum Nachsehen. Laedt nichts, bevor jemand darauf drueckt. -->
+    <div class="teaser-box hidden" id="teaser-box">
+      <video id="teaser-video" controls playsinline preload="none"
+             disablepictureinpicture controlslist="nodownload noplaybackrate"></video>
+      <div class="tb-fuss"><span id="teaser-titel">Teaser</span><b>Mit Ton</b></div>
+    </div>
+
+    <div class="nav-tiles">
+      <a class="tile" id="tile-stream" href="#stream">
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="14" height="14" rx="2"/><path d="M16.5 10l5-3v10l-5-3z"/></svg></span>
+        <span class="txt">
+          <span class="t-head">Live-Stream</span>
+          <span class="state" id="tile-state"><i></i><span id="tile-state-txt">Noch nicht live</span></span>
+        </span>
+        <span class="arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l7 7-7 7"/></svg></span>
+      </a>
+      <a class="tile tile-zweit" href="#events">
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="16" rx="2"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
+        <span class="txt">
+          <span class="t-head">Alle Infos</span>
+          <span class="t-sub">Events · Disziplinen · Training</span>
+        </span>
+        <span class="arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l7 7-7 7"/></svg></span>
+      </a>
+    </div>
+
+    <!-- ---- Wer ihr seid ---- -->
+    <section class="ihr" aria-labelledby="ihr-head">
+      <div class="ihr-in">
+      <div class="ihr-kicker">Wer ihr seid</div>
+      <h2 class="ihr-head" id="ihr-head">Ihr müsst niemanden schlagen</h2>
+      <p class="ihr-lead">
+        Wer hier zuschaut, sucht selten den Sieger. Die meisten von euch kennen
+        den Moment, in dem es nicht mehr ums Tempo geht — sondern nur noch darum,
+        weiterzumachen.
+      </p>
+
+      <div class="ihr-grid">
+        <article class="ihr-card">
+          <h3>Ihr kennt Stunde vier</h3>
+          <p>Am Anfang ist alles leicht. Irgendwann wird jeder Kilometer eine
+             eigene Entscheidung. Wer das einmal erlebt hat, muss es sich nicht
+             erklären lassen.</p>
+        </article>
+        <article class="ihr-card">
+          <h3>Ihr lauft eure eigene Runde</h3>
+          <p>Auf einem Rundkurs überholt man ständig Leute, die ein völlig
+             anderes Rennen laufen. Das macht Vergleiche sinnlos — und nimmt
+             eine Menge Druck raus.</p>
+        </article>
+        <article class="ihr-card">
+          <h3>Ihr braucht keine Medaille</h3>
+          <p>Es gibt keine Zielzeit, die so einen Tag rechtfertigt. Es gibt nur
+             die Frage, ob man dahin gegangen ist, wo es unbequem wird.</p>
+        </article>
+      </div>
+
+      <p class="ihr-close">
+        Deshalb der Name. Der Gegner steht nicht an der Startlinie —
+        er läuft die ganze Zeit mit.
+      </p>
+      </div>
+    </section>
+
+    <div class="home-foot">
+      <span>you-vs-you.online</span>
+      <span class="visits" id="visits">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.9"/></svg>
+        <span class="num" id="visit-num">–</span><span>Besuche</span>
+      </span>
+      <span class="hidden" id="foot-legal">
+        <span class="hidden" id="foot-imp"><a href="#impressum">Impressum</a> · </span><a href="#datenschutz">Datenschutz</a>
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LIVE-STREAM ============ -->
+<section class="view" id="view-stream">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Live-Stream</h2>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner">
+    <div class="stream-frame" id="stream-frame">
+      <div class="locked" id="locked">
+        <div class="lock-icon"><svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4.5" y="10.5" width="15" height="10.5" rx="1.6"/>
+          <path d="M8 10.5V7.2a4 4 0 0 1 8 0v3.3"/><path d="M12 15v2.4"/>
+        </svg></div>
+        <div class="head" id="locked-head">Noch nicht live</div>
+        <div class="sub" id="locked-sub">Der Stream schaltet sich automatisch frei, sobald es losgeht. Diese Seite kann einfach offen bleiben.</div>
+        <div class="mini-cd" id="mini-cd">--:--:--</div>
+      </div>
+      <div class="consent hidden" id="stream-consent">
+        <div class="head">Stream laden?</div>
+        <div class="sub">
+          Der Player kommt von <strong>Twitch</strong>. Beim Laden werden deine IP-Adresse und
+          Geräteinformationen an Twitch Interactive Inc. (USA) übertragen und es können Cookies
+          gesetzt werden. Näheres im <a href="#datenschutz">Datenschutz</a>.
+        </div>
+        <button class="consent-btn" type="button" id="stream-consent-btn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg>
+          Stream jetzt laden
+        </button>
+        <div class="sub" style="font-size:.78rem">Einmal bestätigen — danach lädt der Stream automatisch.</div>
+      </div>
+    </div>
+    <div class="stream-note" id="stream-note">Die Übertragung startet automatisch</div>
+
+    <section class="live hidden" id="live" aria-live="polite">
+      <div class="live-head">
+        <h3 id="live-title">Live vom Lauf</h3>
+        <span class="live-dot" id="live-dot"><i></i><span id="live-dot-txt">Live</span></span>
+      </div>
+
+      <div class="live-grid" id="live-grid"></div>
+
+      <div class="live-goal hidden" id="live-goal">
+        <div class="top">
+          <span>Fortschritt zum Tagesziel</span>
+          <span><b id="live-goal-pct">0 %</b></span>
+        </div>
+        <div class="bar"><span id="live-goal-bar"></span></div>
+        <div class="live-laps" id="live-laps" aria-hidden="true"></div>
+        <div class="live-lap-txt" id="live-lap-txt"></div>
+      </div>
+
+      <div class="live-chart hidden" id="live-chart">
+        <div class="cap">
+          <span>Kilometer im Verlauf</span>
+          <span id="live-chart-note"></span>
+        </div>
+        <figure id="live-fig"></figure>
+        <details class="live-table">
+          <summary>Werte als Tabelle</summary>
+          <div id="live-table-wrap"></div>
+        </details>
+      </div>
+
+      <div class="live-foot" id="live-foot"></div>
+    </section>
+
+    <section class="plan" id="plan">
+      <h3>
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="8.5"/><polyline points="12,7 12,12 15.5,14"/>
+        </svg></span>
+        So läuft die Übertragung
+      </h3>
+      <ul id="plan-list"></ul>
+      <div class="foot" id="plan-foot"></div>
+    </section>
+  </div></div>
+</section>
+
+<!-- ============ EVENTS ============ -->
+<section class="view" id="view-events">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Events</h2>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner">
+    <div class="sec-title">Kommende Termine</div>
+    <div class="cards" id="events-next"></div>
+    <div class="sec-title">Gelaufen</div>
+    <div class="cards" id="events-past"></div>
+    <div class="note-line">Angaben ohne Gewähr — maßgeblich sind die Informationen der Veranstalter</div>
+  </div></div>
+</section>
+
+<!-- ============ DISZIPLINEN ============ -->
+<section class="view" id="view-disziplin">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Disziplinen</h2>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner">
+    <div class="cards" id="disz-list"></div>
+  </div></div>
+</section>
+
+<!-- ============ AUFZEICHNUNGEN ============ -->
+<section class="view" id="view-streams">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Aufzeichnungen</h2>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner">
+    <div class="vod-grid" id="vod-list"></div>
+  </div></div>
+</section>
+
+<!-- ============ TRAINING ============ -->
+<section class="view" id="view-training">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Training</h2>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner">
+    <div class="cards" id="training-list"></div>
+  </div></div>
+</section>
+
+<!-- ============ GAESTEBUCH ============ -->
+<section class="view" id="view-gaestebuch">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Kontakt</h2>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner">
+
+    <form class="gb-form" id="gb-form" novalidate>
+
+      <div class="field">
+        <label for="gb-thema">Worum geht es?</label>
+        <select id="gb-thema" name="thema">
+          <option value="gruss" selected>Gruß oder Frage — darf im Gästebuch stehen</option>
+          <option value="koop">Zusammenarbeit — Marke, Verein, Veranstalter</option>
+        </select>
+      </div>
+
+      <div class="hint" id="gb-hinweis">Schreib gern etwas — eine Nachricht, ein Gruß, eine Frage.
+        Jeder Eintrag wird vorher gelesen und erscheint erst nach Freigabe auf dieser Seite.</div>
+
+      <div class="field">
+        <label for="gb-name" id="gb-name-label">Name</label>
+        <input type="text" id="gb-name" name="name" maxlength="60" autocomplete="name"
+               placeholder="Wie soll ich dich nennen?" required>
+      </div>
+
+      <!-- Nur bei Zusammenarbeit sichtbar. Eine Antwort ohne Rueckadresse
+           waere sonst nicht moeglich. Bei Gruessen bleibt das Feld weg --
+           weniger Daten sind besser. -->
+      <div class="field hidden" id="gb-mail-feld">
+        <label for="gb-mail">E-Mail für die Antwort</label>
+        <input type="email" id="gb-mail" name="email" maxlength="120" autocomplete="email"
+               placeholder="name@firma.de">
+      </div>
+
+      <div class="field">
+        <label for="gb-text">Nachricht</label>
+        <textarea id="gb-text" name="nachricht" maxlength="900" placeholder="Deine Nachricht …" required></textarea>
+      </div>
+
+      <!-- Honigtopf: Roboter fuellen ihn aus, Menschen sehen ihn nie -->
+      <div class="hp" aria-hidden="true">
+        <label for="gb-website">Bitte leer lassen</label>
+        <input type="text" id="gb-website" name="_gotcha" tabindex="-1" autocomplete="off">
+      </div>
+
+      <label class="gb-consent" for="gb-ok">
+        <input type="checkbox" id="gb-ok" required>
+        <span id="gb-ok-text">Ich bin damit einverstanden, dass mein Name und meine Nachricht zur Prüfung
+          gespeichert und nach Freigabe auf dieser Seite veröffentlicht werden.
+          Die Einwilligung kann jederzeit widerrufen werden.
+          <a href="#datenschutz">Datenschutz</a></span>
+      </label>
+
+      <button class="send-btn" id="gb-send" type="submit">Absenden</button>
+      <div class="form-msg" id="gb-msg" role="status" aria-live="polite"></div>
+    </form>
+
+    <!-- ---------- Zusammenarbeit ---------- -->
+    <div class="sec-title">Zusammenarbeit</div>
+    <div class="koop">
+      <p>Anfragen von Marken, Vereinen und Veranstaltern sind willkommen. Damit
+         wir beide keine Zeit verlieren, hier vorab, worum es gehen kann.</p>
+
+      <div class="koop-grid">
+        <div class="koop-box">
+          <h4>Was ich mache</h4>
+          <ul>
+            <li>Produkte testen, die für die Sportart wirklich etwas bringen — Getränke, Schuhe, Shirts, Ausrüstung</li>
+            <li>Rennen unter eurer Flagge, wenn Produkt oder Firma dabei genannt werden</li>
+            <li>Videos, in denen die Ausrüstung im Training und im Wettkampf zu sehen ist</li>
+            <li>Beiträge zu Einsatz und Erfahrung — ehrlich, auch wenn etwas nicht überzeugt</li>
+          </ul>
+        </div>
+        <div class="koop-box">
+          <h4>Wie es laufen kann</h4>
+          <ul>
+            <li><strong>Sponsoring</strong> — die klarste Form für beide Seiten</li>
+            <li><strong>Euer Aufdruck, mein Shirt</strong> — dafür Beiträge und Videos vom Training und vom Rennen</li>
+            <li>Produkt zum Testen, dafür eine ehrliche Rückmeldung</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="koop-nein">
+        <h4>Was nicht geht</h4>
+        <p>Glücksspiel. Und alles, wovon ich nicht selbst überzeugt bin — eine
+           gekaufte Empfehlung nützt am Ende keinem von uns.</p>
+      </div>
+
+      <p class="koop-fuss">Am schnellsten geht es, wenn in der ersten Nachricht schon
+         steht: <strong>welches Produkt</strong>, <strong>welcher Zeitraum</strong>,
+         <strong>was ihr euch vorstellt</strong>. Alternativ direkt an
+         <a href="mailto:kontakt@you-vs-you.online">kontakt@you-vs-you.online</a>.</p>
+    </div>
+
+    <div class="sec-title">Gästebuch</div>
+    <div class="gb-list" id="gb-list"></div>
+  </div></div>
+</section>
+
+<!-- ============ IMPRESSUM ============ -->
+<section class="view" id="view-impressum">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Impressum</h2>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner prose" id="impressum-body"></div></div>
+</section>
+
+<!-- ============ DATENSCHUTZ ============ -->
+<section class="view" id="view-datenschutz">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Datenschutz</h2>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner prose" id="datenschutz-body"></div></div>
+</section>
+
+<!-- Musik -->
+<button class="sound-btn hidden" id="sound-btn" type="button" aria-label="Musik an oder aus">
+  <svg viewBox="0 0 24 24" id="sound-icon" aria-hidden="true"></svg>
+  <span class="txt" id="sound-txt">Musik an</span>
+</button>
+<audio id="bg-music" loop preload="none"></audio>
+
+<script>
+/* ================================================================
+   1 · INHALTE — hier pflegst du alles
+   ================================================================ */
+
+const CONFIG = {
+
+  /* --- Grundeinstellungen --- */
+  twitchChannel: "SaPhiVs",         // NUR der Kanalname, ohne twitch.tv/  ·  leer = Hinweis statt Player
+
+  /* ==============================================================
+     LIVE-WERTE AUS DEM LAUF
+     Adresse der Brücke bei Cloudflare, z. B.
+     "https://vvy-live.deinname.workers.dev"
+     Leer lassen = kein Abruf, die Seite verhält sich wie bisher.
+
+     lapKm    = Rundenlänge für den Rundenzähler (0 = ausblenden)
+     staleSec = ab wann die Werte als veraltet gelten
+     ============================================================== */
+  live: {
+    url:      "https://vvy-live.527nv2tghb.workers.dev",
+    lapKm:    7.5,
+    staleSec: 180
+  },
+  /* ==============================================================
+     TEASER
+     file    = Dateiname ohne Endung. Erwartet werden <file>.mp4
+               und <file>.jpg als Vorschaubild, beide neben index.html.
+     intro   = true  -> laeuft gross nach dem Klick auf "Eintreten",
+               mit Ton, die Hintergrundmusik bleibt dabei aus.
+     tage    = so viele Tage wird er demselben Besucher nicht noch
+               einmal vorgespielt. 0 = jedes Mal.
+     Leer lassen (file:"") = kein Teaser, alles wie vorher.
+     Zum Pruefen: ?teaser=1 erzwingt ihn, ?teaser=0 ueberspringt ihn.
+     ============================================================== */
+  teaser: {
+    /* AUS, bis die Tonrechte geklaert sind. Wieder "teaser" eintragen,
+       dann laeuft der Vorspann. */
+    file:  "",
+    titel: "6H Ultra Werl — der Teaser",
+    intro: true,
+    tage:  14
+  },
+
+  /* AUS. Die bisherige Datei war ein geschuetzter Song. Erst wieder
+     eintragen, wenn eine schriftliche Erlaubnis oder eine eigene
+     bzw. lizenzfreie Aufnahme vorliegt. */
+  music:         "",               // leer lassen = kein Ton
+  musicVolume:   0.35,
+  counterKey:    "you_vs_you_online_besuche_7f3a2",   // leer = Zaehler aus
+
+  /* ==============================================================
+     ANGABEN FUER DIE RECHTSSEITEN
+
+     PFLICHT sind nur "name" und "email" -- damit erscheint die
+     Datenschutzerklaerung. Ohne diese beiden bleibt sie versteckt.
+
+     "street" und "city" sind FREIWILLIG. Nur wenn du beide
+     ausfuellst, kommt zusaetzlich ein Impressum dazu.
+     Ein unvollstaendiges Impressum waere schlechter als gar keines.
+
+     WICHTIG zur Anschrift (§ 5 DDG):
+       - Es muss eine LADUNGSFAEHIGE Anschrift sein, nicht zwingend
+         die Wohnadresse. Eine c/o-Zustelladresse ist zulaessig,
+         solange dort tatsaechlich Post angenommen wird.
+       - Ein POSTFACH reicht NICHT aus.
+       - "name" muss der echte Vor- und Nachname sein,
+         ein Kuenstlername genuegt nicht.
+
+     Beispiel mit Zustelladresse:
+       name:   "Sascha Mustermann"
+       co:     "c/o Musterdienst GmbH"
+       street: "Musterstrasse 12"
+       city:   "59457 Werl"
+     ============================================================== */
+  legal: {
+    name:   "Sascha Carrasco Nagusch",     // Pflicht · echter Vor- und Nachname
+    email:  "kontakt@you-vs-you.online",   // Pflicht
+    co:     "c/o IP-Management #11554",    // die Nummer MUSS mit, sonst kommt keine Post an
+    street: "Ludwig-Erhard-Str. 18",
+    city:   "20459 Hamburg",
+    /* Zustaendige Datenschutz-Aufsichtsbehoerde.
+       Bewusst leer: die angegebene Anschrift liegt in Hamburg, gearbeitet
+       wird in NRW. Eine feste Nennung wuerde einen Widerspruch erzeugen.
+       Art. 77 DSGVO erlaubt die Beschwerde ohnehin bei jeder Behoerde. */
+    authority: "",
+    /* Auf true stellen, sobald bezahlte Kooperationen, Affiliate-Links
+       oder gesponserte Produkte auf der Seite auftauchen. Dann erscheint
+       im Impressum der Abschnitt zur Werbekennzeichnung. */
+    ads: false
+  },
+
+  /* ==============================================================
+     SENDEPLAN
+     Steht in der Stream-Ansicht -- vorher und in jeder Pause.
+     Zeilen frei aendern, <strong> hebt etwas hervor.
+     ============================================================== */
+  streamPlan: [
+    "Gestreamt wird <strong>jede zweite Runde</strong> — eine Runde live, eine Runde Pause",
+    "Eine Runde sind <strong>7,5 km</strong> und dauert etwa <strong>45 Minuten</strong>",
+    "Die <strong>finale Runde</strong> wird auf jeden Fall komplett übertragen",
+    "In den Pausen läuft die Kamera weiter — daraus entsteht später ein <strong>Zusammenschnitt</strong>"
+  ],
+  streamPlanFoot: "Die Pausen schonen Akku und Datenverbindung, damit der Stream bis zum Ziel durchhält. Aufzeichnungen und Zusammenschnitte findest du danach im Menü unter „Aufzeichnungen“.",
+
+  /* ==============================================================
+     GAESTEBUCH-FORMULAR
+     Bei formspree.io kostenlos ein Formular anlegen und die
+     Adresse hier eintragen (Form "https://formspree.io/f/xxxxxxxx").
+     Leer lassen = Formular und Menuepunkt werden ausgeblendet.
+     ============================================================== */
+  formEndpoint:  "https://formspree.io/f/mrpzklje",
+
+  /* ==============================================================
+     EVENTS
+     Die Startansicht sucht sich automatisch das naechste Event.
+     Ist eins vorbei, rutscht das darauffolgende nach.
+
+     stream    = ab wann der Player freigeschaltet wird
+     race      = offizieller Startschuss (nur zur Anzeige)
+     hours     = wie lange der Stream freigeschaltet bleibt
+     raceHours = reine Wettkampfdauer -- steuert den Fortschrittsbalken
+                 und den Kalendereintrag (fehlt der Wert, gilt hours)
+     ============================================================== */
+  events: [
+    {
+      title:  "6H Ultra Werl",
+      place:  "Stadtwald Werl",
+      stream: "2026-09-12T10:00:00+02:00",
+      race:   "2026-09-12T10:00:00+02:00",
+      hours:  8,
+      raceHours: 6,
+      badge:  "6-Stunden-Lauf",
+      /* Bild: "event-werl" laedt event-werl.webp bzw. event-werl.jpg */
+      image:  "event-werl",
+      text:   "Sechs Stunden auf einem 7,5 Kilometer langen Rundkurs durch den Stadtwald. Gewertet wird die Strecke, nicht die Zeit — wer nach fünf Stunden noch eine Runde anfängt, muss sie auch zu Ende gehen. Die Werte im Stream kommen live von der Uhr.",
+      facts: [
+        { k:"Format",   v:"6 Stunden" },
+        { k:"Runde",    v:"7,5 km" },
+        { k:"Höhe",     v:"100 hm" },
+        { k:"Mein Ziel", v:"52,5 km" }
+      ],
+      info: [
+        "Startunterlagen im <strong>Waldlabor</strong> zwischen 07:30 und 09:00 Uhr, Kurzbriefing um 09:45 Uhr",
+        "Rundkurs durch den Stadtwald Werl — fast ausschließlich Waldwege und Singletrails",
+        "Verpflegungspunkt im Start-/Zielbereich, Wasser zusätzlich bei km 2,5 und km 5",
+        "Jede vollständige Runde zählt, Zwischenmessungen bei km 2,5 und km 5",
+        "Medaille ab einer Runde, „Du bist Ultra“-Anhänger ab 6 Runden"
+      ]
+    },
+    {
+      title:  "Mammutmarsch Madrid",
+      place:  "Madrid",
+      /* ACHTUNG: Der Veranstalter hat die Startgruppen und damit die genaue
+         Uhrzeit noch nicht veroeffentlicht. 09:00 ist ein Platzhalter --
+         sobald das Startfenster feststeht, hier korrigieren, sonst zeigt
+         der Countdown die falsche Zeit. Spanien = MEZ, also +01:00. */
+      stream: "2027-02-20T09:00:00+01:00",
+      race:   "2027-02-20T09:00:00+01:00",
+      hours:  26,
+      raceHours: 24,
+      badge:  "100 km in 24 Stunden",
+      image:  "event-madrid",
+      text:   "Hundert Kilometer am Stück, zu Fuß, mit einem Zeitlimit von 24 Stunden und rund 3.000 Höhenmetern im Bergland um Madrid. Gestartet wird in Gruppen. Zehn bis zwölf Stunden davon sind Nacht — Stirnlampe und warme Kleidung sind Pflicht, nicht Empfehlung.",
+      facts: [
+        { k:"Distanz",   v:"100 km" },
+        { k:"Zeitlimit", v:"24 Stunden" },
+        { k:"Höhe",      v:"3.000 hm" },
+        { k:"Mein Ziel", v:"Ankommen" }
+      ],
+      info: [
+        "Start und Ziel am <strong>Paseo de María Teresa</strong> im Nordwesten von Madrid",
+        "Gestartet wird in Gruppen — die genauen Startfenster gibt der Veranstalter später bekannt",
+        "Mindestens vier Streckenposten mit Wasser, Snacks und teils warmem Essen",
+        "Pflicht im Rucksack: Wasserbehälter, Regenschutz, warme Kleidung, Handy mit Powerbank, geladene Stirnlampe",
+        "Ausstiegspunkte mit Shuttle oder Bahn sind eingerichtet",
+        "Anreise 19.02., Rückreise 21.02.2027",
+        "Alle Angaben ohne Gewähr — verbindlich ist der Veranstalter: <a href=\"https://mammutmarsch.de/50-km-marsch/mammutmarsch-madrid/\" target=\"_blank\" rel=\"noopener noreferrer\">mammutmarsch.de</a>"
+      ]
+    }
+    /* Weiteres Event? Einfach als naechsten Block anhaengen:
+    ,{
+      title:  "Name des Laufs",
+      place:  "Ort",
+      stream: "2027-05-01T08:00:00+02:00",
+      race:   "2027-05-01T08:00:00+02:00",
+      hours:  10,
+      badge:  "Marathon",
+      facts: [ { k:"Distanz", v:"42,2 km" } ],
+      info:  [ "Erste Info", "Zweite Info" ]
+    }
+    */
+  ],
+
+  /* ==============================================================
+     DISZIPLINEN
+     ============================================================== */
+  disciplines: [
+    {
+      title: "Zeitlauf",
+      sub:   "6 oder 12 Stunden",
+      text:  "Beim Zeitlauf zählt nicht die Strecke, sondern die Uhr. Auf einem kurzen Rundkurs geht es darum, in einer festen Zeit so viele Runden wie möglich zu sammeln. Wer die Einteilung falsch angeht, steht nach der Hälfte still — die eigentliche Disziplin ist das Haushalten mit den Kräften."
+    },
+    {
+      title: "Ultralauf",
+      sub:   "alles über 42,195 km",
+      text:  "Ultra beginnt dort, wo der Marathon endet. Tempo tritt in den Hintergrund, dafür rücken Verpflegung, Ausrüstung und Kopf nach vorn. Die entscheidenden Kilometer sind selten die ersten."
+    },
+    {
+      title: "Rucking",
+      sub:   "Gehen mit Gewicht",
+      text:  "Marschieren mit beschwertem Rucksack oder Weste. Belastet Rumpf, Beine und Schultern deutlich stärker als reines Gehen, ohne die Gelenke so zu fordern wie Laufen. Eine gute Ergänzung im Grundlagenbereich."
+    },
+    {
+      title: "Trail",
+      sub:   "abseits vom Asphalt",
+      text:  "Waldwege, Wurzeln, Singletrails. Der Untergrund wechselt ständig, das Tempo ebenso. Höhenmeter und Trittsicherheit bestimmen den Rhythmus mehr als die Pace-Anzeige an der Uhr."
+    }
+  ],
+
+  /* ==============================================================
+     AUFZEICHNUNGEN
+     type: "twitch"  -> id = die Video-Nummer aus der Twitch-Adresse
+                        (twitch.tv/videos/123456789 -> id: "123456789")
+     type: "youtube" -> id = die Kennung aus der YouTube-Adresse
+                        (youtu.be/AbCdEf -> id: "AbCdEf")
+     ============================================================== */
+  vods: [
+    /* Beispiel -- nach dem ersten Stream ausfuellen:
+    { title:"6H Ultra Werl — kompletter Lauf", date:"12.09.2026", type:"twitch", id:"123456789" },
+    { title:"Zusammenschnitt", date:"14.09.2026", type:"youtube", id:"AbCdEfGhIjk" }
+    */
+  ],
+
+  /* ==============================================================
+     TRAINING
+     ============================================================== */
+  trainings: [
+    /* Beispiel:
+    { date:"08.08.2026", title:"Langer Lauf", meta:"28 km · 3:10 h",
+      text:"Ruhiges Grundlagentempo im Wald, letzte 5 km angezogen." }
+    */
+  ],
+
+  /* ==============================================================
+     GAESTEBUCH — freigegebene Eintraege
+     Kommt eine Nachricht per Mail rein und du willst sie zeigen,
+     traegst du sie hier ein. Neueste zuerst.
+     ============================================================== */
+  guestbook: [
+    /* { name:"Max", date:"10.08.2026", text:"Viel Erfolg!" } */
+  ]
+};
+
+const $ = id => document.getElementById(id);
+/* Nur schreiben, wenn sich wirklich etwas geaendert hat --
+   spart im Sekundentakt unnoetige Layout-Arbeit. */
+const setText = (el, v) => { if (el && el.textContent !== v) el.textContent = v; };
+const esc = s => String(s == null ? '' : s)
+  .replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ================================================================
+   2 · ZEIT UND EVENT-AUSWAHL
+   ================================================================ */
+
+const pad = n => String(n).padStart(2,'0');
+const ms  = s => new Date(s).getTime();
+
+function splitTime(t){
+  const s = Math.max(0, Math.floor(t/1000));
+  return { d:Math.floor(s/86400), h:Math.floor(s%86400/3600), m:Math.floor(s%3600/60), s:s%60 };
+}
+
+/* Events nach Datum sortieren -- die Reihenfolge in der Liste ist egal.
+   Eintraege ohne gueltiges Datum werden aussortiert, damit ein Tippfehler
+   nicht die ganze Startansicht lahmlegt. */
+const EVENTS = [...CONFIG.events]
+  .filter(e => e && isFinite(ms(e.stream)))
+  .sort((a,b) => ms(a.stream) - ms(b.stream));
+
+function endOf(e){ return ms(e.stream) + (e.hours || 8) * 3600000; }
+
+/* Das aktuelle Event: das erste, das noch nicht vorbei ist.
+   Ist alles vorbei, bleibt das letzte stehen. */
+function currentEvent(){
+  const now = Date.now();
+  return EVENTS.find(e => now < endOf(e)) || EVENTS[EVENTS.length - 1] || null;
+}
+
+function phaseOf(e){
+  if (!e) return 'none';
+  const now = Date.now();
+  if (now < ms(e.stream)) return 'before';
+  if (now < endOf(e))     return 'live';
+  return 'after';
+}
+
+/* Termine immer in deutscher Zeit anzeigen -- unabhaengig davon,
+   in welcher Zeitzone der Besucher gerade sitzt. */
+const TZ = 'Europe/Berlin';
+function dateText(iso){
+  const d = new Date(iso);
+  const wd = d.toLocaleDateString('de-DE', { weekday:'long', timeZone:TZ });
+  return wd + ', ' + d.toLocaleDateString('de-DE',
+    { day:'2-digit', month:'long', year:'numeric', timeZone:TZ });
+}
+function timeText(iso){
+  return new Date(iso).toLocaleTimeString('de-DE',
+    { hour:'2-digit', minute:'2-digit', timeZone:TZ }) + ' Uhr';
+}
+</script>
+
+<script>
+/* ================================================================
+   3 · EINWILLIGUNG FUER EINGEBETTETE VIDEOS
+   Twitch und YouTube laden erst nach ausdruecklicher Zustimmung.
+   Die Entscheidung wird lokal gespeichert -- danach laedt der
+   Stream automatisch, ohne dass nochmal geklickt werden muss.
+   ================================================================ */
+
+const EMBED_KEY = 'vvy_embed_ok';
+
+function embedAllowed(){
+  try{ return localStorage.getItem(EMBED_KEY) === '1'; }catch(_){ return false; }
+}
+function allowEmbeds(){
+  try{ localStorage.setItem(EMBED_KEY,'1'); }catch(_){}
+  applyEmbedConsent();
+}
+function revokeEmbeds(){
+  try{ localStorage.removeItem(EMBED_KEY); }catch(_){}
+  location.reload();
+}
+
+/* ================================================================
+   4 · SEITEN AUFBAUEN
+   ================================================================ */
+
+let EVT = currentEvent();
+
+/* ---- Startansicht ---- */
+function paintHome(){
+  if (!EVT){
+    $('home-title').textContent  = 'Bald mehr';
+    $('home-kicker').textContent = 'Kein Termin eingetragen';
+    $('home-place').textContent  = '';
+    $('cd-box').classList.add('hidden');
+    $('actions').classList.add('hidden');
+    return;
+  }
+  $('cd-box').classList.remove('hidden');
+  /* Kalendereintrag und Teilen ergeben nur vor und waehrend des Laufs Sinn */
+  $('actions').classList.toggle('hidden', phaseOf(EVT) === 'after');
+  $('home-title').textContent = EVT.title;
+  $('home-place').textContent = EVT.place + ' · ' + dateText(EVT.stream);
+
+  const idx = EVENTS.indexOf(EVT);
+  $('home-kicker').textContent =
+    phaseOf(EVT) === 'after' ? 'Letztes Event'
+    : (idx === 0 ? 'Nächstes Event' : 'Als Nächstes');
+}
+
+/* ---- Events ---- */
+function eventCard(e, isNext){
+  const p = phaseOf(e);
+  const badge = p === 'live' ? '<span class="badge g">Läuft jetzt</span>'
+              : p === 'after' ? '<span class="badge d">Beendet</span>'
+              : (isNext ? '<span class="badge">Als Nächstes</span>' : '');
+
+  const facts = (e.facts || []).map(f =>
+    '<div class="stat"><div class="k">' + esc(f.k) + '</div><div class="v">' + esc(f.v) + '</div></div>').join('');
+
+  const info = (e.info || []).map(t => '<li>' + t + '</li>').join('');
+
+  /* Eventbild: WebP mit JPG als Rueckfall. Beide Dateien liegen neben der
+     index.html. Fehlt "image", bleibt die Karte wie bisher. */
+  const bild = e.image
+    ? '<div class="bild"><picture>'
+      + '<source srcset="' + esc(e.image) + '.webp" type="image/webp">'
+      + '<img src="' + esc(e.image) + '.jpg" width="1600" height="700" loading="lazy" '
+      + 'decoding="async" alt="' + esc(e.title) + ' — ' + esc(e.place) + '"></picture></div>'
+    : '';
+
+  const text = e.text ? '<p>' + esc(e.text) + '</p>' : '';
+
+  return '<article class="card ' + (p === 'after' ? 'past' : (isNext ? 'next' : '')) + '">'
+       + bild
+       + badge
+       + '<h3>' + esc(e.title) + '</h3>'
+       + '<div class="meta">' + dateText(e.stream) + ' · ' + timeText(e.race || e.stream)
+       + ' · ' + esc(e.place) + '</div>'
+       + text
+       + (info ? '<ul style="margin-top:' + (text ? '1em' : '0') + '">' + info + '</ul>' : '')
+       + (facts ? '<div class="stat-row">' + facts + '</div>' : '')
+       + '</article>';
+}
+
+function paintEvents(){
+  const now = Date.now();
+  const next = EVENTS.filter(e => now < endOf(e));
+  const past = EVENTS.filter(e => now >= endOf(e)).reverse();
+
+  $('events-next').innerHTML = next.length
+    ? next.map((e,i) => eventCard(e, i === 0)).join('')
+    : '<div class="empty">Noch kein neuer Termin eingetragen</div>';
+
+  $('events-past').innerHTML = past.length
+    ? past.map(e => eventCard(e, false)).join('')
+    : '<div class="empty">Hier erscheinen die Events nach dem Lauf</div>';
+}
+
+/* ---- Disziplinen ---- */
+function paintDisciplines(){
+  $('disz-list').innerHTML = (CONFIG.disciplines || []).map(d =>
+    '<article class="card"><h3>' + esc(d.title) + '</h3>'
+    + (d.sub ? '<div class="meta">' + esc(d.sub) + '</div>' : '')
+    + '<p>' + esc(d.text) + '</p></article>').join('')
+    || '<div class="empty">Noch nichts eingetragen</div>';
+}
+
+/* ---- Aufzeichnungen ---- */
+function twitchParents(){
+  const host = location.hostname || 'localhost';
+  const list = [host];
+  if (host.startsWith('www.')) list.push(host.slice(4)); else list.push('www.' + host);
+  return [...new Set(list)];
+}
+
+function vodSrc(v){
+  if (v.type === 'youtube'){
+    return 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.id) + '?rel=0';
+  }
+  return 'https://player.twitch.tv/?video=' + encodeURIComponent(v.id)
+       + twitchParents().map(p => '&parent=' + encodeURIComponent(p)).join('')
+       + '&autoplay=false';
+}
+
+function paintVods(){
+  const list = CONFIG.vods || [];
+  if (!list.length){
+    $('vod-list').innerHTML = '<div class="empty">Nach dem ersten Stream erscheinen hier die Aufzeichnungen</div>';
+    return;
+  }
+  const ok = embedAllowed();
+  $('vod-list').innerHTML = list.map(v =>
+    '<div class="vod"><div class="frame">'
+    + (ok
+        ? '<iframe src="' + esc(vodSrc(v)) + '" allowfullscreen loading="lazy" title="' + esc(v.title) + '"></iframe>'
+        : '<div class="consent">'
+          + '<div class="head">Video laden?</div>'
+          + '<div class="sub">Beim Laden werden Daten an '
+          + (v.type === 'youtube' ? 'Google Ireland Ltd.' : 'Twitch Interactive Inc. (USA)')
+          + ' übertragen. Näheres im <a href="#datenschutz">Datenschutz</a>.</div>'
+          + '<button class="consent-btn" type="button" data-allow-embeds>'
+          + '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg>Video laden</button>'
+          + '</div>')
+    + '</div>'
+    + '<div class="body"><h3>' + esc(v.title) + '</h3>'
+    + (v.date ? '<div class="meta">' + esc(v.date) + '</div>' : '')
+    + '</div></div>').join('');
+}
+
+/* ---- Training ---- */
+function paintTrainings(){
+  const list = CONFIG.trainings || [];
+  $('training-list').innerHTML = list.length
+    ? list.map(t =>
+        '<article class="card"><h3>' + esc(t.title) + '</h3>'
+        + '<div class="meta">' + esc(t.date || '') + (t.meta ? ' · ' + esc(t.meta) : '') + '</div>'
+        + (t.text ? '<p>' + esc(t.text) + '</p>' : '') + '</article>').join('')
+    : '<div class="empty">Hier landen die Einheiten aus der Vorbereitung</div>';
+}
+
+/* ---- Sendeplan ---- */
+function paintPlan(){
+  const list = CONFIG.streamPlan || [];
+  if (!list.length){ $('plan').classList.add('hidden'); return; }
+  $('plan-list').innerHTML = list.map(t => '<li>' + t + '</li>').join('');
+  $('plan-foot').innerHTML = CONFIG.streamPlanFoot || '';
+}
+
+/* ---- Gaestebuch ---- */
+function paintGuestbook(){
+  const list = CONFIG.guestbook || [];
+  $('gb-list').innerHTML = list.length
+    ? list.map(g =>
+        '<div class="gb-entry"><div class="ihr"><span class="name">' + esc(g.name) + '</span>'
+        + (g.date ? '<span class="when">' + esc(g.date) + '</span>' : '') + '</div>'
+        + '<div class="text">' + esc(g.text) + '</div></div>').join('')
+    : '<div class="empty">Noch keine freigegebenen Einträge — sei der Erste</div>';
+
+  /* Das Formular erscheint nur, wenn beides steht:
+     eine Empfangsadresse UND eine Datenschutzerklaerung.
+     Namen und Nachrichten einzusammeln, ohne dass Besucher
+     nachlesen koennen was damit passiert, waere nicht zulaessig. */
+  if (!CONFIG.formEndpoint || !legalReady()){
+    $('gb-form').classList.add('hidden');
+    $('menu-gb').classList.add('hidden');
+    if (CONFIG.formEndpoint && !legalReady()){
+      console.warn('[You vs You] Gästebuch wartet auf CONFIG.legal (name + email).');
+    }
+  }
+}
+
+/* ---- Formular abschicken ----
+   Ein Formular, zwei Zwecke. Das Themenfeld steuert, welche Felder
+   erscheinen, welcher Einwilligungstext gilt und was in der Mail steht.
+   Zwei getrennte Formulare waeren zwar sauberer zu lesen, wuerden sich
+   bei Formspree aber dasselbe Monatskontingent teilen -- und doppelte
+   Wartung bedeuten. */
+(function(){
+  const form = $('gb-form'), btn = $('gb-send'), msg = $('gb-msg');
+  if (!form) return;
+
+  const thema   = $('gb-thema');
+  const mailBox = $('gb-mail-feld');
+  const mail    = $('gb-mail');
+  const hinweis = $('gb-hinweis');
+  const okText  = $('gb-ok-text');
+  const nameLbl = $('gb-name-label');
+
+  const TEXTE = {
+    gruss: {
+      hinweis: 'Schreib gern etwas — eine Nachricht, ein Gruß, eine Frage. '
+             + 'Jeder Eintrag wird vorher gelesen und erscheint erst nach Freigabe auf dieser Seite.',
+      label:   'Name',
+      platz:   'Wie soll ich dich nennen?',
+      ok:      'Ich bin damit einverstanden, dass mein Name und meine Nachricht zur Prüfung '
+             + 'gespeichert und nach Freigabe auf dieser Seite veröffentlicht werden. '
+             + 'Die Einwilligung kann jederzeit widerrufen werden. ',
+      knopf:   'Absenden',
+      danke:   'Danke! Dein Eintrag wird geprüft und dann veröffentlicht.'
+    },
+    koop: {
+      hinweis: 'Anfragen zu Zusammenarbeit werden <strong>nicht veröffentlicht</strong>. '
+             + 'Sie gehen direkt an kontakt@you-vs-you.online. Was in der ersten Nachricht '
+             + 'stehen sollte, steht weiter unten.',
+      label:   'Name und Firma',
+      platz:   'Name, Firma oder Verein',
+      ok:      'Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung dieser '
+             + 'Anfrage gespeichert und verarbeitet werden. Eine Veröffentlichung findet '
+             + 'nicht statt. Die Einwilligung kann jederzeit widerrufen werden. ',
+      knopf:   'Anfrage senden',
+      danke:   'Danke! Die Anfrage ist angekommen, ich melde mich.'
+    }
+  };
+
+  function umschalten(){
+    const t = TEXTE[thema.value] || TEXTE.gruss;
+    const koop = thema.value === 'koop';
+    hinweis.innerHTML = t.hinweis;
+    nameLbl.textContent = t.label;
+    $('gb-name').placeholder = t.platz;
+    okText.innerHTML = t.ok + '<a href="#datenschutz">Datenschutz</a>';
+    btn.textContent = t.knopf;
+    mailBox.classList.toggle('hidden', !koop);
+    mail.required = koop;
+    if (!koop) mail.value = '';
+    msg.textContent = '';
+  }
+  thema.addEventListener('change', umschalten);
+  umschalten();
+
+  form.addEventListener('submit', async ev => {
+    ev.preventDefault();
+
+    const koop = thema.value === 'koop';
+    const t    = TEXTE[thema.value] || TEXTE.gruss;
+    const name = $('gb-name').value.trim();
+    const text = $('gb-text').value.trim();
+    const adr  = mail.value.trim();
+
+    if (name.length < 2 || text.length < 3){
+      msg.className = 'form-msg err';
+      msg.textContent = 'Bitte Name und Nachricht ausfüllen';
+      return;
+    }
+    if (koop && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(adr)){
+      msg.className = 'form-msg err';
+      msg.textContent = 'Bitte eine E-Mail-Adresse für die Antwort angeben';
+      return;
+    }
+    if (!$('gb-ok').checked){
+      msg.className = 'form-msg err';
+      msg.textContent = koop ? 'Bitte der Verarbeitung zustimmen'
+                             : 'Bitte der Veröffentlichung zustimmen';
+      return;
+    }
+    if ($('gb-website').value){ return; }        // Roboter -- still verwerfen
+    if (!CONFIG.formEndpoint){
+      msg.className = 'form-msg err';
+      msg.textContent = 'Formular ist noch nicht eingerichtet';
+      return;
+    }
+
+    btn.disabled = true;
+    msg.className = 'form-msg';
+    msg.textContent = 'Wird gesendet …';
+
+    /* Nur senden, was gebraucht wird. Bei Gruessen wird keine
+       E-Mail-Adresse uebertragen -- sie wird auch nicht erhoben. */
+    const daten = {
+      art: koop ? 'Zusammenarbeit' : 'Gruss oder Frage',
+      name: name,
+      nachricht: text,
+      _subject: koop ? 'Kooperationsanfrage von ' + name
+                     : 'Neuer Gästebuch-Eintrag von ' + name,
+      seite: 'you-vs-you.online'
+    };
+    if (koop){ daten.email = adr; daten._replyto = adr; }
+
+    try{
+      const r = await fetch(CONFIG.formEndpoint, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Accept':'application/json' },
+        body: JSON.stringify(daten)
+      });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      form.reset();
+      umschalten();                 /* leert auch die Meldung ... */
+      msg.className = 'form-msg ok';
+      msg.textContent = t.danke;    /* ... deshalb steht der Dank danach */
+    }catch(_){
+      msg.className = 'form-msg err';
+      msg.textContent = 'Das hat nicht geklappt — bitte später nochmal versuchen, '
+                      + 'oder direkt an kontakt@you-vs-you.online schreiben';
+    }finally{
+      btn.disabled = false;
+    }
+  });
+})();
+
+/* ---- Impressum und Datenschutz ---- */
+function legalReady(){
+  const l = CONFIG.legal || {};
+  return Boolean(l.name && l.email);
+}
+/* Ein Impressum gibt es nur mit vollstaendiger Anschrift.
+   Eine halbe Anschrift waere schlechter als gar kein Impressum. */
+function hasAddress(){
+  const l = CONFIG.legal || {};
+  return Boolean(l.street && l.city);
+}
+
+/* Abschnittsnummern verschieben sich, wenn der Live-Abschnitt dazukommt */
+function dsN(n){ return (CONFIG.live && CONFIG.live.url) ? n + 1 : n; }
+
+function paintLegal(){
+  const l = CONFIG.legal || {};
+  if (!legalReady()){
+    console.warn('[You vs You] CONFIG.legal.name und .email fehlen — die Datenschutzseite ist ausgeblendet.');
+    return;
+  }
+
+  $('menu-legal').classList.remove('hidden');
+  $('foot-legal').classList.remove('hidden');
+  $('entry-legal').classList.remove('hidden');
+  if (hasAddress()){
+    $('menu-imp').classList.remove('hidden');
+    $('foot-imp').classList.remove('hidden');
+    $('entry-imp').classList.remove('hidden');
+    $('entry-sep').classList.remove('hidden');
+  }
+
+  /* Aus der Eintrittsseite heraus: erst eintreten (ohne Musik --
+     das waere ungefragt), dann zur Rechtsseite springen. */
+  document.querySelectorAll('#entry-legal a').forEach(a => {
+    a.addEventListener('click', () => { enterSite(false); });
+  });
+
+  const anschrift = [esc(l.name), esc(l.co), esc(l.street), esc(l.city)]
+                      .filter(Boolean).join('<br>');
+  const mail = esc(l.email);
+
+  if (hasAddress()) $('impressum-body').innerHTML =
+      '<h3>Angaben gemäß § 5 DDG</h3>'
+    + '<p>' + anschrift + '</p>'
+    + '<h3>Kontakt</h3>'
+    + '<p>E-Mail: <a href="mailto:' + mail + '">' + mail + '</a></p>'
+    + '<p>Eine Telefonnummer wird nicht angegeben. Die Kontaktaufnahme per E-Mail '
+    + 'ermöglicht eine unmittelbare und wirksame Kommunikation; Anfragen werden '
+    + 'kurzfristig beantwortet.</p>'
+    + '<h3>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h3>'
+    + '<p>' + esc(l.name) + ', Anschrift wie oben.</p>'
+
+    + (l.ads
+        ? '<h3>Werbung und Kooperationen</h3>'
+        + '<p>Auf dieser Seite werden Produkte gezeigt, die von Herstellern kostenlos zur '
+        + 'Verfügung gestellt oder vergütet wurden. Solche Inhalte sind an Ort und Stelle '
+        + 'als <strong>Werbung</strong> beziehungsweise <strong>Anzeige</strong> '
+        + 'gekennzeichnet. Provisionslinks sind zusätzlich als solche ausgewiesen. '
+        + 'Die Bewertung der Produkte bleibt davon unberührt.</p>'
+        : '')
+
+    + '<h3>Angaben zu Veranstaltungen</h3>'
+    + '<p>Diese Seite steht in keiner Verbindung zu den genannten Veranstaltern und ist kein '
+    + 'offizielles Angebot der jeweiligen Veranstaltung. Termine, Strecken und Regeln werden '
+    + 'ohne Gewähr wiedergegeben — verbindlich sind ausschließlich die Angaben der Veranstalter. '
+    + 'Genannte Marken- und Veranstaltungsnamen sind Eigentum der jeweiligen Rechteinhaber und '
+    + 'werden hier ausschließlich beschreibend verwendet.</p>'
+
+    + '<h3>Haftung für Inhalte</h3>'
+    + '<p>Die Inhalte dieser Seite wurden mit Sorgfalt erstellt. Für die Richtigkeit, '
+    + 'Vollständigkeit und Aktualität wird jedoch keine Gewähr übernommen. Die hier gezeigten '
+    + 'Trainings- und Wettkampfinhalte sind persönliche Erfahrungsberichte und ersetzen keine '
+    + 'sportmedizinische oder trainingswissenschaftliche Beratung.</p>'
+
+    + '<h3>Haftung für Links</h3>'
+    + '<p>Diese Seite enthält Verweise auf externe Angebote, auf deren Inhalte kein Einfluss '
+    + 'besteht. Für die Inhalte der verlinkten Seiten ist stets deren Anbieter verantwortlich. '
+    + 'Zum Zeitpunkt der Verlinkung waren keine Rechtsverstöße erkennbar. Bei Bekanntwerden von '
+    + 'Rechtsverstößen werden entsprechende Links unverzüglich entfernt.</p>'
+
+    + '<h3>Urheberrecht, Bilder und Videos</h3>'
+    + '<p>Alle Fotos und Videos auf dieser Seite stammen aus eigener Aufnahme. Sie unterliegen '
+    + 'dem deutschen Urheberrecht; Vervielfältigung und Verbreitung außerhalb der Grenzen des '
+    + 'Urheberrechts bedürfen der schriftlichen Zustimmung.</p>'
+    + '<p>Wer auf einer Aufnahme abgebildet ist und mit der Veröffentlichung nicht einverstanden '
+    + 'ist, erhält auf formlose Nachricht an '
+    + '<a href="mailto:' + mail + '">' + mail + '</a> eine unverzügliche Entfernung oder '
+    + 'Unkenntlichmachung — ohne Angabe von Gründen.</p>'
+
+    + '<h3>Verbraucherstreitbeilegung</h3>'
+    + '<p>Zur Teilnahme an einem Streitbeilegungsverfahren vor einer Verbraucher­schlichtungs­'
+    + 'stelle besteht weder Bereitschaft noch Verpflichtung (§ 36 VSBG).</p>';
+
+  $('datenschutz-body').innerHTML =
+      '<h3>1 · Verantwortlicher</h3>'
+    + '<p>' + anschrift + '<br>E-Mail: <a href="mailto:' + mail + '">' + mail + '</a></p>'
+
+    + '<h3>2 · Hosting und Server-Protokolle</h3>'
+    + '<p>Diese Seite wird bei <strong>GitHub Pages</strong> (GitHub Inc., 88 Colin P Kelly Jr St, '
+    + 'San Francisco, CA 94107, USA) gehostet. Beim Aufruf werden technisch notwendige Daten wie '
+    + 'IP-Adresse, Datum und Uhrzeit, aufgerufene Datei und Browserkennung in Server-Protokollen '
+    + 'verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO — das berechtigte Interesse an '
+    + 'einem sicheren und störungsfreien Betrieb. Einzelheiten in der '
+    + '<a href="https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement" '
+    + 'target="_blank" rel="noopener noreferrer">Datenschutzerklärung von GitHub</a>.</p>'
+
+    + '<h3>3 · Schriftarten</h3>'
+    + '<p>Die verwendeten Schriften <em>Oswald</em> und <em>Rajdhani</em> werden ausschließlich '
+    + '<strong>von diesem Server</strong> geladen. Es besteht keine Verbindung zu Google Fonts, '
+    + 'es wird keine IP-Adresse an Google übermittelt.</p>'
+
+    + '<h3>4 · Besuchszähler</h3>'
+    + '<p>Auf der Startseite wird ein einfacher Zähler des Dienstes <em>countapi</em> '
+    + '(mileshilliard.com) eingebunden. Dabei wird ausschließlich ein anonymer Zählerstand '
+    + 'abgerufen und erhöht; technisch bedingt wird dem Dienst die IP-Adresse übermittelt. '
+    + 'Es werden keine Cookies gesetzt und keine Profile gebildet. Rechtsgrundlage ist '
+    + 'Art. 6 Abs. 1 lit. f DSGVO — das berechtigte Interesse an einer einfachen '
+    + 'Reichweitenmessung ohne Tracking.</p>'
+
+    + (CONFIG.live && CONFIG.live.url
+        ? '<h3>5 · Live-Werte während des Laufs</h3>'
+        + '<p>Während einer Veranstaltung zeigt diese Seite Kilometer, Zeiten, Höhenmeter '
+        + 'und das Wetter aus der Stoppuhr im Stream. Diese Werte werden über einen eigenen '
+        + 'Dienst bei <strong>Cloudflare</strong> (Cloudflare Inc., 101 Townsend St, '
+        + 'San Francisco, CA 94107, USA) abgerufen; dabei wird technisch bedingt die '
+        + 'IP-Adresse übermittelt. Es werden keine Cookies gesetzt.</p>'
+        + '<p>Übertragen werden ausschließlich Streckenwerte — <strong>keine '
+        + 'Standortdaten und keine Koordinaten</strong>. Rechtsgrundlage ist Art. 6 Abs. 1 '
+        + 'lit. f DSGVO — das berechtigte Interesse daran, den Verlauf auch dann zu zeigen, '
+        + 'wenn die Übertragung gerade pausiert.</p>'
+        : '')
+
+    + '<h3>' + (CONFIG.live && CONFIG.live.url ? '6' : '5') + ' · Eingebettete Videos (Twitch, YouTube)</h3>'
+    + '<p>Live-Stream und Aufzeichnungen werden über <strong>Twitch</strong> '
+    + '(Twitch Interactive Inc., 350 Bush Street, San Francisco, CA 94104, USA) '
+    + 'beziehungsweise <strong>YouTube</strong> im erweiterten Datenschutzmodus '
+    + '(Google Ireland Ltd., Gordon House, Barrow Street, Dublin 4, Irland) eingebunden.</p>'
+    + '<p>Diese Inhalte werden <strong>erst nach ausdrücklichem Klick</strong> geladen. Vorher '
+    + 'besteht keinerlei Verbindung zu diesen Anbietern. Mit dem Klick werden IP-Adresse, '
+    + 'Geräte- und Browserinformationen an den jeweiligen Anbieter übertragen; es können Cookies '
+    + 'gesetzt und Daten in die USA übermittelt werden. Rechtsgrundlage ist die Einwilligung nach '
+    + 'Art. 6 Abs. 1 lit. a DSGVO. Die Einwilligung wird lokal im Browser gespeichert und gilt '
+    + 'für weitere Besuche.</p>'
+    + '<p id="revoke-wrap"></p>'
+
+    + '<h3>' + (dsN(6)) + ' · Kontaktformular und Gästebuch</h3>'
+    + '<p>Auf der Seite <em>Kontakt</em> steht ein Formular mit zwei Zwecken. Beide werden '
+    + 'über den Dienst <strong>Formspree</strong> (Formspree Inc., USA) per E-Mail '
+    + 'zugestellt; dabei werden zusätzlich technische Verbindungsdaten übertragen.</p>'
+    + '<p><strong>Gruß oder Frage.</strong> Übermittelt werden der eingegebene Name und die '
+    + 'Nachricht. Eine E-Mail-Adresse wird nicht erhoben. Rechtsgrundlage ist die Einwilligung '
+    + 'nach Art. 6 Abs. 1 lit. a DSGVO, die beim Absenden ausdrücklich erteilt wird. Eine '
+    + 'Veröffentlichung im Gästebuch erfolgt erst nach manueller Prüfung.</p>'
+    + '<p><strong>Zusammenarbeit.</strong> Übermittelt werden Name beziehungsweise Firma, die '
+    + 'angegebene E-Mail-Adresse und die Nachricht. Diese Anfragen werden <strong>nicht '
+    + 'veröffentlicht</strong>. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO bei der '
+    + 'Anbahnung eines Vertragsverhältnisses, sonst Art. 6 Abs. 1 lit. f DSGVO — das '
+    + 'berechtigte Interesse an der Beantwortung.</p>'
+    + '<p>Die Einwilligung kann jederzeit formlos per E-Mail widerrufen werden; ein '
+    + 'veröffentlichter Eintrag wird dann entfernt. Anfragen werden gelöscht, sobald das '
+    + 'Anliegen abschließend geklärt ist und keine gesetzlichen Aufbewahrungspflichten '
+    + 'entgegenstehen.</p>'
+
+    + '<h3>' + (dsN(7)) + ' · Musik</h3>'
+    + '<p>Die optionale Hintergrundmusik wird von diesem Server ausgeliefert. Es findet keine '
+    + 'Übermittlung an Dritte statt.</p>'
+
+    + '<h3>' + (dsN(8)) + ' · Lokale Speicherung</h3>'
+    + '<p>Im Browser werden zwei technische Einträge abgelegt: die Entscheidung über das Laden '
+    + 'eingebetteter Videos sowie ein Merker, damit der Besuchszähler pro Sitzung nur einmal '
+    + 'erhöht wird. Beide enthalten keine personenbezogenen Daten und lassen sich über die '
+    + 'Browsereinstellungen jederzeit löschen. Es werden <strong>keine Cookies zu Werbe- oder '
+    + 'Analysezwecken</strong> gesetzt.</p>'
+
+    + '<h3>' + (dsN(9)) + ' · Kontaktaufnahme per E-Mail</h3>'
+    + '<p>Wer per E-Mail schreibt, dessen Adresse und Nachricht werden ausschließlich zur '
+    + 'Bearbeitung des Anliegens verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO — '
+    + 'das berechtigte Interesse an der Beantwortung; bei vertraglichen Anliegen Art. 6 Abs. 1 '
+    + 'lit. b DSGVO. Die Nachrichten werden gelöscht, sobald das Anliegen abschließend '
+    + 'geklärt ist und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.</p>'
+
+    + '<h3>' + (dsN(10)) + ' · Fotos und Videos von Personen</h3>'
+    + '<p>Auf dieser Seite werden Aufnahmen von Wettkämpfen und Trainings gezeigt. Personen im '
+    + 'Vordergrund werden nur mit ihrer Einwilligung abgebildet (Art. 6 Abs. 1 lit. a DSGVO, '
+    + '§ 22 KunstUrhG). Zufällig im Hintergrund erfasste Personen bei öffentlichen '
+    + 'Veranstaltungen sind als Beiwerk beziehungsweise als Teil einer Versammlung nach '
+    + '§ 23 KunstUrhG erfasst.</p>'
+    + '<p>Eine erteilte Einwilligung kann jederzeit widerrufen werden. Auf formlose Nachricht '
+    + 'an <a href="mailto:' + mail + '">' + mail + '</a> wird die Aufnahme unverzüglich '
+    + 'entfernt oder die Person unkenntlich gemacht — ohne Angabe von Gründen.</p>'
+
+    + '<h3>' + (dsN(11)) + ' · Übermittlung in die USA</h3>'
+    + '<p>Die eingesetzten Dienste GitHub, Cloudflare, Twitch, YouTube und Formspree gehören zu '
+    + 'Unternehmen mit Sitz beziehungsweise Muttergesellschaft in den USA. Dabei können Daten in '
+    + 'die USA übermittelt werden. Die Anbieter stützen sich auf das <strong>EU-US Data Privacy '
+    + 'Framework</strong> (Angemessenheitsbeschluss der Europäischen Kommission vom 10. Juli 2023, '
+    + 'Art. 45 DSGVO) beziehungsweise auf Standardvertragsklauseln nach Art. 46 Abs. 2 lit. c '
+    + 'DSGVO.</p>'
+    + '<p>Ein dem europäischen Recht gleichwertiges Schutzniveau kann dennoch nicht in jedem Fall '
+    + 'garantiert werden; insbesondere ist ein Zugriff durch US-Behörden nicht vollständig '
+    + 'auszuschließen. Für Twitch, YouTube und das Gästebuch erfolgt die Übermittlung deshalb '
+    + 'ausschließlich nach ausdrücklicher Einwilligung.</p>'
+
+    + '<h3>' + (dsN(12)) + ' · Speicherdauer</h3>'
+    + '<p>Server-Protokolle werden vom Hoster nach kurzer Zeit automatisch gelöscht. '
+    + 'Gästebuch-Nachrichten bleiben gespeichert, bis der Widerruf erklärt wird. Lokale '
+    + 'Browser-Einträge bleiben, bis sie gelöscht werden. Eine darüber hinausgehende Speicherung '
+    + 'findet nicht statt.</p>'
+
+    + '<h3>' + (dsN(13)) + ' · Keine automatisierte Entscheidungsfindung</h3>'
+    + '<p>Es findet keine automatisierte Entscheidungsfindung einschließlich Profiling nach '
+    + 'Art. 22 DSGVO statt.</p>'
+
+    + '<h3>' + (dsN(14)) + ' · Deine Rechte</h3>'
+    + '<ul>'
+    + '<li>Auskunft über die verarbeiteten Daten (Art. 15 DSGVO)</li>'
+    + '<li>Berichtigung unrichtiger Daten (Art. 16 DSGVO)</li>'
+    + '<li>Löschung (Art. 17 DSGVO) und Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>'
+    + '<li>Datenübertragbarkeit (Art. 20 DSGVO)</li>'
+    + '<li>Widerspruch gegen Verarbeitungen auf Grundlage berechtigter Interessen (Art. 21 DSGVO)</li>'
+    + '<li>Widerruf erteilter Einwilligungen mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO)</li>'
+    + '<li>Beschwerde bei einer Datenschutz-Aufsichtsbehörde (Art. 77 DSGVO)</li>'
+    + '</ul>'
+    + '<p>Für alle Anliegen genügt eine formlose Nachricht an '
+    + '<a href="mailto:' + mail + '">' + mail + '</a>.</p>'
+    + (l.authority
+        ? '<p>Zuständige Aufsichtsbehörde: <strong>' + esc(l.authority) + '</strong>. '
+        + 'Das Beschwerderecht besteht unabhängig davon bei jeder Aufsichtsbehörde.</p>'
+        : '')
+
+    + '<h3>' + (dsN(15)) + ' · Änderungen dieser Erklärung</h3>'
+    + '<p>Diese Erklärung wird angepasst, sobald sich die eingesetzten Dienste oder die '
+    + 'Rechtslage ändern. Es gilt jeweils die hier abrufbare Fassung.</p>';
+
+  paintRevoke();
+}
+
+function paintRevoke(){
+  const wrap = $('revoke-wrap');
+  if (!wrap) return;
+  wrap.innerHTML = embedAllowed()
+    ? '<button class="revoke-btn" type="button" id="revoke-btn">Einwilligung widerrufen</button>'
+    : '<em style="color:rgba(255,255,255,.6)">Aktuell ist keine Einwilligung gespeichert.</em>';
+  const b = $('revoke-btn');
+  if (b) b.addEventListener('click', revokeEmbeds);
+}
+
+/* ---- Strukturierte Daten fuer Suchmaschinen ---- */
+function paintJsonLd(){
+  const upcoming = EVENTS.filter(e => Date.now() < endOf(e));
+  if (!upcoming.length) return;
+  const data = upcoming.map(e => ({
+    '@context':'https://schema.org',
+    '@type':'SportsEvent',
+    name: e.title,
+    startDate: e.stream,
+    endDate: new Date(endOf(e)).toISOString(),
+    eventStatus:'https://schema.org/EventScheduled',
+    eventAttendanceMode:'https://schema.org/OfflineEventAttendanceMode',
+    location:{ '@type':'Place', name:e.place, address:{ '@type':'PostalAddress', addressLocality:e.place, addressCountry:'DE' } },
+    image:['https://www.you-vs-you.online/og.jpg'],
+    url:'https://www.you-vs-you.online/#events',
+    description: (e.info && e.info[0] ? String(e.info[0]).replace(/<[^>]*>/g,'') : e.title)
+  }));
+  const s = document.createElement('script');
+  s.type = 'application/ld+json';
+  s.textContent = JSON.stringify(data.length === 1 ? data[0] : data);
+  document.head.appendChild(s);
+}
+
+/* ================================================================
+   5 · NAVIGATION
+   ================================================================ */
+
+const VIEWS = {
+  home:'view-home', stream:'view-stream', events:'view-events',
+  disziplin:'view-disziplin', streams:'view-streams',
+  training:'view-training',
+  /* "kontakt" ist der heutige Name. "gaestebuch" bleibt als Deckname
+     bestehen, damit alte geteilte Links weiter funktionieren. */
+  kontakt:'view-gaestebuch', gaestebuch:'view-gaestebuch',
+  impressum:'view-impressum', datenschutz:'view-datenschutz'
+};
+
+const menu = $('menu');
+const menuToggles = document.querySelectorAll('#menu-btn, [data-menu]');
+let lastFocus = null;
+
+function openMenu(trigger){
+  lastFocus = trigger || document.activeElement;
+  menu.classList.add('open');
+  menu.removeAttribute('inert');
+  menu.setAttribute('aria-hidden','false');
+  menuToggles.forEach(b => b.setAttribute('aria-expanded','true'));
+  $('menu-close').focus();
+}
+function closeMenu(returnFocus){
+  if (!menu.classList.contains('open')){
+    menu.setAttribute('inert','');
+    menu.setAttribute('aria-hidden','true');
+    return;
+  }
+  menu.classList.remove('open');
+  menu.setAttribute('inert','');
+  menu.setAttribute('aria-hidden','true');
+  menuToggles.forEach(b => b.setAttribute('aria-expanded','false'));
+  if (returnFocus && lastFocus && document.contains(lastFocus)) lastFocus.focus();
+  lastFocus = null;
+}
+
+/* Tabulator bleibt im offenen Menue */
+menu.addEventListener('keydown', e => {
+  if (e.key !== 'Tab') return;
+  const items = menu.querySelectorAll('a[href], button');
+  if (!items.length) return;
+  const first = items[0], last = items[items.length - 1];
+  if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+});
+
+menuToggles.forEach(b => b.addEventListener('click', () => openMenu(b)));
+$('menu-close').addEventListener('click', () => closeMenu(true));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(true); });
+
+function render(){
+  let key = (location.hash || '#home').replace('#','');
+  /* Rechtsseiten nur anzeigen, wenn sie auch befuellt sind */
+  if (key === 'datenschutz' && !legalReady()) key = 'home';
+  if (key === 'impressum'   && !hasAddress()) key = 'home';
+  const name = VIEWS[key] ? key : 'home';
+
+  /* Ueber die Abschnitts-Kennungen gehen, nicht ueber die Schluessel:
+     zwei Schluessel koennen auf denselben Abschnitt zeigen (kontakt und
+     gaestebuch). Ginge man ueber die Schluessel, wuerde der zweite
+     Durchlauf den ersten wieder ausschalten. */
+  const anId = VIEWS[name];
+  Object.values(VIEWS).forEach(id => $(id).classList.toggle('on', id === anId));
+  /* Der schwebende Menue-Knopf gehoert nur auf die Startansicht --
+     die Unterseiten haben ihn oben in der Kopfzeile. */
+  $('menu-btn').classList.toggle('hidden', name !== 'home' || !entered);
+  closeMenu(false);
+  if (name !== 'home') window.scrollTo(0,0);
+  if (name === 'stream') updateStreamPanel();
+}
+
+let entered = false;
+let cameFromInside = false;
+window.addEventListener('hashchange', () => { cameFromInside = true; render(); });
+
+document.querySelectorAll('[data-back]').forEach(b => {
+  b.addEventListener('click', () => {
+    if (cameFromInside && history.length > 1) history.back();
+    else location.hash = '#home';
+  });
+});
+
+/* Einwilligungs-Knoepfe in den Aufzeichnungen (nachtraeglich erzeugt) */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-allow-embeds]');
+  if (t){ allowEmbeds(); }
+});
+
+/* ================================================================
+   6 · LIVE-PLAYER
+   ================================================================ */
+
+let playerInserted = false;
+
+function channelReady(){
+  const c = String(CONFIG.twitchChannel || '').trim();
+  return c && !/^dein/i.test(c);   // Platzhalter zaehlt nicht als Kanal
+}
+
+function insertPlayer(){
+  if (playerInserted || !channelReady()) return;
+  playerInserted = true;
+
+  const frame = document.createElement('iframe');
+  frame.src = 'https://player.twitch.tv/?channel=' + encodeURIComponent(CONFIG.twitchChannel.trim())
+            + twitchParents().map(p => '&parent=' + encodeURIComponent(p)).join('')
+            + '&autoplay=true&muted=false';
+  frame.allowFullscreen = true;
+  frame.setAttribute('allow','autoplay; fullscreen; picture-in-picture');
+  frame.title = 'Live-Stream';
+
+  $('stream-frame').appendChild(frame);
+  $('locked').classList.add('hidden');
+  $('stream-consent').classList.add('hidden');
+  $('stream-note').textContent = 'Übertragung läuft';
+  if (window.fadeOutMusic) window.fadeOutMusic();
+}
+
+function removePlayer(){
+  playerInserted = false;
+  const old = $('stream-frame').querySelector('iframe');
+  if (old) old.remove();
+  $('locked').classList.remove('hidden');
+  $('stream-consent').classList.add('hidden');
+}
+
+/* Entscheidet, was in der Stream-Ansicht zu sehen ist:
+   Countdown -> Einwilligung -> Player. */
+function updateStreamPanel(){
+  const p = phaseOf(EVT);
+
+  if (p !== 'live'){
+    if (playerInserted) removePlayer();
+    $('stream-consent').classList.add('hidden');
+    $('locked').classList.remove('hidden');
+    return;
+  }
+
+  if (!channelReady()){
+    $('stream-consent').classList.add('hidden');
+    $('locked').classList.remove('hidden');
+    $('locked-head').textContent = 'Stream startet gleich';
+    $('locked-sub').textContent  = 'Der Kanal wird gerade freigeschaltet. Bitte die Seite in wenigen Minuten neu laden.';
+    $('mini-cd').textContent = '';
+    return;
+  }
+
+  if (embedAllowed()){
+    $('locked').classList.add('hidden');
+    $('stream-consent').classList.add('hidden');
+    insertPlayer();
+  } else {
+    $('locked').classList.add('hidden');
+    $('stream-consent').classList.remove('hidden');
+    $('stream-note').textContent = 'Einmal bestätigen, dann läuft der Stream';
+  }
+}
+
+function applyEmbedConsent(){
+  paintVods();
+  paintRevoke();
+  if ($('view-stream').classList.contains('on')) updateStreamPanel();
+}
+
+$('stream-consent-btn').addEventListener('click', allowEmbeds);
+
+/* ================================================================
+   7 · SEKUNDENTAKT
+   Vier Aktualisierungen pro Sekunde reichen fuer eine
+   Sekundenanzeige voellig aus. Vorher liefen es 60 --
+   das kostet auf dem Handy ueber Stunden spuerbar Akku.
+   ================================================================ */
+
+function tick(){
+  const before = EVT;
+  EVT = currentEvent();
+
+  /* Ist ein Event vorbei und ein neues rueckt nach, wird alles neu aufgebaut */
+  if (EVT !== before){
+    paintHome(); paintEvents();
+    removePlayer();
+  }
+
+  const p = phaseOf(EVT);
+  if (p === 'none') return;
+
+  paintProgress();
+  scheduleLive();
+
+  if (p === 'before'){
+    const t = splitTime(ms(EVT.stream) - Date.now());
+    const hms = pad(t.h) + ':' + pad(t.m) + ':' + pad(t.s);
+
+    /* Weiter als einen Tag weg: Tage gross, Stunden und Minuten klein,
+       keine Sekunden. Am letzten Tag zaehlt die Uhr wieder komplett. */
+    const fern = t.d >= 1;
+    $('cd-box').classList.toggle('fern', fern);
+
+    setText($('cd-label'), 'Start in');
+    setText($('cd-days'), t.d > 0 ? (t.d === 1 ? '1 Tag' : t.d + ' Tage') : '');
+    $('cd-days').style.display = t.d > 0 ? '' : 'none';
+    setText($('cd'), fern ? (t.h + ' Std ' + pad(t.m) + ' Min') : hms);
+    $('cd-units').classList.remove('hidden');
+    $('cd-box').classList.remove('live');
+    setText($('mini-cd'), (t.d > 0 ? t.d + ' Tage · ' : '') + hms);
+    $('tile-stream').classList.remove('is-live');
+    setText($('tile-state-txt'), 'Noch nicht live');
+    setText($('locked-head'), 'Noch nicht live');
+    setText($('locked-sub'), 'Der Stream schaltet sich automatisch frei, sobald es losgeht. Diese Seite kann einfach offen bleiben.');
+  }
+  else if (p === 'live'){
+    $('cd-box').classList.remove('fern');
+    $('cd-box').classList.add('live');
+    setText($('cd-label'), 'Jetzt');
+    $('cd-days').style.display = 'none';
+    setText($('cd'), 'LIVE');
+    $('cd-units').classList.add('hidden');
+    $('tile-stream').classList.add('is-live');
+    setText($('tile-state-txt'), 'Läuft jetzt');
+    if ($('view-stream').classList.contains('on')) updateStreamPanel();
+  }
+  else if (p === 'after'){
+    $('cd-box').classList.remove('fern');
+    setText($('cd-label'), 'Beendet');
+    $('cd-days').style.display = 'none';
+    setText($('cd'), 'Danke!');
+    $('cd-units').classList.add('hidden');
+    $('cd-box').classList.remove('live');
+    $('tile-stream').classList.remove('is-live');
+    setText($('tile-state-txt'), 'Beendet');
+    setText($('locked-head'), 'Übertragung beendet');
+    setText($('locked-sub'), 'Danke fürs Zuschauen. Aufzeichnungen findest du im Menü.');
+    setText($('mini-cd'), '');
+    setText($('stream-note'), '');
+  }
+}
+
+setInterval(tick, 250);
+/* Nach dem Aufwachen aus dem Hintergrund sofort nachziehen */
+document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
+
+/* ================================================================
+   8 · MUSIK
+   Browser lassen Ton nie von allein starten -- es braucht einen
+   echten Klick. Der Eintreten-Knopf ist genau dieser Klick.
+   ================================================================ */
+
+const Music = (function(){
+  const btn = $('sound-btn'), icon = $('sound-icon'), txt = $('sound-txt'), audio = $('bg-music');
+  if (!CONFIG.music) return { start(){}, show(){} };
+
+  const ON  = '<path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z"/><path d="M16 8.8a4.4 4.4 0 0 1 0 6.4"/><path d="M18.8 6a8.2 8.2 0 0 1 0 12"/>';
+  const OFF = '<path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z"/><line x1="16.5" y1="9.5" x2="21" y2="14.5"/><line x1="21" y1="9.5" x2="16.5" y2="14.5"/>';
+
+  let playing = false;
+  function paint(){
+    icon.innerHTML = playing ? ON : OFF;
+    txt.textContent = playing ? 'Musik aus' : 'Musik an';
+  }
+  function start(){
+    if (playing) return;
+    if (!audio.src) audio.src = CONFIG.music;
+    audio.volume = CONFIG.musicVolume;
+    audio.play().then(() => { playing = true; paint(); }).catch(() => { playing = false; paint(); });
+  }
+  function stop(){ audio.pause(); playing = false; paint(); }
+
+  window.fadeOutMusic = function(){
+    if (!playing) return;
+    const step = audio.volume / 20;
+    const t = setInterval(() => {
+      audio.volume = Math.max(0, audio.volume - step);
+      if (audio.volume <= 0.01){ clearInterval(t); stop(); audio.volume = CONFIG.musicVolume; }
+    }, 100);
+  };
+
+  btn.addEventListener('click', () => playing ? stop() : start());
+  paint();
+  return { start, show(){ btn.classList.remove('hidden'); } };
+})();
+
+/* ================================================================
+   9 · EINTRITT
+   ================================================================ */
+
+function enterSite(withMusic){
+  if (entered) return;
+  entered = true;
+  if (withMusic){ Music.start(); }
+  Music.show();
+  render();
+  $('entry').classList.add('fade');
+  setTimeout(() => $('entry').classList.add('hidden'), 750);
+}
+
+/* ================================================================
+   9b · TEASER
+   Einmal als Vorspann nach dem Eintreten, danach jederzeit auf der
+   Startansicht. Beides aus derselben Datei, beides ohne fremden Dienst.
+   ================================================================ */
+
+const Teaser = (function(){
+  const t = CONFIG.teaser || {};
+  const aus = { moeglich:false, vorspann(){ return false; }, zeigen(){} };
+  if (!t.file) return aus;
+
+  const MP4  = t.file + '.mp4';
+  const BILD = t.file + '.jpg';
+  const KEY  = 'vvy-teaser:' + t.file;
+
+  const q      = new URLSearchParams(location.search);
+  const zwang  = q.get('teaser');           // "1" erzwingt, "0" ueberspringt
+  const tage   = Number(t.tage);
+  const frist  = (isFinite(tage) ? tage : 14) * 86400000;
+
+  function schonGesehen(){
+    if (zwang === '1') return false;
+    if (!frist) return false;
+    try{
+      const v = Number(localStorage.getItem(KEY));
+      return isFinite(v) && v > 0 && (Date.now() - v) < frist;
+    }catch(_){ return false; }
+  }
+  function merken(){
+    try{ localStorage.setItem(KEY, String(Date.now())); }catch(_){}
+  }
+
+  /* ---- Kasten auf der Startansicht ---- */
+  function zeigen(){
+    const box = $('teaser-box'), vid = $('teaser-video');
+    if (!box || !vid) return;
+    vid.src = MP4;
+    vid.poster = BILD;
+    if (t.titel) $('teaser-titel').textContent = t.titel;
+    box.classList.remove('hidden');
+    /* Laeuft der Teaser, wird die Hintergrundmusik leise ausgeblendet --
+       zwei Tonspuren gleichzeitig will niemand hoeren. */
+    vid.addEventListener('play', () => { if (window.fadeOutMusic) window.fadeOutMusic(); });
+  }
+
+  /* ---- Vorspann ----
+     Gibt true zurueck, wenn er wirklich laeuft. Nur dann bleibt die
+     Musik aus und der Eintritt wartet auf das Ende. */
+  function vorspann(fertig){
+    if (!t.intro || zwang === '0' || schonGesehen()) return false;
+
+    const huelle = $('intro'), vid = $('intro-video'),
+          bar = $('intro-fortschritt'), skip = $('intro-skip');
+    if (!huelle || !vid) return false;
+
+    let beendet = false;
+    function schliessen(){
+      if (beendet) return;
+      beendet = true;
+      merken();
+      try{ vid.pause(); }catch(_){}
+      huelle.classList.add('weg');
+      setTimeout(() => {
+        huelle.classList.add('hidden');
+        huelle.setAttribute('aria-hidden','true');
+        vid.removeAttribute('src'); vid.load();      // Speicher freigeben
+      }, 600);
+      document.removeEventListener('keydown', taste);
+      if (typeof fertig === 'function') fertig();
+    }
+    function taste(e){ if (e.key === 'Escape' || e.key === 'Enter') schliessen(); }
+
+    vid.src = MP4;
+    vid.poster = BILD;
+    vid.addEventListener('ended', schliessen);
+    vid.addEventListener('error', schliessen);
+    vid.addEventListener('timeupdate', () => {
+      if (vid.duration) bar.style.width = (vid.currentTime / vid.duration * 100) + '%';
+    });
+    skip.addEventListener('click', schliessen);
+    document.addEventListener('keydown', taste);
+
+    huelle.classList.remove('hidden');
+    huelle.setAttribute('aria-hidden','false');
+
+    /* Der Klick auf "Eintreten" ist die Nutzergeste -- damit darf der
+       Ton an sein. Verweigert der Browser es trotzdem (Stromsparmodus,
+       strenge Einstellung), geht es sofort ohne Vorspann weiter. */
+    const p = vid.play();
+    if (p && typeof p.catch === 'function'){
+      p.catch(() => {
+        console.warn('[You vs You] Vorspann wurde vom Browser abgelehnt — Seite laeuft normal weiter.');
+        schliessen();
+      });
+    }
+    setTimeout(() => skip.focus({ preventScroll:true }), 400);
+    return true;
+  }
+
+  return { moeglich:true, vorspann, zeigen, schonGesehen };
+})();
+
+$('enter-btn').addEventListener('click', () => {
+  /* Erst versuchen, den Vorspann zu starten. Laeuft er, bleibt die Musik
+     aus und die Seite wird im Hintergrund schon aufgebaut. */
+  const laeuft = Teaser.vorspann(() => { Music.show(); });
+  enterSite(!laeuft);
+});
+
+/* Geteilte Links wie .../#events sollen direkt dort landen und nicht
+   hinter der Eintrittsseite haengen bleiben. Ohne Klick keine Musik --
+   das verlangen die Browser ohnehin. */
+(function(){
+  const key = (location.hash || '').replace('#','');
+  if (key && VIEWS[key] && key !== 'home'){
+    $('entry').classList.add('hidden');
+    entered = true;
+    Music.show();
+  }
+})();
+
+/* ================================================================
+   10 · KALENDER UND TEILEN
+   Beides laeuft komplett im Browser -- kein Server, kein Dienst.
+   ================================================================ */
+
+const SITE_URL = 'https://www.you-vs-you.online/';
+
+function raceHoursOf(e){ return Number(e.raceHours) > 0 ? Number(e.raceHours) : (e.hours || 6); }
+function raceStartOf(e){ return ms(e.race || e.stream); }
+function raceEndOf(e){ return raceStartOf(e) + raceHoursOf(e) * 3600000; }
+
+/* Zeitstempel im iCalendar-Format: 20260912T080000Z */
+function icsStamp(t){
+  return new Date(t).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+}
+/* Komma, Semikolon, Backslash und Zeilenumbruch muessen maskiert werden */
+function icsText(s){
+  return String(s == null ? '' : s)
+    .replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');
+}
+
+function buildIcs(e){
+  const start = raceStartOf(e);
+  const uid = 'vvy-' + icsStamp(start) + '@you-vs-you.online';
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//You vs You//Termin//DE',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    'UID:' + uid,
+    'DTSTAMP:' + icsStamp(Date.now()),
+    'DTSTART:' + icsStamp(start),
+    'DTEND:' + icsStamp(raceEndOf(e)),
+    'SUMMARY:' + icsText(e.title),
+    'LOCATION:' + icsText(e.place),
+    'DESCRIPTION:' + icsText('Live-Stream und alle Infos: ' + SITE_URL),
+    'URL:' + SITE_URL,
+    'BEGIN:VALARM',
+    'TRIGGER:-PT60M',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:' + icsText(e.title + ' startet in einer Stunde'),
+    'END:VALARM',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+}
+
+(function(){
+  const btn = $('act-cal'), txt = $('act-cal-txt');
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    if (!EVT) return;
+    const blob = new Blob([buildIcs(EVT)], { type:'text/calendar;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = EVT.title.replace(/[^\wÄÖÜäöüß -]/g,'').trim().replace(/\s+/g,'-') + '.ics';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+
+    btn.classList.add('done');
+    txt.textContent = 'Termin gespeichert';
+    setTimeout(() => { btn.classList.remove('done'); txt.textContent = 'Zum Kalender'; }, 3500);
+  });
+})();
+
+(function(){
+  const btn = $('act-share'), txt = $('act-share-txt');
+  if (!btn) return;
+
+  btn.addEventListener('click', async () => {
+    /* Bewusst NUR Titel und Adresse weitergeben.
+       Gibt man zusaetzlich ein Textfeld mit, haengen manche Ziele
+       (WhatsApp, Kopieren unter macOS) Text und Adresse aneinander --
+       dann steht die Adresse zweimal in der Nachricht. */
+    if (navigator.share){
+      try{ await navigator.share({ title:'You vs You', url: SITE_URL }); return; }
+      catch(_){ return; }                       // abgebrochen -- keine Meldung noetig
+    }
+    /* Am Rechner: Adresse in die Zwischenablage */
+    try{
+      await navigator.clipboard.writeText(SITE_URL);
+      btn.classList.add('done');
+      txt.textContent = 'Link kopiert';
+    }catch(_){
+      txt.textContent = SITE_URL.replace(/^https:\/\//,'');
+    }
+    setTimeout(() => { btn.classList.remove('done'); txt.textContent = 'Teilen'; }, 3500);
+  });
+})();
+
+/* ================================================================
+   11 · FORTSCHRITT WAEHREND DES LAUFS
+   ================================================================ */
+
+function paintProgress(){
+  const box = $('cd-progress');
+  if (!EVT){ box.classList.add('hidden'); return; }
+
+  const start = raceStartOf(EVT), end = raceEndOf(EVT), now = Date.now();
+  if (now < start || now >= end){ box.classList.add('hidden'); return; }
+
+  box.classList.remove('hidden');
+  const total = end - start;
+  const done  = Math.min(1, Math.max(0, (now - start) / total));
+  $('cd-bar').style.width = (done * 100).toFixed(2) + '%';
+
+  /* Restzeit auf die naechste volle Minute aufrunden --
+     sonst zeigt die Anzeige gefuehlt immer eine Minute zu wenig. */
+  const el = splitTime(now - start), lf = splitTime(end - now + 59999);
+  setText($('cd-elapsed'), el.h + ':' + pad(el.m) + ' h gelaufen');
+  setText($('cd-left'),    'noch ' + lf.h + ':' + pad(lf.m) + ' h');
+}
+
+/* ================================================================
+   12 · BESUCHERZAEHLER
+   Faellt der Dienst aus, bleibt der Zaehler unsichtbar.
+   Pro Browsersitzung wird nur einmal hochgezaehlt.
+   ================================================================ */
+
+(function(){
+  if (!CONFIG.counterKey) return;
+  const box = $('visits'), num = $('visit-num');
+  const base = 'https://countapi.mileshilliard.com/api/v1/';
+  let already = false;
+  try{ already = sessionStorage.getItem('vvy_counted') === '1'; }catch(_){}
+
+  fetch(base + (already ? 'get/' : 'hit/') + encodeURIComponent(CONFIG.counterKey))
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('counter')))
+    .then(d => {
+      const v = parseInt(d.value, 10);
+      if (!isFinite(v)) return;
+      num.textContent = v.toLocaleString('de-DE');
+      box.classList.add('show');
+      try{ sessionStorage.setItem('vvy_counted','1'); }catch(_){}
+    }).catch(() => {});
+})();
+
+/* ================================================================
+   12b · LIVE-WERTE AUS DEM LAUF
+
+   Die Werte kommen aus dem Stream-Overlay über eine kleine Brücke
+   bei Cloudflare. Ist keine Adresse eingetragen, passiert hier
+   nichts und die Seite sieht aus wie vorher.
+
+   Übertragen werden nur Kilometer, Zeiten, Höhenmeter und Wetter --
+   keine Koordinaten.
+   ================================================================ */
+
+const LIVE = CONFIG.live || {};
+let liveData = null, liveTs = 0, liveBusy = false, liveTimer = null;
+
+const nf = (n, d) => Number(n).toLocaleString('de-DE',
+  { minimumFractionDigits:d, maximumFractionDigits:d });
+
+function paceTxt(sec){
+  if (!sec || !isFinite(sec) || sec <= 0 || sec > 5999) return '–';
+  return Math.floor(sec/60) + ':' + pad(Math.round(sec%60));
+}
+function hmTxt(msv){
+  const t = splitTime(msv);
+  return (t.d ? t.d*24 + t.h : t.h) + ':' + pad(t.m) + ' h';
+}
+
+async function fetchLive(){
+  if (!LIVE.url || liveBusy) return;
+  liveBusy = true;
+  try{
+    const r = await fetch(LIVE.url.replace(/\/+$/,'') + '?_=' + Date.now(),
+                          { cache:'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    if (j && j.ok && j.data){
+      liveData = j.data;
+      liveTs   = j.ts || Date.now();
+    }
+  }catch(_){ /* Netz weg -- alte Werte stehen lassen */ }
+  liveBusy = false;
+  paintLive();
+}
+
+/* Abruf nur solange es etwas zu holen gibt */
+function scheduleLive(){
+  if (!LIVE.url) return;
+  const p = phaseOf(EVT);
+  const want = (p === 'live') ? 20000 : null;   // während des Laufs alle 20 s
+
+  if (want && !liveTimer){
+    fetchLive();
+    liveTimer = setInterval(fetchLive, want);
+  } else if (!want && liveTimer){
+    clearInterval(liveTimer); liveTimer = null;
+    fetchLive();                                 // Endstand einmal nachladen
+  }
+}
+
+function paintLive(){
+  const box = $('live');
+  if (!LIVE.url || !liveData){ box.classList.add('hidden'); $('cd-live').classList.add('hidden'); return; }
+
+  const d      = liveData;
+  /* Maßgeblich ist das Alter des letzten Punktes von der Uhr (pt),
+     nicht der Zeitpunkt, zu dem die Brücke geantwortet hat (t).
+     Sonst sähen eingefrorene Werte ewig frisch aus. */
+  const ageSec = Math.max(0, Math.round((Date.now() - (d.pt || d.t || liveTs)) / 1000));
+  const stale  = ageSec > (LIVE.staleSec || 180);
+  const phase  = phaseOf(EVT);
+  const ended  = phase === 'after';
+
+  /* Vor dem Event nur zeigen, wenn die Werte frisch sind.
+     Sonst würde ein Testeintrag wochenlang als „Live vom Lauf"
+     auf der Startseite stehen, obwohl gar kein Lauf läuft.
+     Zehn Minuten Fenster, damit ein Trockentest sichtbar bleibt. */
+  if (phase === 'before' && ageSec > 600){
+    box.classList.add('hidden'); $('cd-live').classList.add('hidden'); return;
+  }
+
+  box.classList.remove('hidden');
+  box.classList.toggle('stale', stale || ended);
+  setText($('live-title'), ended ? 'Ergebnis' : 'Live vom Lauf');
+  setText($('live-dot-txt'), ended ? 'Beendet' : (stale ? 'Kein Signal' : 'Live'));
+
+  /* ---- Kennzahlen ---- */
+  const cells = [
+    { k:'Gelaufen', v:nf(d.km || 0, 1), u:'km' },
+    d.left != null ? { k:'Restzeit',  v:hmTxt(d.left).replace(' h',''), u:'h' }
+                   : { k:'Laufzeit',  v:hmTxt(d.elapsed || 0).replace(' h',''), u:'h' },
+    { k:'Pace jetzt', v:paceTxt(d.pace),  u:'/km' },
+    { k:'Ø Pace',     v:paceTxt(d.apace), u:'/km' },
+    { k:'Höhenmeter', v:nf(d.gain || 0, 0), u:'hm' }
+  ];
+  if (d.temp != null) cells.push({ k:'Temperatur', v:nf(d.temp, 1), u:'°C' });
+
+  $('live-grid').innerHTML = cells.map(c =>
+    '<div class="live-cell"><div class="k">' + esc(c.k) + '</div>'
+    + '<div class="v">' + esc(c.v) + '<span class="u">' + esc(c.u) + '</span></div></div>').join('');
+
+  /* ---- Fortschritt zum Tagesziel ---- */
+  const target = Number(d.target) || 0;
+  if (target > 0){
+    $('live-goal').classList.remove('hidden');
+    const pct = Math.min(100, (d.km || 0) / target * 100);
+    $('live-goal-bar').style.width = pct.toFixed(1) + '%';
+    /* Ist das Pflichtziel erreicht, hoert der Countdown auf --
+       ab da zaehlt nur noch, wie viel obendrauf kommt. */
+    const ueber = (d.km || 0) - target;
+    setText($('live-goal-pct'), ueber >= 0
+      ? 'Ziel erreicht · +' + nf(ueber,1) + ' km'
+      : Math.round(pct) + ' % von ' + nf(target,1) + ' km');
+    $('live-goal').classList.toggle('reached', ueber >= 0);
+  } else {
+    $('live-goal').classList.add('hidden');
+  }
+
+  /* ---- Rundenzähler ---- */
+  const lapKm = Number(LIVE.lapKm) || 0;
+  if (lapKm > 0 && target > 0){
+    const lkm     = d.km || 0;
+    const planned = Math.max(1, Math.round(target / lapKm));   // Runden bis zum Tagesziel
+    const done    = Math.floor(lkm / lapKm);                   // voll abgeschlossene Runden
+    const part    = (lkm % lapKm) / lapKm;                     // angefangene Runde
+    /* Laeuft er ueber das Ziel hinaus, waechst die Leiste einfach mit */
+    const total   = Math.max(planned, done + (part > 0 ? 1 : 0));
+
+    let marks = '';
+    for (let i = 0; i < total; i++){
+      marks += '<i class="' + (i < done ? 'done' : (i === done && part > .15 ? 'part' : '')) + '"></i>';
+    }
+    $('live-laps').innerHTML = marks;
+
+    $('live-lap-txt').innerHTML =
+        done >= planned
+          ? 'Tagesziel geschafft · <b>' + done + ' Runden</b> voll'
+      : done + 1 === planned
+          ? '<b>Letzte Runde</b> · noch <b>' + nf(Math.max(0, target - lkm), 1) + ' km</b> bis zum Ziel'
+          : 'Runde <b>' + (done + 1) + '</b> von <b>' + planned
+            + '</b> · <b>' + nf(Math.max(0, lapKm - (lkm % lapKm)), 1) + ' km</b> bis zur nächsten';
+  } else {
+    $('live-laps').innerHTML = '';
+    $('live-lap-txt').textContent = '';
+  }
+
+  paintLiveChart(d);
+
+  /* ---- Fußzeile ---- */
+  setText($('live-foot'), ended
+    ? 'Endstand nach dem Lauf. Aufzeichnungen findest du im Menü.'
+    : (stale
+        ? 'Zuletzt aktualisiert vor ' + (ageSec < 120 ? ageSec + ' Sekunden' : Math.round(ageSec/60) + ' Minuten')
+          + ' — vermutlich gerade kein Empfang auf der Strecke.'
+        : 'Aktualisiert vor ' + ageSec + ' Sekunden · die Werte kommen direkt aus der Uhr im Stream.'));
+
+  /* ---- Kompaktzeile unter dem Countdown ---- */
+  const cd = $('cd-live');
+  if (phaseOf(EVT) === 'live'){
+    cd.classList.remove('hidden');
+    let txt = '<span><b>' + nf(d.km || 0, 1) + '</b> km</span>';
+    if (lapKm > 0 && target > 0){
+      const total = Math.max(1, Math.round(target / lapKm));
+      const done  = Math.floor((d.km || 0) / lapKm);
+      txt += '<span>Runde <b>' + Math.min(total, done + 1) + '</b> / ' + total + '</span>';
+    }
+    if (d.apace) txt += '<span>Ø <b>' + paceTxt(d.apace) + '</b> /km</span>';
+    cd.innerHTML = txt;
+  } else {
+    cd.classList.add('hidden');
+  }
+}
+
+/* ================================================================
+   VERLAUFSKURVE
+   Eine Reihe, eine Farbe. Das Tagesziel ist eine zurückhaltende
+   Schwelle, keine zweite Datenfarbe -- zwei kräftige Farben wären
+   bei Rot-Grün-Sehschwäche kaum zu unterscheiden.
+   ================================================================ */
+function paintLiveChart(d){
+  const wrap = $('live-chart');
+  const pts  = Array.isArray(d.hist) ? d.hist.filter(p => Array.isArray(p) && p.length === 2) : [];
+  if (pts.length < 3){ wrap.classList.add('hidden'); return; }
+  wrap.classList.remove('hidden');
+
+  const W = 640, H = 190;
+  const M = { t:14, r:46, b:26, l:34 };
+  const iw = W - M.l - M.r, ih = H - M.t - M.b;
+
+  const maxMin = Math.max(pts[pts.length-1][0], (d.dur ? d.dur * 60 : 0), 1);
+  const target = Number(d.target) || 0;
+  const maxKm  = Math.max(pts[pts.length-1][1], target, 1) * 1.08;
+
+  const X = m => M.l + (m / maxMin) * iw;
+  const Y = k => M.t + ih - (k / maxKm) * ih;
+
+  const line = pts.map((p,i) => (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1)).join(' ');
+  const area = line + ' L' + X(pts[pts.length-1][0]).toFixed(1) + ' ' + (M.t+ih)
+             + ' L' + X(pts[0][0]).toFixed(1) + ' ' + (M.t+ih) + ' Z';
+
+  /* Achsen: wenige, ruhige Schritte */
+  const hourStep = maxMin > 480 ? 120 : 60;
+  const xt = [];
+  for (let m = 0; m <= maxMin; m += hourStep) xt.push(m);
+  const kmStep = maxKm > 60 ? 20 : (maxKm > 25 ? 10 : 5);
+  const yt = [];
+  for (let k = 0; k <= maxKm; k += kmStep) yt.push(k);
+
+  const grid = yt.map(k =>
+    '<line x1="' + M.l + '" y1="' + Y(k).toFixed(1) + '" x2="' + (M.l+iw) + '" y2="' + Y(k).toFixed(1) + '"/>').join('');
+
+  const xlab = xt.map(m =>
+    '<text x="' + X(m).toFixed(1) + '" y="' + (M.t+ih+16) + '" text-anchor="middle">' + (m/60) + ' h</text>').join('');
+  const ylab = yt.map(k =>
+    '<text x="' + (M.l-8) + '" y="' + (Y(k)+3).toFixed(1) + '" text-anchor="end">' + k + '</text>').join('');
+
+  const tline = target > 0 && target <= maxKm
+    ? '<line class="target" x1="' + M.l + '" y1="' + Y(target).toFixed(1) + '" x2="' + (M.l+iw) + '" y2="' + Y(target).toFixed(1) + '"/>'
+      + '<text class="target-txt" x="' + (M.l+iw+6) + '" y="' + (Y(target)+3).toFixed(1) + '">Ziel</text>'
+    : '';
+
+  const last  = pts[pts.length-1];
+  const endX  = X(last[0]), endY = Y(last[1]);
+  /* Beschriftung am rechten Rand nach innen kippen statt abschneiden */
+  const rightish = endX > M.l + iw * .72;
+  const endLbl = '<text class="end-txt" x="' + (rightish ? endX - 9 : endX + 9).toFixed(1)
+               + '" y="' + (endY - 9).toFixed(1) + '" text-anchor="' + (rightish ? 'end' : 'start') + '">'
+               + nf(last[1],1) + ' km</text>';
+
+  /* Verlauf von der Spitze bis zur Grundlinie -- feste Koordinaten,
+     damit der Farbverlauf nicht springt, wenn die Kurve waechst. */
+  const topY = Y(Math.max(...pts.map(p => p[1])));
+
+  $('live-fig').innerHTML =
+    '<svg viewBox="0 0 ' + W + ' ' + H + '" id="live-svg" role="img" '
+  + 'aria-label="Verlauf der gelaufenen Kilometer: ' + nf(last[1],1) + ' Kilometer nach '
+  + Math.floor(last[0]/60) + ' Stunden ' + (last[0]%60) + ' Minuten">'
+  + '<defs><linearGradient id="kmFill" gradientUnits="userSpaceOnUse" '
+  + 'x1="0" y1="' + topY.toFixed(1) + '" x2="0" y2="' + (M.t+ih) + '">'
+  + '<stop offset="0%"   stop-color="#FF7A18" stop-opacity=".42"/>'
+  + '<stop offset="55%"  stop-color="#FF7A18" stop-opacity=".16"/>'
+  + '<stop offset="100%" stop-color="#FF7A18" stop-opacity="0"/>'
+  + '</linearGradient></defs>'
+  + '<g class="grid">' + grid + '</g>'
+  + tline
+  + '<path class="area" d="' + area + '"/>'
+  + '<path class="line" d="' + line + '"/>'
+  + '<line class="cross hidden" id="live-cross" y1="' + M.t + '" y2="' + (M.t+ih) + '"/>'
+  + '<circle class="hit hidden" id="live-hit" r="4.5"/>'
+  + '<circle class="end" cx="' + endX.toFixed(1) + '" cy="' + endY.toFixed(1) + '" r="4"/>'
+  + endLbl
+  + '<g class="axis">' + xlab + ylab + '</g>'
+  + '<rect id="live-catch" x="' + M.l + '" y="' + M.t + '" width="' + iw + '" height="' + ih
+  + '" fill="transparent" style="cursor:crosshair"/>'
+  + '</svg>'
+  + '<div class="live-tip hidden" id="live-tip"></div>';
+
+  setText($('live-chart-note'), 'Punkt alle 5 Minuten');
+  bindChartHover(pts, X, Y, M, iw, W);
+
+  /* Tabellenansicht -- damit die Kurve nicht die einzige Quelle ist */
+  /* (Aufbau siehe unten) */
+  const rows = pts.filter((_,i) => i % Math.max(1, Math.ceil(pts.length/24)) === 0 || i === pts.length-1);
+  $('live-table-wrap').innerHTML =
+    '<table><thead><tr><th>Nach</th><th>Kilometer</th></tr></thead><tbody>'
+  + rows.map(p => '<tr><td>' + Math.floor(p[0]/60) + ':' + pad(p[0]%60) + ' h</td><td>'
+      + nf(p[1],1) + ' km</td></tr>').join('')
+  + '</tbody></table>';
+}
+
+/* Fadenkreuz mit Werteanzeige -- funktioniert mit Maus und Finger */
+function bindChartHover(pts, X, Y, M, iw, W){
+  const svg   = $('live-svg'), catcher = $('live-catch');
+  const cross = $('live-cross'), dot = $('live-hit'), tip = $('live-tip');
+  if (!svg || !catcher) return;
+
+  function hide(){
+    cross.classList.add('hidden'); dot.classList.add('hidden'); tip.classList.add('hidden');
+  }
+
+  function move(ev){
+    const box = svg.getBoundingClientRect();
+    const sx  = (ev.clientX - box.left) / box.width * W;    // Bildschirm -> SVG-Koordinaten
+
+    /* naechstliegender Datenpunkt */
+    let best = pts[0], bd = Infinity;
+    for (const p of pts){
+      const d = Math.abs(X(p[0]) - sx);
+      if (d < bd){ bd = d; best = p; }
+    }
+    const px = X(best[0]), py = Y(best[1]);
+
+    cross.setAttribute('x1', px); cross.setAttribute('x2', px); cross.classList.remove('hidden');
+    dot.setAttribute('cx', px);   dot.setAttribute('cy', py);   dot.classList.remove('hidden');
+
+    tip.innerHTML = '<b>' + nf(best[1],1) + ' km</b><span>nach ' + Math.floor(best[0]/60)
+                  + ':' + pad(best[0]%60) + ' h</span>';
+    tip.classList.remove('hidden');
+    const left = px / W * box.width;
+    tip.style.left = Math.max(0, Math.min(box.width - tip.offsetWidth, left - tip.offsetWidth/2)) + 'px';
+  }
+
+  catcher.addEventListener('pointermove', move);
+  catcher.addEventListener('pointerdown', move);
+  catcher.addEventListener('pointerleave', hide);
+  catcher.addEventListener('pointercancel', hide);
+}
+
+/* ================================================================
+   13 · ALS APP SPEICHERBAR (Service Worker)
+   Sorgt dafuer, dass die Seite auch bei wackliger Verbindung
+   laedt und sich aufs Startdisplay legen laesst.
+   Die Seite selbst wird immer zuerst aus dem Netz geholt --
+   eine Aenderung auf GitHub ist also sofort sichtbar.
+   ================================================================ */
+
+if ('serviceWorker' in navigator &&
+    (location.protocol === 'https:' || location.hostname === 'localhost')){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+/* ================================================================
+   14 · START
+   ================================================================ */
+
+paintHome();
+paintEvents();
+paintDisciplines();
+paintVods();
+paintTrainings();
+paintGuestbook();
+paintPlan();
+paintLegal();
+paintJsonLd();
+
+/* Teaser: Kasten auf der Startansicht, und der Hinweis unter dem
+   Eintreten-Knopf -- aber nur, wenn der Vorspann auch wirklich kommt. */
+if (Teaser.moeglich){
+  Teaser.zeigen();
+  const t = CONFIG.teaser || {};
+  const q = new URLSearchParams(location.search);
+  if (t.intro && q.get('teaser') !== '0' && !Teaser.schonGesehen()){
+    $('entry-hint').classList.remove('hidden');
+  }
+}
+
+render();
+tick();
+if (LIVE.url) fetchLive();     /* Endstand auch nach dem Lauf zeigen */
+</script>
+
+</body>
+</html>
