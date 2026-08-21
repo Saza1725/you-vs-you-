@@ -712,6 +712,58 @@ body{
 }
 .badge.g{ border-color:var(--green); color:var(--green) }
 .badge.d{ border-color:rgba(255,255,255,.3); color:var(--dim) }
+.badge.n{ border-color:var(--signal); color:var(--signal) }
+
+/* ============================================================
+   NEUIGKEITEN
+   Zwei Darstellungen aus derselben Liste: eine kurze auf der
+   Startseite, eine vollstaendige unter #neues.
+   ============================================================ */
+.news-home{ margin:clamp(1.6rem,3vw,2.6rem) 0 0 }
+.news-kopf{
+  display:flex; align-items:baseline; justify-content:space-between;
+  gap:1rem; flex-wrap:wrap;
+  padding-bottom:.5em; border-bottom:.15rem solid var(--hairline);
+  margin-bottom:clamp(.7rem,1.4vw,1.1rem);
+}
+.news-kopf h2{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  font-size:clamp(1.1rem,2.2vw,1.6rem); letter-spacing:.05em;
+}
+.news-alle{
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.68rem,1vw,.8rem); letter-spacing:.14em;
+  color:var(--accent); text-decoration:none; white-space:nowrap;
+}
+.news-alle:hover,.news-alle:focus-visible{ color:var(--accent-hi) }
+
+.news-liste{ display:grid; gap:.1rem }
+.news-item{
+  display:block; text-decoration:none; color:inherit;
+  background:var(--panel); border:.1rem solid var(--hairline);
+  border-left:.28rem solid var(--accent);
+  padding:clamp(.85rem,1.7vw,1.15rem) clamp(1rem,2vw,1.4rem);
+}
+.news-item + .news-item{ border-top:0 }
+a.news-item:hover, a.news-item:focus-visible{ border-left-color:var(--signal) }
+.news-item.ist-neu{ border-left-color:var(--signal) }
+.n-zeile{
+  display:flex; align-items:center; gap:.7em; flex-wrap:wrap;
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.62rem,.95vw,.74rem); letter-spacing:.15em; color:var(--dim);
+  margin-bottom:.45em;
+}
+.n-neu{ color:var(--signal); border:.09rem solid var(--signal); padding:.1em .55em .15em }
+.n-titel{
+  font-family:'Oswald',sans-serif; font-weight:600;
+  font-size:clamp(1rem,1.7vw,1.2rem); line-height:1.2; text-wrap:balance;
+}
+.n-text{ margin-top:.4em; color:var(--dim); font-size:clamp(.9rem,1.3vw,1rem); line-height:1.5 }
+.n-mehr{
+  display:inline-block; margin-top:.5em; color:var(--accent);
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.62rem,.95vw,.74rem); letter-spacing:.14em;
+}
 
 .stat-row{
   display:grid; gap:clamp(.6rem,1.2vw,1rem);
@@ -1363,6 +1415,10 @@ body{
       <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5.5 9.5V20h13V9.5"/></svg></span>
       <span class="txt"><span class="m-head">Start</span><span class="m-sub">Countdown zum nächsten Event</span></span>
     </a>
+    <a class="menu-item hidden" id="menu-news" href="#neues">
+      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h11v13H4z"/><path d="M15 9h4a1.5 1.5 0 0 1 1.5 1.5v7A1.5 1.5 0 0 1 19 19h-4"/><line x1="6.5" y1="9.5" x2="12.5" y2="9.5"/><line x1="6.5" y1="12.5" x2="12.5" y2="12.5"/><line x1="6.5" y1="15.5" x2="10" y2="15.5"/></svg></span>
+      <span class="txt"><span class="m-head">Neuigkeiten</span><span class="m-sub" id="menu-news-sub">Was es Neues gibt</span></span>
+    </a>
     <a class="menu-item" href="#events">
       <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="16" rx="2"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span>
       <span class="txt"><span class="m-head">Events</span><span class="m-sub">Termine · Daten · Ergebnisse</span></span>
@@ -1451,6 +1507,15 @@ body{
         <span class="arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l7 7-7 7"/></svg></span>
       </a>
     </div>
+
+    <!-- ---- Neuigkeiten, Kurzfassung ---- -->
+    <section class="news-home hidden" id="news-home" aria-labelledby="news-home-head">
+      <div class="news-kopf">
+        <h2 id="news-home-head">Was es Neues gibt</h2>
+        <a class="news-alle" href="#neues">Alle Neuigkeiten</a>
+      </div>
+      <div class="news-liste" id="news-home-liste"></div>
+    </section>
 
     <!-- ---- Wer ihr seid ---- -->
     <section class="ihr" aria-labelledby="ihr-head">
@@ -1587,6 +1652,20 @@ body{
 </section>
 
 <!-- ============ EVENTS ============ -->
+<section class="view" id="view-news">
+  <div class="sub-head">
+    <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
+    <h2>Neuigkeiten</h2>
+    <button class="head-menu" type="button" data-menu aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Menü
+    </button>
+  </div>
+  <div class="sub-body"><div class="inner">
+    <div class="news-liste" id="news-alle-liste"></div>
+  </div></div>
+</section>
+
 <section class="view" id="view-events">
   <div class="sub-head">
     <button class="back-btn" type="button" data-back><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5l-7 7 7 7"/></svg>Zurück</button>
@@ -1912,6 +1991,50 @@ const CONFIG = {
      raceHours = reine Wettkampfdauer -- steuert den Fortschrittsbalken
                  und den Kalendereintrag (fehlt der Wert, gilt hours)
      ============================================================== */
+  /* ==============================================================
+     NEUIGKEITEN
+
+     Neuen Eintrag oben einfuegen. Sortiert wird automatisch nach
+     Datum, aeltere rutschen von selbst nach unten.
+
+       datum    Pflicht, Form JJJJ-MM-TT.
+                Ein Datum in der Zukunft wird noch NICHT angezeigt --
+                so kann man Eintraege vorbereiten.
+       titel    Pflicht, kurz. Eine Zeile.
+       text     Ein bis drei Saetze. Was ist passiert, warum zaehlt es.
+       ziel     Optional, z.B. "#events" oder eine ganze Adresse.
+       zielText Optional, Beschriftung des Verweises.
+
+     neuTage       so viele Tage traegt ein Eintrag die Marke NEU
+     aufStartseite so viele stehen auf der Startseite, der Rest unter
+                   "Alle Neuigkeiten"
+
+     Leere Liste = der ganze Bereich verschwindet, auch der Menuepunkt.
+     ============================================================== */
+  news: {
+    neuTage:       21,
+    aufStartseite: 3,
+    liste: [
+      {
+        datum: "2026-08-21",
+        titel: "Die Seite läuft jetzt ohne Musik",
+        text:  "Die Hintergrundmusik ist vorerst abgeschaltet. Der Grund ist einfach: Es soll nur Musik laufen, an der die Rechte geklärt sind. Sobald ein lizenzierter Titel da ist, kommt der Ton zurück — zusammen mit dem Vorspann."
+      },
+      {
+        datum: "2026-08-20",
+        titel: "Madrid steht im Kalender",
+        text:  "Nach Werl kommt der nächste Termin: 100 Kilometer beim Mammutmarsch Madrid, 24 Stunden Zeitlimit, rund 3.000 Höhenmeter. Das Ticket liegt vor.",
+        ziel:  "#events",
+        zielText: "Zum Eventeintrag"
+      },
+      {
+        datum: "2026-08-19",
+        titel: "Die Live-Anzeige ist angeschlossen",
+        text:  "Die Uhr am Handgelenk steuert ab sofort die Anzeige im Stream. Kilometer, Tempo und Zeit kommen direkt von der Aktivität — nicht von Hand nachgetragen."
+      }
+    ]
+  },
+
   events: [
     {
       title:  "6H Ultra Werl",
@@ -2183,6 +2306,95 @@ function eventCard(e, isNext){
        + (info ? '<ul style="margin-top:' + (text ? '1em' : '0') + '">' + info + '</ul>' : '')
        + (facts ? '<div class="stat-row">' + facts + '</div>' : '')
        + '</article>';
+}
+
+/* ---- Neuigkeiten ----
+   Eine Quelle, zwei Darstellungen. Eintraege mit einem Datum in der
+   Zukunft bleiben unsichtbar, damit man vorschreiben kann. */
+function newsListe(){
+  const n = CONFIG.news || {};
+  const heute = new Date(); heute.setHours(23,59,59,999);
+  return (n.liste || [])
+    .filter(e => e && e.datum && e.titel)
+    .map(e => {
+      const d = new Date(e.datum + 'T12:00:00');
+      return isNaN(d) ? null : Object.assign({}, e, { _d: d });
+    })
+    .filter(e => e && e._d <= heute)
+    .sort((a,b) => b._d - a._d);
+}
+
+function newsDatum(d){
+  return d.toLocaleDateString('de-DE', { day:'2-digit', month:'long', year:'numeric' });
+}
+
+function newsEintrag(e, neuTage){
+  const alterTage = (Date.now() - e._d.getTime()) / 86400000;
+  const istNeu = alterTage <= neuTage;
+
+  const kopf = '<div class="n-zeile">'
+             + (istNeu ? '<span class="n-neu">Neu</span>' : '')
+             + '<span>' + esc(newsDatum(e._d)) + '</span></div>'
+             + '<div class="n-titel">' + esc(e.titel) + '</div>'
+             + (e.text ? '<div class="n-text">' + esc(e.text) + '</div>' : '');
+
+  const klasse = 'news-item' + (istNeu ? ' ist-neu' : '');
+
+  /* Mit Ziel wird der ganze Eintrag anklickbar, ohne bleibt er ein
+     ruhiger Textblock. Fremde Adressen bekommen rel="noopener". */
+  if (e.ziel) {
+    const extern = /^https?:/i.test(e.ziel);
+    return '<a class="' + klasse + '" href="' + esc(e.ziel) + '"'
+         + (extern ? ' target="_blank" rel="noopener noreferrer"' : '') + '>'
+         + kopf
+         + '<span class="n-mehr">' + esc(e.zielText || 'Mehr dazu') + ' &rsaquo;</span>'
+         + '</a>';
+  }
+  return '<div class="' + klasse + '">' + kopf + '</div>';
+}
+
+function paintNews(){
+  const n = CONFIG.news || {};
+  const alle = newsListe();
+  const neuTage = Number(n.neuTage) > 0 ? Number(n.neuTage) : 21;
+  const wieViele = Number(n.aufStartseite) > 0 ? Number(n.aufStartseite) : 3;
+
+  const kasten = $('news-home');
+  const menue  = $('menu-news');
+
+  /* Ohne Eintraege verschwindet der Bereich vollstaendig -- kein leerer
+     Kasten, kein toter Menuepunkt. */
+  if (!alle.length) {
+    if (kasten) kasten.classList.add('hidden');
+    if (menue)  menue.classList.add('hidden');
+    /* Auch leeren: sonst stuende bei einem spaeteren Aufruf noch der
+       alte Inhalt in der Ansicht #neues. */
+    if ($('news-home-liste')) $('news-home-liste').innerHTML = '';
+    if ($('news-alle-liste')) $('news-alle-liste').innerHTML = '';
+    return;
+  }
+
+  if (kasten) kasten.classList.remove('hidden');
+  if (menue)  menue.classList.remove('hidden');
+
+  const kurz = alle.slice(0, wieViele);
+  const hl = $('news-home-liste');
+  if (hl) hl.innerHTML = kurz.map(e => newsEintrag(e, neuTage)).join('');
+
+  const al = $('news-alle-liste');
+  if (al) al.innerHTML = alle.map(e => newsEintrag(e, neuTage)).join('');
+
+  /* Der Verweis "Alle Neuigkeiten" lohnt nur, wenn es mehr gibt. */
+  const verweis = document.querySelector('#news-home .news-alle');
+  if (verweis) verweis.classList.toggle('hidden', alle.length <= kurz.length);
+
+  const sub = $('menu-news-sub');
+  if (sub) {
+    const frisch = alle.filter(e => (Date.now() - e._d.getTime()) / 86400000 <= neuTage).length;
+    sub.textContent = frisch
+      ? (frisch === 1 ? 'Ein neuer Eintrag' : frisch + ' neue Einträge')
+      : 'Was es Neues gibt';
+  }
 }
 
 function paintEvents(){
@@ -2697,6 +2909,7 @@ function paintJsonLd(){
 
 const VIEWS = {
   home:'view-home', stream:'view-stream', events:'view-events',
+  neues:'view-news',
   disziplin:'view-disziplin', streams:'view-streams',
   training:'view-training',
   /* "kontakt" ist der heutige Name. "gaestebuch" bleibt als Deckname
@@ -2874,7 +3087,7 @@ function tick(){
 
   /* Ist ein Event vorbei und ein neues rueckt nach, wird alles neu aufgebaut */
   if (EVT !== before){
-    paintHome(); paintEvents();
+    paintHome(); paintNews(); paintEvents();
     removePlayer();
   }
 
@@ -3580,6 +3793,7 @@ if ('serviceWorker' in navigator &&
    ================================================================ */
 
 paintHome();
+paintNews();
 paintEvents();
 paintDisciplines();
 paintVods();
