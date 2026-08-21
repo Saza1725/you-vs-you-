@@ -1912,9 +1912,11 @@ const CONFIG = {
     tage:  14
   },
 
-  /* AUS, solange keine lizenzierte Musik vorliegt. Wieder "musik.mp3"
-     eintragen, sobald ein Titel mit Lizenz da ist. */
-  music:         "",               // leer lassen = kein Ton
+  /* Eigene Erzeugung ueber Artlist AI (Lyria 3 Pro), Lizenz 8yiMMP,
+     Lizenzzeitraum 21.08.2026 bis 20.09.2026. Ausschnitt aus
+     "Tempest of Triumph", 8 Takte, nahtlose Schleife, -26 LUFS.
+     Lizenzurkunde liegt unter Home Info/Lizenzen/. */
+  music:         "musik.mp3",      // leer lassen = kein Ton
   musicVolume:   0.35,
   counterKey:    "you_vs_you_online_besuche_7f3a2",   // leer = Zaehler aus
 
@@ -2717,6 +2719,10 @@ function paintLegal(){
     + '<p>Alle Fotos und Videos auf dieser Seite stammen aus eigener Aufnahme. Sie unterliegen '
     + 'dem deutschen Urheberrecht; Vervielfältigung und Verbreitung außerhalb der Grenzen des '
     + 'Urheberrechts bedürfen der schriftlichen Zustimmung.</p>'
+    + '<h3>Musik</h3>'
+    + '<p>Die Hintergrundmusik wurde vom Betreiber selbst mit dem KI-Werkzeug von '
+    + '<strong>Artlist</strong> erzeugt und ist über eine Artlist-Lizenz abgedeckt. '
+    + 'Eine Weiterverwendung der Aufnahme außerhalb dieser Seite ist nicht gestattet.</p>'
     + '<p>Wer auf einer Aufnahme abgebildet ist und mit der Veröffentlichung nicht einverstanden '
     + 'ist, erhält auf formlose Nachricht an '
     + '<a href="mailto:' + mail + '">' + mail + '</a> eine unverzügliche Entfernung oder '
