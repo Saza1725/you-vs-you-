@@ -199,6 +199,66 @@ body{
 .entry-legal a{ color:inherit; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.32); padding-bottom:2px }
 .entry-legal a:hover,
 .entry-legal a:focus-visible{ color:var(--white); border-bottom-color:var(--accent) }
+#entry .entry-hint{
+  font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.56rem,.95vw,.72rem); letter-spacing:.26em;
+  color:rgba(255,255,255,.5); margin-top:-.6rem;
+}
+
+/* ============================================================
+   TEASER ALS VORSPANN
+   ============================================================ */
+
+#intro{
+  position:fixed; inset:0; z-index:200; background:#000;
+  display:flex; align-items:center; justify-content:center;
+  opacity:1; transition:opacity .55s ease;
+}
+#intro.weg{ opacity:0; pointer-events:none }
+#intro video{
+  width:100%; height:100%; object-fit:contain; background:#000; display:block;
+}
+.intro-leiste{
+  position:absolute; left:0; right:0; bottom:0; height:.22rem;
+  background:rgba(255,255,255,.14);
+}
+.intro-leiste i{ display:block; height:100%; width:0; background:var(--accent) }
+.intro-skip{
+  position:absolute; right:clamp(1rem,3vw,2.4rem); bottom:clamp(1.6rem,4vw,3rem);
+  display:inline-flex; align-items:center; gap:.6em;
+  padding:.7em 1.3em .75em;
+  background:rgba(8,5,15,.62); border:.1rem solid rgba(255,255,255,.42);
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  color:var(--white); cursor:pointer;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.66rem,1.1vw,.82rem); letter-spacing:.2em;
+  transition:border-color .2s ease, background .2s ease;
+}
+.intro-skip:hover, .intro-skip:focus-visible{
+  border-color:var(--accent); background:rgba(8,5,15,.85);
+}
+.intro-skip svg{ width:1.05em; height:1.05em; flex:none }
+.intro-skip svg path{ stroke:var(--accent); stroke-width:2.4; fill:none;
+  stroke-linecap:round; stroke-linejoin:round }
+
+/* ---------- Teaser auf der Startansicht ---------- */
+.teaser-box{
+  width:min(52rem,100%); margin:clamp(1.4rem,3vw,2.4rem) auto 0;
+  border:.1rem solid var(--hairline); border-top:.35rem solid var(--accent);
+  background:var(--panel);
+}
+.teaser-box video{
+  display:block; width:100%; height:auto; aspect-ratio:16/9;
+  background:#000; object-fit:contain;
+}
+.teaser-box .tb-fuss{
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  padding:.85rem clamp(.9rem,2vw,1.3rem) .95rem;
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(.6rem,1vw,.76rem); letter-spacing:.16em;
+}
+.teaser-box .tb-fuss span{ color:rgba(255,255,255,.72) }
+.teaser-box .tb-fuss b{ color:var(--accent); font-weight:600 }
 
 /* ============================================================
    MENUE
@@ -1256,6 +1316,8 @@ body{
     Eintreten
   </button>
 
+  <div class="entry-hint hidden" id="entry-hint">mit Ton &middot; 30 Sekunden</div>
+
   <!-- Pflichtangaben muessen ohne Umweg erreichbar sein. Deshalb stehen
        sie schon hier und nicht erst hinter dem Eintritt. -->
   <div class="entry-legal hidden" id="entry-legal">
@@ -1263,6 +1325,20 @@ body{
     <span id="entry-sep" class="hidden">·</span>
     <a href="#datenschutz">Datenschutz</a>
   </div>
+</div>
+
+<!-- ============ TEASER ALS VORSPANN ============
+     Liegt ueber allem, schwarz, randlos. Wird nur eingeblendet, wenn
+     CONFIG.teaser.intro steht und das Abspielen wirklich anlaeuft --
+     scheitert es, geht es ohne Umweg auf die Startansicht weiter. -->
+<div id="intro" class="hidden" aria-hidden="true">
+  <video id="intro-video" playsinline preload="none"
+         disablepictureinpicture controlslist="nodownload noplaybackrate"></video>
+  <div class="intro-leiste"><i id="intro-fortschritt"></i></div>
+  <button class="intro-skip" id="intro-skip" type="button">
+    Überspringen
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 6l6 6-6 6"/></svg>
+  </button>
 </div>
 
 <!-- ============ MENUE ============ -->
@@ -1349,6 +1425,13 @@ body{
   </div>
 
   <div>
+
+    <!-- Teaser zum Nachsehen. Laedt nichts, bevor jemand darauf drueckt. -->
+    <div class="teaser-box hidden" id="teaser-box">
+      <video id="teaser-video" controls playsinline preload="none"
+             disablepictureinpicture controlslist="nodownload noplaybackrate"></video>
+      <div class="tb-fuss"><span id="teaser-titel">Teaser</span><b>Mit Ton</b></div>
+    </div>
 
     <div class="nav-tiles">
       <a class="tile" id="tile-stream" href="#stream">
@@ -1730,7 +1813,29 @@ const CONFIG = {
     lapKm:    7.5,
     staleSec: 180
   },
-  music:         "musik.mp3",       // leer lassen = kein Ton
+  /* ==============================================================
+     TEASER
+     file    = Dateiname ohne Endung. Erwartet werden <file>.mp4
+               und <file>.jpg als Vorschaubild, beide neben index.html.
+     intro   = true  -> laeuft gross nach dem Klick auf "Eintreten",
+               mit Ton, die Hintergrundmusik bleibt dabei aus.
+     tage    = so viele Tage wird er demselben Besucher nicht noch
+               einmal vorgespielt. 0 = jedes Mal.
+     Leer lassen (file:"") = kein Teaser, alles wie vorher.
+     Zum Pruefen: ?teaser=1 erzwingt ihn, ?teaser=0 ueberspringt ihn.
+     ============================================================== */
+  teaser: {
+    /* AUS, solange die Tonspur nicht lizenziert ist. Wieder "teaser"
+       eintragen, dann laeuft der Vorspann nach dem Eintreten. */
+    file:  "",
+    titel: "6H Ultra Werl — der Teaser",
+    intro: true,
+    tage:  14
+  },
+
+  /* AUS, solange keine lizenzierte Musik vorliegt. Wieder "musik.mp3"
+     eintragen, sobald ein Titel mit Lizenz da ist. */
+  music:         "",               // leer lassen = kein Ton
   musicVolume:   0.35,
   counterKey:    "you_vs_you_online_besuche_7f3a2",   // leer = Zaehler aus
 
@@ -2885,7 +2990,114 @@ function enterSite(withMusic){
   setTimeout(() => $('entry').classList.add('hidden'), 750);
 }
 
-$('enter-btn').addEventListener('click', () => enterSite(true));
+/* ================================================================
+   9b · TEASER
+   Einmal als Vorspann nach dem Eintreten, danach jederzeit auf der
+   Startansicht. Beides aus derselben Datei, beides ohne fremden Dienst.
+   ================================================================ */
+
+const Teaser = (function(){
+  const t = CONFIG.teaser || {};
+  const aus = { moeglich:false, vorspann(){ return false; }, zeigen(){} };
+  if (!t.file) return aus;
+
+  const MP4  = t.file + '.mp4';
+  const BILD = t.file + '.jpg';
+  const KEY  = 'vvy-teaser:' + t.file;
+
+  const q      = new URLSearchParams(location.search);
+  const zwang  = q.get('teaser');           // "1" erzwingt, "0" ueberspringt
+  const tage   = Number(t.tage);
+  const frist  = (isFinite(tage) ? tage : 14) * 86400000;
+
+  function schonGesehen(){
+    if (zwang === '1') return false;
+    if (!frist) return false;
+    try{
+      const v = Number(localStorage.getItem(KEY));
+      return isFinite(v) && v > 0 && (Date.now() - v) < frist;
+    }catch(_){ return false; }
+  }
+  function merken(){
+    try{ localStorage.setItem(KEY, String(Date.now())); }catch(_){}
+  }
+
+  /* ---- Kasten auf der Startansicht ---- */
+  function zeigen(){
+    const box = $('teaser-box'), vid = $('teaser-video');
+    if (!box || !vid) return;
+    vid.src = MP4;
+    vid.poster = BILD;
+    if (t.titel) $('teaser-titel').textContent = t.titel;
+    box.classList.remove('hidden');
+    /* Laeuft der Teaser, wird die Hintergrundmusik leise ausgeblendet --
+       zwei Tonspuren gleichzeitig will niemand hoeren. */
+    vid.addEventListener('play', () => { if (window.fadeOutMusic) window.fadeOutMusic(); });
+  }
+
+  /* ---- Vorspann ----
+     Gibt true zurueck, wenn er wirklich laeuft. Nur dann bleibt die
+     Musik aus und der Eintritt wartet auf das Ende. */
+  function vorspann(fertig){
+    if (!t.intro || zwang === '0' || schonGesehen()) return false;
+
+    const huelle = $('intro'), vid = $('intro-video'),
+          bar = $('intro-fortschritt'), skip = $('intro-skip');
+    if (!huelle || !vid) return false;
+
+    let beendet = false;
+    function schliessen(){
+      if (beendet) return;
+      beendet = true;
+      merken();
+      try{ vid.pause(); }catch(_){}
+      huelle.classList.add('weg');
+      setTimeout(() => {
+        huelle.classList.add('hidden');
+        huelle.setAttribute('aria-hidden','true');
+        vid.removeAttribute('src'); vid.load();      // Speicher freigeben
+      }, 600);
+      document.removeEventListener('keydown', taste);
+      if (typeof fertig === 'function') fertig();
+    }
+    function taste(e){ if (e.key === 'Escape' || e.key === 'Enter') schliessen(); }
+
+    vid.src = MP4;
+    vid.poster = BILD;
+    vid.addEventListener('ended', schliessen);
+    vid.addEventListener('error', schliessen);
+    vid.addEventListener('timeupdate', () => {
+      if (vid.duration) bar.style.width = (vid.currentTime / vid.duration * 100) + '%';
+    });
+    skip.addEventListener('click', schliessen);
+    document.addEventListener('keydown', taste);
+
+    huelle.classList.remove('hidden');
+    huelle.setAttribute('aria-hidden','false');
+
+    /* Der Klick auf "Eintreten" ist die Nutzergeste -- damit darf der
+       Ton an sein. Verweigert der Browser es trotzdem (Stromsparmodus,
+       strenge Einstellung), geht es sofort ohne Vorspann weiter. */
+    const p = vid.play();
+    if (p && typeof p.catch === 'function'){
+      p.catch(() => {
+        console.warn('[You vs You] Vorspann wurde vom Browser abgelehnt — Seite laeuft normal weiter.');
+        schliessen();
+      });
+    }
+    setTimeout(() => skip.focus({ preventScroll:true }), 400);
+    return true;
+  }
+
+  return { moeglich:true, vorspann, zeigen, schonGesehen };
+})();
+
+$('enter-btn').addEventListener('click', () => {
+  /* Erst versuchen, den Vorspann zu starten. Laeuft er, bleibt die Musik
+     aus und die Seite wird im Hintergrund schon aufgebaut. */
+  const laeuft = Teaser.vorspann(() => { Music.show(); });
+  enterSite(!laeuft);
+});
 
 /* Geteilte Links wie .../#events sollen direkt dort landen und nicht
    hinter der Eintrittsseite haengen bleiben. Ohne Klick keine Musik --
@@ -3376,6 +3588,18 @@ paintGuestbook();
 paintPlan();
 paintLegal();
 paintJsonLd();
+
+/* Teaser: Kasten auf der Startansicht, und der Hinweis unter dem
+   Eintreten-Knopf -- aber nur, wenn der Vorspann auch wirklich kommt. */
+if (Teaser.moeglich){
+  Teaser.zeigen();
+  const t = CONFIG.teaser || {};
+  const q = new URLSearchParams(location.search);
+  if (t.intro && q.get('teaser') !== '0' && !Teaser.schonGesehen()){
+    $('entry-hint').classList.remove('hidden');
+  }
+}
+
 render();
 tick();
 if (LIVE.url) fetchLive();     /* Endstand auch nach dem Lauf zeigen */
