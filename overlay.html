@@ -308,6 +308,19 @@ const CONFIG = {
 const q = new URLSearchParams(location.search);
 const $ = id => document.getElementById(id);
 
+/* Welcher Platz in der Bruecke? 1 = Sascha, 2 = Partner.
+   Ohne Angabe immer 1 -- damit bleibt alles Bestehende gleich.
+   Aufruf: overlay.html?wer=2 */
+const WER    = q.get('wer') === '2' ? 2 : 1;
+const ANHANG = WER === 2 ? '?wer=2' : '';
+
+/* Bau-Kennung im Fenstertitel. In Moblin unsichtbar -- dort wird nur
+   der Seiteninhalt gezeigt -- im Browser-Tab aber sofort ablesbar.
+   Damit laesst sich ohne Zweifel pruefen, welche Fassung geladen ist
+   und welchen Platz sie abfragt. */
+const BAU = '2026-08-23-platz2';
+document.title = 'Race Overlay - Platz ' + WER + ' - Bau ' + BAU;
+
 const SENDET  = CONFIG.mode === 'send' && !CONFIG.demo;
 const HOLT    = CONFIG.mode === 'show' && !CONFIG.demo;
 const STALE_MS = 45000;
@@ -444,7 +457,12 @@ const Feed = (function(){
   if (!HOLT) return aus;
   if (!CONFIG.liveUrl){ melde('err','AUS — live= fehlt im Link'); return aus; }
 
-  const url = String(CONFIG.liveUrl).replace(/\/+$/,'') + '/';
+  const url = String(CONFIG.liveUrl).replace(/\/+$/,'') + '/' + ANHANG;
+  /* Der Zeitstempel gegen den Zwischenspeicher haengt hinten an.
+     Steht schon ein ?wer=2 in der Adresse, muss das Trennzeichen ein
+     & sein -- ein zweites ? wuerde den Wert zu "2?t=..." machen und
+     die Bruecke faende Platz 2 nicht mehr. */
+  const TRENNER = url.indexOf('?') >= 0 ? '&' : '?';
   let holAt = 0, busy = false, n = 0;
 
   /* Die Uhr am Handgelenk gibt den Start vor.
@@ -467,7 +485,7 @@ const Feed = (function(){
     if (busy) return;
     busy = true;
     try{
-      const r = await fetch(url + '?t=' + Date.now(), { cache:'no-store' });
+      const r = await fetch(url + TRENNER + 't=' + Date.now(), { cache:'no-store' });
       const j = await r.json();
       const d = j && j.data;
       if (d){
@@ -531,7 +549,8 @@ const Live = (function(){
   if (!CONFIG.liveUrl || !CONFIG.liveKey){
     melde('err','Notbetrieb ohne Versand — live= oder key= fehlt'); return aus;
   }
-  const url = String(CONFIG.liveUrl).replace(/\/+$/,'');
+  /* Auch der Notweg schreibt auf den gewaehlten Platz. */
+  const url = String(CONFIG.liveUrl).replace(/\/+$/,'') + '/' + ANHANG;
   const hist = []; let letzte = 0, histMin = -1, busy = false;
   return { tick(){
     const now = Date.now();
@@ -560,6 +579,15 @@ const Live = (function(){
 
 /* ---- Demo ---- */
 if (CONFIG.demo){
+  /* Zum Ausprobieren soll sofort etwas laufen. Liegt der Rennstart noch
+     in der Zukunft -- am 23.08. sind das drei Wochen -- blieben sonst
+     alle Werte auf null und der Countdown stuende still. Fuer die
+     Vorfuehrung wird der Start deshalb auf "vor zehn Minuten" gelegt.
+     Betrifft ausschliesslich den Demo-Betrieb, nichts wird gespeichert. */
+  if (Date.now() < raceStartMs){
+    raceStartMs = Date.now() - 600000;
+    startFest   = true;
+  }
   setInterval(() => {
     if (Date.now() < raceStartMs) return;
     state.meter += 2.6 + Math.random();
