@@ -274,7 +274,11 @@ body.stale .zeile:not(#z-uhr) .unit{ opacity:.40; transition:opacity .6s ease }
      &debug=1     Diagnose-Schild
      &demo=1      erfundene Werte zum Ausprobieren
      &training=1  Aufnahmebetrieb: alles beginnt bei null, Zeit zaehlt
-                  hoch, kein Streckenziel, kein LIVE-Kennzeichen
+                  hoch, kein Streckenziel, kein LIVE-Kennzeichen.
+                  Die Uhr steht still, bis die Fenix eine laufende
+                  Aktivitaet meldet -- dann startet sie mit deren Wert
+     &sofort=1    nur im Aufnahmebetrieb: Uhr laeuft schon beim Laden,
+                  ohne auf die Fenix zu warten
      &wer=2       zweiter Platz in der Bruecke (Partner)
    ================================================================ */
 
@@ -336,7 +340,16 @@ const ANHANG = WER === 2 ? '?wer=2' : '';
    der Seiteninhalt gezeigt -- im Browser-Tab aber sofort ablesbar.
    Damit laesst sich ohne Zweifel pruefen, welche Fassung geladen ist
    und welchen Platz sie abfragt. */
-const BAU = '2026-08-23-platz2';
+/* ---- Wann faengt die Uhr an zu laufen? ----
+   Im Rennbetrieb sofort -- dort ist der Start ein fester Zeitpunkt.
+   Im Aufnahmebetrieb NICHT: dort soll das Overlay schon im Bild
+   stehen, waehrend alles auf null steht, und erst anspringen, wenn
+   auf der Fenix eine Aktivitaet laeuft. Genau dann meldet die Bruecke
+   eine Laufzeit, und syncStart() unten setzt den Startpunkt.
+   Mit &sofort=1 laesst sich das Warten ueberspringen. */
+let laeuftLos = !CONFIG.training || q.get('sofort') === '1' || CONFIG.demo;
+
+const BAU = '2026-08-24-wartet';
 document.title = 'Race Overlay - ' + (CONFIG.training ? 'Aufnahme' : 'Rennen') +
                  ' - Platz ' + WER + ' - Bau ' + BAU;
 
@@ -503,6 +516,7 @@ const Feed = (function(){
     if (!isFinite(e) || e <= 0) return;
     raceStartMs = Date.now() - e;
     startFest = true;
+    laeuftLos = true;                 /* jetzt darf die Uhr loslaufen */
     ankerSchreiben(raceStartMs);
     melde('ok','Start von der Uhr uebernommen');
   }
@@ -614,6 +628,7 @@ if (CONFIG.demo){
     raceStartMs = Date.now() - 600000;
     startFest   = true;
   }
+  laeuftLos = true;
   setInterval(() => {
     if (Date.now() < raceStartMs) return;
     state.meter += 2.6 + Math.random();
@@ -629,7 +644,9 @@ if (CONFIG.demo){
    ================================================================ */
 function zeichne(){
   const now = Date.now();
-  const el  = Math.max(0, now - raceStartMs);
+  /* Solange die Uhr wartet, bleibt die Laufzeit bei null -- und mit ihr
+     alles, was aus ihr berechnet wird (Restzeit, Durchschnittstempo). */
+  const el  = laeuftLos ? Math.max(0, now - raceStartMs) : 0;
 
   if (CONFIG.durationH > 0){
     const rest = Math.max(0, CONFIG.durationH*3600000 - el);
