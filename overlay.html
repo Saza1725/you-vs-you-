@@ -273,6 +273,9 @@ body.stale .zeile:not(#z-uhr) .unit{ opacity:.40; transition:opacity .6s ease }
      &wx=51.5547,7.9139   Ort fuers Wetter
      &debug=1     Diagnose-Schild
      &demo=1      erfundene Werte zum Ausprobieren
+     &training=1  Aufnahmebetrieb: alles beginnt bei null, Zeit zaehlt
+                  hoch, kein Streckenziel, kein LIVE-Kennzeichen
+     &wer=2       zweiter Platz in der Bruecke (Partner)
    ================================================================ */
 
 const CONFIG = {
@@ -289,7 +292,8 @@ const CONFIG = {
   introAudio:  "",
   introKicker: "Live",
   demo:        false,
-  debug:       false
+  debug:       false,
+  training:    false
 };
 
 (function(){
@@ -303,6 +307,20 @@ const CONFIG = {
   if (q.has('demo'))     CONFIG.demo  = q.get('demo')  !== '0';
   if (q.has('debug'))    CONFIG.debug = q.get('debug') !== '0';
   CONFIG.mode = CONFIG.mode === 'send' ? 'send' : 'show';
+
+  /* ---- Aufnahmebetrieb ----
+     Fuer eigene Aufnahmen ohne Livestream. Alles beginnt bei null:
+     die Zeit zaehlt hoch statt rueckwaerts, es gibt kein Streckenziel
+     und kein Renndatum -- der Start ist der Augenblick des Ladens.
+     Wer einen Wert anders haben will, haengt ihn einfach zusaetzlich
+     an; ausdruecklich Gesetztes gewinnt gegen die Voreinstellung. */
+  if (q.has('training') && q.get('training') !== '0'){
+    CONFIG.training    = true;
+    CONFIG.durationH   = q.has('duration')  ? CONFIG.durationH   : 0;
+    CONFIG.targetKm    = q.has('target')    ? CONFIG.targetKm    : 0;
+    CONFIG.raceStartAt = q.has('racestart') ? CONFIG.raceStartAt : '';
+    CONFIG.title       = q.has('title')     ? CONFIG.title       : 'Training';
+  }
 })();
 
 const q = new URLSearchParams(location.search);
@@ -319,7 +337,8 @@ const ANHANG = WER === 2 ? '?wer=2' : '';
    Damit laesst sich ohne Zweifel pruefen, welche Fassung geladen ist
    und welchen Platz sie abfragt. */
 const BAU = '2026-08-23-platz2';
-document.title = 'Race Overlay - Platz ' + WER + ' - Bau ' + BAU;
+document.title = 'Race Overlay - ' + (CONFIG.training ? 'Aufnahme' : 'Rennen') +
+                 ' - Platz ' + WER + ' - Bau ' + BAU;
 
 const SENDET  = CONFIG.mode === 'send' && !CONFIG.demo;
 const HOLT    = CONFIG.mode === 'show' && !CONFIG.demo;
@@ -347,7 +366,11 @@ function ankerLesen(){
 }
 function ankerSchreiben(ms){ try{ localStorage.setItem(SKEY, String(ms)); }catch(_){} }
 
-if (q.get('reset') === '1'){ try{ localStorage.removeItem(SKEY); }catch(_){} }
+if (q.get('reset') === '1' || CONFIG.training){
+  /* Im Aufnahmebetrieb wird der gemerkte Startpunkt bewusst verworfen.
+     Sonst haenge die naechste Aufnahme an der Zeit der vorherigen. */
+  try{ localStorage.removeItem(SKEY); }catch(_){}
+}
 else {
   const gemerkt = ankerLesen();
   if (gemerkt !== null){ raceStartMs = gemerkt; startFest = true; }
@@ -359,7 +382,10 @@ const feed  = { pace:null, apace:null, pAge:null, ok:false };
 
 /* ---- Anzeige einrichten ---- */
 if (q.get('hoch') === '1')      document.body.classList.add('hoch');
-if (q.get('livebadge') === '0') $('k-live').classList.add('aus');
+/* Eine Aufnahme ist nicht live -- das Kennzeichen waere schlicht
+   unwahr. Mit &livebadge=1 laesst es sich trotzdem einschalten. */
+if (q.get('livebadge') === '0' || (CONFIG.training && q.get('livebadge') !== '1'))
+  $('k-live').classList.add('aus');
 if (q.get('signet') === '0')    $('k-signet').classList.add('aus');
 if (CONFIG.debug)               $('dbg').classList.remove('hidden');
 $('k-titel').textContent = CONFIG.title;
