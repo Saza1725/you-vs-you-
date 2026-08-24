@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>You vs You - Zwischenkarte</title>
+<!--
+  ================================================================
+  YOU VS YOU -- Zwischenkarte fuer den Stream
+  Bau: 2026-08-24-karte
+
+  Vollbildkarte als Browser-Quelle in cloud-obs. Deckt die Luecke,
+  wenn zwischen zwei Sendern gewechselt wird, und dient als Start-,
+  Pause- und Schlussbild.
+
+  Ueber die Adresse steuerbar:
+    ?k=wechsel   Kamerawechsel laeuft (Voreinstellung)
+    ?k=start     gleich geht es los
+    ?k=pause     kurze Pause
+    ?k=ende      Schlussbild
+    ?k=technik   technische Stoerung
+    ?titel=...   eigener Titel, ersetzt alles
+    ?unter=...   eigene zweite Zeile
+    ?wer=1|2     nennt, auf wen gewechselt wird
+    ?uhr=0       Uhrzeit unten ausblenden
+    ?ruhig=1     ohne Bewegung (fuer schwache Geraete)
+
+  Die Karte laeuft ohne Netz und ohne Daten. Sie holt nichts nach.
+  ================================================================
+-->
+<style>
+:root{
+  --glut:    #FF7A18;
+  --glut-hi: #FFB25E;
+  --weiss:   #FFFFFF;
+  --dim:     rgba(255,255,255,.58);
+  --grund:   #0A0605;
+}
+*{ margin:0; padding:0; box-sizing:border-box }
+html,body{
+  width:100vw; height:100vh; overflow:hidden;
+  background:var(--grund); color:var(--weiss);
+  font-family:'Rajdhani','Arial Narrow',Arial,sans-serif;
+  display:flex; align-items:center; justify-content:center;
+}
+/* Ein ruhiger Lichtschein, damit das Bild nicht tot wirkt */
+.schein{
+  position:fixed; inset:-30%;
+  background:radial-gradient(closest-side, rgba(255,122,24,.16), transparent 70%);
+  animation:atmen 7s ease-in-out infinite;
+}
+@keyframes atmen{ 0%,100%{ transform:scale(1); opacity:.55 } 50%{ transform:scale(1.18); opacity:1 } }
+body.ruhig .schein{ animation:none; opacity:.7 }
+
+.mitte{ position:relative; text-align:center; padding:0 8vw; max-width:1600px }
+
+.klein{
+  font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+  letter-spacing:.42em; font-size:clamp(.8rem,1.5vw,1.3rem);
+  color:var(--glut); margin-bottom:clamp(1rem,2.4vh,2.2rem);
+}
+h1{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  letter-spacing:.02em; line-height:1.04;
+  font-size:clamp(2.6rem,7.4vw,7.4rem);
+}
+.balken{
+  width:clamp(120px,16vw,300px); height:.34rem; background:var(--glut);
+  margin:clamp(1.2rem,3vh,2.6rem) auto;
+}
+.unter{
+  font-size:clamp(1rem,2.3vw,2rem); color:var(--dim); font-weight:500;
+  letter-spacing:.06em;
+}
+/* Drei Punkte, die zeigen: es geht weiter */
+.punkte{ margin-top:clamp(1.6rem,4vh,3.4rem); display:flex; gap:.9rem; justify-content:center }
+.punkte i{
+  width:.85rem; height:.85rem; border-radius:50%; background:var(--glut);
+  opacity:.25; animation:takt 1.4s ease-in-out infinite;
+}
+.punkte i:nth-child(2){ animation-delay:.22s }
+.punkte i:nth-child(3){ animation-delay:.44s }
+@keyframes takt{ 0%,100%{ opacity:.22; transform:translateY(0) } 45%{ opacity:1; transform:translateY(-.45rem) } }
+body.ruhig .punkte i{ animation:none; opacity:.6 }
+body.ohnepunkte .punkte{ display:none }
+
+/* Wortmarke unten rechts, wie im Overlay */
+.signet{
+  position:fixed; right:clamp(1.4rem,3vw,3.4rem); bottom:clamp(1.2rem,3vh,3rem);
+  text-align:right;
+}
+.wortmarke{
+  font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
+  letter-spacing:.05em; font-size:clamp(1.1rem,2.3vw,2.1rem);
+}
+.wortmarke em{ font-style:italic; color:var(--glut); font-weight:700 }
+.mail{
+  font-family:'Oswald',sans-serif; font-weight:600; letter-spacing:.12em;
+  font-size:clamp(.62rem,1.1vw,.92rem); color:var(--dim); margin-top:.25rem;
+}
+.uhr{
+  position:fixed; left:clamp(1.4rem,3vw,3.4rem); bottom:clamp(1.2rem,3vh,3rem);
+  font-family:'Oswald',sans-serif; font-weight:600; letter-spacing:.14em;
+  font-size:clamp(.9rem,1.8vw,1.5rem); color:var(--dim);
+}
+body.ohneuhr .uhr{ display:none }
+</style>
+</head>
+<body>
+<div class="schein"></div>
+
+<div class="mitte">
+  <div class="klein" id="k-klein">You vs You</div>
+  <h1 id="k-titel">Kamerawechsel</h1>
+  <div class="balken"></div>
+  <div class="unter" id="k-unter">Gleich geht es weiter</div>
+  <div class="punkte"><i></i><i></i><i></i></div>
+</div>
+
+<div class="signet">
+  <div class="wortmarke">You <em>vs</em> You</div>
+  <div class="mail">you-vs-you.online</div>
+</div>
+<div class="uhr" id="k-uhr">--:--</div>
+
+<script>
+const q = new URLSearchParams(location.search);
+const $ = id => document.getElementById(id);
+
+const KARTEN = {
+  wechsel: { klein:'You vs You',      titel:'Kamerawechsel',   unter:'Gleich geht es weiter' },
+  start:   { klein:'6H Ultra Werl',   titel:'Gleich geht es los', unter:'Der Stream startet in Kürze' },
+  pause:   { klein:'You vs You',      titel:'Kurze Pause',     unter:'Wir sind gleich zurück' },
+  ende:    { klein:'You vs You',      titel:'Danke fürs Dabeisein', unter:'you-vs-you.online' },
+  technik: { klein:'You vs You',      titel:'Kleine Störung',  unter:'Wir arbeiten daran' }
+};
+
+const k = KARTEN[q.get('k')] || KARTEN.wechsel;
+$('k-klein').textContent = q.get('klein') || k.klein;
+$('k-titel').textContent = q.get('titel') || k.titel;
+
+let unten = q.get('unter') || k.unter;
+const wer = q.get('wer');
+if (!q.has('unter') && (wer === '1' || wer === '2') && (q.get('k') || 'wechsel') === 'wechsel'){
+  unten = wer === '1' ? 'Weiter mit Sascha' : 'Weiter mit dem zweiten Läufer';
+}
+$('k-unter').textContent = unten;
+
+if (q.get('ruhig') === '1') document.body.classList.add('ruhig');
+if (q.get('k') === 'ende')  document.body.classList.add('ohnepunkte');
+if (q.get('uhr') === '0')   document.body.classList.add('ohneuhr');
+
+function tick(){
+  $('k-uhr').textContent = new Date().toLocaleTimeString('de-DE',
+      { hour:'2-digit', minute:'2-digit', timeZone:'Europe/Berlin' });
+}
+tick(); setInterval(tick, 10000);
+
+document.title = 'You vs You - ' + $('k-titel').textContent + ' - Bau 2026-08-24-karte';
+</script>
+</body>
+</html>
