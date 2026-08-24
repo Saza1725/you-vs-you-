@@ -273,10 +273,17 @@ body.stale .zeile:not(#z-uhr) .unit{ opacity:.40; transition:opacity .6s ease }
      &wx=51.5547,7.9139   Ort fuers Wetter
      &debug=1     Diagnose-Schild
      &demo=1      erfundene Werte zum Ausprobieren
-     &training=1  Aufnahmebetrieb: alles beginnt bei null, Zeit zaehlt
-                  hoch, kein Streckenziel, kein LIVE-Kennzeichen.
-                  Die Uhr steht still, bis die Fenix eine laufende
-                  Aktivitaet meldet -- dann startet sie mit deren Wert
+     &training=1  Aufnahmebetrieb erzwingen: alles beginnt bei null,
+                  Zeit zaehlt hoch, kein Streckenziel, kein
+                  LIVE-Kennzeichen. Die Uhr steht still, bis die Fenix
+                  eine laufende Aktivitaet meldet -- dann startet sie
+                  mit deren Wert
+     &training=0  Rennbetrieb erzwingen
+
+     OHNE beides entscheidet die Datei selbst, nach der Uhr:
+     ab 12 Stunden vor dem Start bis 2 Stunden nach dem Ende ist
+     Rennbetrieb, sonst Aufnahmebetrieb. In cloud-obs steht damit
+     ein einziges Mal die nackte Adresse -- nichts umzustellen.
      &sofort=1    nur im Aufnahmebetrieb: Uhr laeuft schon beim Laden,
                   ohne auf die Fenix zu warten
      &wer=2       zweiter Platz in der Bruecke (Partner)
@@ -317,8 +324,47 @@ const CONFIG = {
      die Zeit zaehlt hoch statt rueckwaerts, es gibt kein Streckenziel
      und kein Renndatum -- der Start ist der Augenblick des Ladens.
      Wer einen Wert anders haben will, haengt ihn einfach zusaetzlich
-     an; ausdruecklich Gesetztes gewinnt gegen die Voreinstellung. */
-  if (q.has('training') && q.get('training') !== '0'){
+     an; ausdruecklich Gesetztes gewinnt gegen die Voreinstellung.
+
+     ---- Der Selbstschalter (24.08.2026) ----
+     Frueher musste die Adresse in cloud-obs von Hand umgestellt werden:
+     vor einer Aufnahme ?training=1 anhaengen, danach wieder entfernen.
+     Sechs Szenen, zwei Handgriffe je Szene, und wehe man vergisst den
+     Rueckweg -- dann laeuft am Renntag die Trainingsanzeige.
+
+     Deshalb entscheidet die Datei es jetzt selbst, nach der Uhr:
+
+       Rennfenster  = von VORLAUF_H Stunden vor dem Start
+                      bis NACHLAUF_H Stunden nach dem Ende
+       innerhalb    -> Rennbetrieb
+       ausserhalb   -> Aufnahmebetrieb
+
+     Damit steht in cloud-obs ein einziges Mal die nackte Adresse, und
+     sie stimmt das ganze Jahr. ?training=1 und ?training=0 gewinnen
+     weiterhin gegen den Selbstschalter -- fuer den Fall, dass jemand
+     es doch von Hand haben will. */
+  const VORLAUF_H  = 12;
+  const NACHLAUF_H = 2;
+
+  let aufnahme;
+  if (q.has('training')){
+    aufnahme = q.get('training') !== '0';        /* ausdruecklich gesetzt */
+  } else if (CONFIG.demo){
+    aufnahme = false;                            /* Vorfuehrung zeigt das Rennbild */
+  } else {
+    const start = CONFIG.raceStartAt ? new Date(CONFIG.raceStartAt).getTime() : 0;
+    if (!start || !isFinite(start)){
+      aufnahme = true;                           /* kein Renndatum -> Aufnahme */
+    } else {
+      const von = start - VORLAUF_H * 3600000;
+      const bis = start + ((CONFIG.durationH > 0 ? CONFIG.durationH : 6) + NACHLAUF_H) * 3600000;
+      const jetzt = Date.now();
+      aufnahme = (jetzt < von) || (jetzt > bis);
+    }
+  }
+  CONFIG.schalter = q.has('training') ? 'Adresse' : (CONFIG.demo ? 'Vorfuehrung' : 'Uhr');
+
+  if (aufnahme){
     CONFIG.training    = true;
     CONFIG.durationH   = q.has('duration')  ? CONFIG.durationH   : 0;
     CONFIG.targetKm    = q.has('target')    ? CONFIG.targetKm    : 0;
@@ -349,7 +395,7 @@ const ANHANG = WER === 2 ? '?wer=2' : '';
    Mit &sofort=1 laesst sich das Warten ueberspringen. */
 let laeuftLos = !CONFIG.training || q.get('sofort') === '1' || CONFIG.demo;
 
-const BAU = '2026-08-24-startbeleg';
+const BAU = '2026-08-24-selbstschalter';
 document.title = 'Race Overlay - ' + (CONFIG.training ? 'Aufnahme' : 'Rennen') +
                  ' - Platz ' + WER + ' - Bau ' + BAU;
 
@@ -595,6 +641,8 @@ const Feed = (function(){
                     'uhrSek: ' + (d.uhrSek == null ? 'fehlt' : d.uhrSek) +
                     ' · quelle: ' + (d.quelle || '?') +
                     '\nUhr laeuft: ' + (laeuftLos ? 'ja' : 'NEIN, wartet') +
+                    '\nBetrieb: ' + (CONFIG.training ? 'Aufnahme' : 'Rennen') +
+                    ' (' + CONFIG.schalter + ')' +
                     (j.err ? '\nBruecke: '+j.err : ''));
       } else {
         feed.ok = false;
