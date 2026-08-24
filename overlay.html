@@ -349,7 +349,7 @@ const ANHANG = WER === 2 ? '?wer=2' : '';
    Mit &sofort=1 laesst sich das Warten ueberspringen. */
 let laeuftLos = !CONFIG.training || q.get('sofort') === '1' || CONFIG.demo;
 
-const BAU = '2026-08-24-wartet';
+const BAU = '2026-08-24-startbeleg';
 document.title = 'Race Overlay - ' + (CONFIG.training ? 'Aufnahme' : 'Rennen') +
                  ' - Platz ' + WER + ' - Bau ' + BAU;
 
@@ -504,19 +504,67 @@ const Feed = (function(){
   const TRENNER = url.indexOf('?') >= 0 ? '&' : '?';
   let holAt = 0, busy = false, n = 0;
 
-  /* Die Uhr am Handgelenk gibt den Start vor.
-     Sobald die Bruecke eine laufende Stoppuhr meldet, wird der
-     Countdown genau dorthin gelegt -- egal, was im Zeitplan steht.
-     Das geschieht genau einmal. Stoppe ich die Aktivitaet spaeter
-     versehentlich und starte sie neu, faellt die Rennzeit dadurch
-     nicht auf null zurueck. */
+  /* ================================================================
+     WANN LAEUFT AUF DER FENIX WIRKLICH ETWAS?
+     ================================================================
+     Der Wert `elapsed` allein beweist gar nichts. LiveTrack liefert
+     Punkte, sobald die Sitzung existiert -- das Telefon meldet seinen
+     Standort auch ohne gestartete Aktivitaet. `elapsed` ist dann
+     schlicht das Alter der Sitzung und waechst Sekunde um Sekunde.
+
+     Am 24.08. sprang die Anzeige deshalb 40 Sekunden nach dem
+     Eintragen des Links an, obwohl die Uhr aus war.
+
+     Zwei Belege werden ab jetzt verlangt, einer davon muss zutreffen:
+
+       1. `uhrSek` -- die Stoppuhr der Fenix. Liefert Garmin sie,
+          ist die Sache eindeutig, und die Anzeige uebernimmt genau
+          diesen Wert. Video und Handgelenk zeigen dieselbe Zahl.
+
+       2. Die Strecke waechst. Steht keine Stoppuhr zur Verfuegung,
+          zaehlt nur echte Bewegung: mehr als 20 m gegenueber dem
+          ersten gesehenen Stand.
+
+     Solange keiner der beiden zutrifft, bleibt alles auf null. */
+  let kmErste = null;
+
+  function laeuftAufDerUhr(d){
+    const uhr = Number(d && d.uhrSek);
+    if (isFinite(uhr) && uhr > 0) return 'uhr';
+
+    const km = Number(d && d.km);
+    if (!isFinite(km)) return '';
+    if (kmErste === null){ kmErste = km; return ''; }
+    if (km > kmErste + 0.02) return 'strecke';
+    return '';
+  }
+
   function syncStart(d){
-    if (!SYNC || startFest || d.elapsed == null) return;
-    const e = Number(d.elapsed);
-    if (!isFinite(e) || e <= 0) return;
-    raceStartMs = Date.now() - e;
+    if (!SYNC || startFest) return;
+
+    const beleg = laeuftAufDerUhr(d);
+    if (!beleg) return;
+
+    let versatz = 0;
+    const uhr = Number(d.uhrSek);
+    if (isFinite(uhr) && uhr > 0){
+      /* Die Stoppuhr der Fenix -- der genaue Wert. */
+      versatz = uhr * 1000;
+    } else {
+      /* Keine Stoppuhr, aber die Strecke waechst: die Aktivitaet
+         laeuft also. `elapsed` waere jetzt hoechstens ungefaehr --
+         es enthaelt auch die Wartezeit vor dem Start. Nur wenn schon
+         eine nennenswerte Strecke da ist, ist es brauchbar; sonst
+         faengt die Anzeige hier bei null an. Ein paar Sekunden zu
+         spaet ist besser als Minuten zu frueh. */
+      const e = Number(d.elapsed);
+      versatz = (Number(d.km) > 0.30 && isFinite(e) && e > 0) ? e : 0;
+    }
+
+    raceStartMs = Date.now() - versatz;
     startFest = true;
     laeuftLos = true;                 /* jetzt darf die Uhr loslaufen */
+    melde('ok','Start erkannt ueber: ' + beleg);
     ankerSchreiben(raceStartMs);
     melde('ok','Start von der Uhr uebernommen');
   }
@@ -538,9 +586,16 @@ const Feed = (function(){
         feed.apace = d.apace != null ? Number(d.apace) : null;
         feed.pAge  = j.pAge != null ? Number(j.pAge) : null;
         feed.ok = true; state.fix = Date.now(); n++;
+        /* Im Diagnose-Schild steht ab jetzt auch, WORAUF die Anzeige
+           wartet und was Garmin wirklich liefert. Damit laesst sich in
+           zehn Sekunden ablesen, statt zu raten. */
         melde('ok', 'OK ' + komma(state.meter/1000,2) + ' km\n' +
                     (feed.pAge!=null ? Math.round(feed.pAge/1000)+' s alt' : 'ohne Zeitstempel') +
-                    ' · ' + n + '. Abruf' + (j.err ? '\nBruecke: '+j.err : ''));
+                    ' · ' + n + '. Abruf\n' +
+                    'uhrSek: ' + (d.uhrSek == null ? 'fehlt' : d.uhrSek) +
+                    ' · quelle: ' + (d.quelle || '?') +
+                    '\nUhr laeuft: ' + (laeuftLos ? 'ja' : 'NEIN, wartet') +
+                    (j.err ? '\nBruecke: '+j.err : ''));
       } else {
         feed.ok = false;
         melde('err', 'noch keine Werte' + (j && j.err ? '\n' + j.err : ''));
