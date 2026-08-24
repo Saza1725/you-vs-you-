@@ -13,9 +13,20 @@
      werden bewusst NICHT angefasst.
 
    Nach jeder Aenderung an den Dateien die Zahl in CACHE erhoehen.
+   Das ist keine Kosmetik: Bilder kommen zuerst aus dem Cache. Wer
+   die Seite schon einmal offen hatte, bekommt sonst ewig die alten
+   Bilder, egal was auf GitHub liegt. Zahl erhoeht -> alter Cache
+   wird beim naechsten Besuch geloescht, alles wird neu geholt.
+
+   v3, 24.08.2026 -- Markenzeichen auf der Socke aus start.jpg,
+   start.webp, start-hoch.jpg, start-hoch.webp und og.jpg entfernt.
+   Zahl erhoeht, damit die alten Bilder aus dem Browserspeicher fliegen.
+
+   v2, 21.08.2026 -- gesaeuberte Startbilder, Hochformat und die
+   beiden Figuren aufgenommen.
    ================================================================ */
 
-const CACHE = 'vvy-v1';
+const CACHE = 'vvy-v3';
 
 const ASSETS = [
   './',
@@ -23,7 +34,14 @@ const ASSETS = [
   './404.html',
   './start.webp',
   './start.jpg',
+  './start-hoch.webp',
+  './start-hoch.jpg',
   './og.jpg',
+  './teaser.jpg',
+  /* Die beiden Begleiter. Nur die kleinen WebP -- die PNG sind der
+     Rueckfall fuer alte Browser und werden bei Bedarf nachgeladen. */
+  './figur-links.webp',
+  './figur-rechts.webp',
   './favicon.svg',
   './apple-touch-icon.png',
   './icon-192.png',
