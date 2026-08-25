@@ -213,10 +213,20 @@ body{
   position:fixed; inset:0; z-index:200; background:#000;
   display:flex; align-items:center; justify-content:center;
   opacity:1; transition:opacity .55s ease;
+  overflow:hidden;
 }
 #intro.weg{ opacity:0; pointer-events:none }
+/* Der Vorspann ist hochkant. Auf einem breiten Bildschirm blieben
+   sonst zwei schwarze Balken. Das Standbild fuellt sie unscharf und
+   abgedunkelt -- kostet nichts, weil teaser.jpg ohnehin geladen wird. */
+#intro::before{
+  content:''; position:absolute; inset:-4%;
+  background:url(teaser.jpg) center/cover no-repeat;
+  filter:blur(34px) brightness(.38) saturate(.85);
+}
 #intro video{
-  width:100%; height:100%; object-fit:contain; background:#000; display:block;
+  position:relative; z-index:1;
+  width:100%; height:100%; object-fit:contain; background:transparent; display:block;
 }
 .intro-leiste{
   position:absolute; left:0; right:0; bottom:0; height:.22rem;
@@ -1372,7 +1382,7 @@ a.news-item:hover, a.news-item:focus-visible{ border-left-color:var(--signal) }
     Eintreten
   </button>
 
-  <div class="entry-hint hidden" id="entry-hint">mit Ton &middot; 30 Sekunden</div>
+  <div class="entry-hint hidden" id="entry-hint">mit Ton &middot; 45 Sekunden</div>
 
   <!-- Pflichtangaben muessen ohne Umweg erreichbar sein. Deshalb stehen
        sie schon hier und nicht erst hinter dem Eintritt. -->
@@ -1918,6 +1928,7 @@ const CONFIG = {
     file:  "teaser",
     titel: "You vs You — der Teaser",
     intro: true,
+    stand: "2026-08-25",      /* aendern -> alle sehen ihn wieder */
     tage:  14
   },
 
@@ -3236,7 +3247,11 @@ const Teaser = (function(){
 
   const MP4  = t.file + '.mp4';
   const BILD = t.file + '.jpg';
-  const KEY  = 'vvy-teaser:' + t.file;
+  /* Der Merker traegt den Stand mit. Ohne ihn bekaeme den neuen
+     Vorspann niemand zu sehen, der den alten innerhalb der Frist
+     schon gesehen hat -- der Dateiname bleibt ja "teaser".
+     Also: bei jedem neuen Teaser auch CONFIG.teaser.stand aendern. */
+  const KEY  = 'vvy-teaser:' + t.file + (t.stand ? ':' + t.stand : '');
 
   const q      = new URLSearchParams(location.search);
   const zwang  = q.get('teaser');           // "1" erzwingt, "0" ueberspringt

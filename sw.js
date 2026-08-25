@@ -18,6 +18,11 @@
    Bilder, egal was auf GitHub liegt. Zahl erhoeht -> alter Cache
    wird beim naechsten Besuch geloescht, alles wird neu geholt.
 
+   v4, 25.08.2026 -- neuer Teaser: teaser.mp4 ist jetzt hochkant
+   (1080x1832, 44 s, eigene Musik), teaser.jpg neu. Ohne erhoehte
+   Zahl saehe jeder, der die Seite schon offen hatte, weiter das
+   alte Vorschaubild.
+
    v3, 24.08.2026 -- Markenzeichen auf der Socke aus start.jpg,
    start.webp, start-hoch.jpg, start-hoch.webp und og.jpg entfernt.
    Zahl erhoeht, damit die alten Bilder aus dem Browserspeicher fliegen.
@@ -26,7 +31,7 @@
    beiden Figuren aufgenommen.
    ================================================================ */
 
-const CACHE = 'vvy-v3';
+const CACHE = 'vvy-v4';
 
 const ASSETS = [
   './',
