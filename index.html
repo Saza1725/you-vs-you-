@@ -719,6 +719,85 @@ body{
 .badge.n{ border-color:var(--signal); color:var(--signal) }
 
 /* ============================================================
+   DIE BEIDEN FIGUREN
+   Drei Lagen, in dieser Reihenfolge:
+     1  sitzend  -- unsichtbar, genau ueber den Koerpern im Startbild
+     2  stehend  -- auf den Buchstaben, Arme verschraenkt, mit Sprechblase
+     3  Ecke     -- klein unten, als Begleiter fuer den Rest des Besuchs
+   Bewegt wird mit einer Ueberblendung auf transform, nicht mit
+   Bildfolgen -- so laesst sich Ziel 2 und 3 nacheinander ansteuern.
+   ============================================================ */
+#figuren{
+  position:fixed; inset:0; z-index:120;
+  pointer-events:none; overflow:hidden;
+  opacity:0; visibility:hidden;
+}
+#figuren.an{ opacity:1; visibility:visible }
+/* Sobald sie unten stehen, rutschen sie unter Tonschalter (80)
+   und Menue (90) -- sonst waeren beide verdeckt und unklickbar. */
+#figuren.eck{ z-index:78 }
+#figuren figure{
+  position:absolute; margin:0; opacity:0;
+  transform-origin:0 0;              /* Pflicht: sonst wandert das Ziel beim Skalieren */
+  will-change:transform,opacity;
+  transition:transform var(--dauer,1150ms) cubic-bezier(.22,.9,.24,1),
+             opacity 420ms ease;
+}
+#figuren figure.da{ opacity:1 }
+#figuren img{
+  display:block; width:100%; height:100%; object-fit:contain;
+  object-position:bottom center;
+  filter:drop-shadow(0 .35rem 1rem rgba(0,0,0,.6));
+}
+/* Glutkante beim Aufstehen -- brennt kurz auf und verglimmt. */
+#figuren figure.da img{ animation:fig-glut 1500ms ease-out both }
+@keyframes fig-glut{
+  0%   { filter:drop-shadow(0 0 2.4rem rgba(255,122,24,.95)) brightness(1.55) }
+  45%  { filter:drop-shadow(0 0 1.4rem rgba(255,122,24,.55)) brightness(1.14) }
+  100% { filter:drop-shadow(0 .35rem 1rem rgba(0,0,0,.6)) brightness(1) }
+}
+
+/* ---- Der Schleier ueber dem sitzenden Koerper ----
+   Wenn die stehende Figur davor steht, sieht man sonst beide
+   gleichzeitig -- den Sitzenden und den Stehenden. Ein weicher
+   Fleck aus Glut und Dunkel loescht den Sitzenden waehrend des
+   Aufrichtens aus. */
+#figuren .schleier{
+  position:absolute; opacity:0; pointer-events:none;
+  transition:opacity 900ms ease;
+  background:
+    radial-gradient(closest-side, rgba(255,122,24,.30), rgba(255,122,24,0) 72%),
+    radial-gradient(closest-side, rgba(8,5,15,.94) 38%, rgba(8,5,15,.55) 66%, rgba(8,5,15,0) 100%);
+  filter:blur(10px);
+}
+#figuren.auf .schleier{ opacity:1 }
+
+/* ---- Die Sprechblase ---- */
+#fig-blase{
+  position:absolute; max-width:min(62vw,24rem);
+  padding:.85rem 1.1rem;
+  background:rgba(8,5,15,.9); border:.12rem solid var(--accent);
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  clip-path:polygon(.9rem 0, 100% 0, 100% calc(100% - .9rem), calc(100% - .9rem) 100%, 0 100%, 0 .9rem);
+  font-family:'Rajdhani',sans-serif; font-weight:600;
+  font-size:clamp(.92rem,1.7vw,1.15rem); line-height:1.35;
+  color:var(--paper); letter-spacing:.01em;
+  opacity:0; transform:translateY(.5rem) scale(.97);
+  transition:opacity 460ms ease, transform 460ms cubic-bezier(.22,.9,.24,1);
+}
+#fig-blase b{ color:var(--accent); font-weight:700 }
+#fig-blase.an{ opacity:1; transform:none }
+
+/* Wer weniger Bewegung eingestellt hat, bekommt keine Reise:
+   Die beiden stehen sofort an ihrem Platz und blenden nur auf. */
+@media (prefers-reduced-motion: reduce){
+  #figuren figure{ transition:opacity 420ms ease !important }
+  #figuren figure.da img{ animation:none !important;
+                          filter:drop-shadow(0 .35rem 1rem rgba(0,0,0,.6)) }
+  #fig-blase{ transition:opacity 300ms ease !important; transform:none !important }
+}
+
+/* ============================================================
    NEUIGKEITEN
    Zwei Darstellungen aus derselben Liste: eine kurze auf der
    Startseite, eine vollstaendige unter #neues.
@@ -1451,6 +1530,16 @@ a.news-item:hover, a.news-item:focus-visible{ border-left-color:var(--signal) }
   </div>
 </nav>
 
+<!-- Die beiden Begleiter. Bleiben leer und unsichtbar, solange
+     CONFIG.figuren.an auf false steht oder die Bilder fehlen. -->
+<div id="figuren" aria-hidden="true">
+  <div class="schleier" id="fig-schleier-links"></div>
+  <div class="schleier" id="fig-schleier-rechts"></div>
+  <figure id="fig-links"><img id="fig-links-bild" alt=""></figure>
+  <figure id="fig-rechts"><img id="fig-rechts-bild" alt=""></figure>
+  <div id="fig-blase"></div>
+</div>
+
 <!-- ============ START ============ -->
 <section class="view bg-photo" id="view-home">
   <div class="home-top">
@@ -2002,6 +2091,58 @@ const CONFIG = {
      raceHours = reine Wettkampfdauer -- steuert den Fortschrittsbalken
                  und den Kalendereintrag (fehlt der Wert, gilt hours)
      ============================================================== */
+  /* ==============================================================
+     DIE BEIDEN FIGUREN
+
+     Ablauf nach dem Eintreten:
+       1  sie richten sich auf den Buchstaben auf, wo sie sitzen
+       2  eine Sprechblase erscheint
+       3  das Startbild blendet ab, beide gleiten klein in die Ecken
+
+       an       false schaltet alles ab -- kein Bild wird geladen
+       links    Dateiname ohne Endung, erwartet <name>.webp und <name>.png
+       rechts   dasselbe
+
+     sitzQuer / sitzHoch  -- wo die beiden im jeweiligen Startbild sitzen,
+     als Anteil der Bildbreite bzw. -hoehe. Diese Werte sind an
+     start.jpg (1792x1008) und start-hoch.jpg (1327x1008) gemessen.
+     Wird das Startbild neu erzeugt, muessen sie nachgemessen werden.
+
+       x     Mitte der Figur, Anteil der Bildbreite
+       y     Oberkante Kopf, Anteil der Bildhoehe
+       h     Hoehe Kopf bis Schuh, Anteil der Bildhoehe
+
+     aufHoehe   Hoehe der aufgerichteten Figur auf dem Buchstaben,
+                Anteil der BILDhoehe. Mehr als 0.76 schiebt den Kopf
+                aus dem Bild -- die Buchstaben sind riesig.
+     bleibtMs   wie lange das Startbild stehen bleibt, bevor es abblendet
+     stehHoehe  Hoehe der kleinen Figur unten, Anteil der FENSTERhoehe
+     stehRand   Abstand zum linken bzw. rechten Fensterrand
+     blase      Text, Verzoegerung und an welcher Figur er haengt
+     ============================================================== */
+  figuren: {
+    an:     true,
+    links:  "figur-links",
+    rechts: "figur-rechts",
+    sitzQuer: {
+      links:  { x:0.307, y:0.104, h:0.690 },
+      rechts: { x:0.675, y:0.117, h:0.677 }
+    },
+    sitzHoch: {
+      links:  { x:0.240, y:0.104, h:0.690 },
+      rechts: { x:0.737, y:0.117, h:0.677 }
+    },
+    aufHoehe:  0.74,
+    bleibtMs:  3600,
+    stehHoehe: { quer:0.17, hoch:0.13 },
+    stehRand:  0.015,
+    blase: {
+      text:    "<b>Willkommen.</b> Es geht nur um dich.",
+      seite:   "links",
+      nachMs:  1150
+    }
+  },
+
   /* ==============================================================
      NEUIGKEITEN
 
@@ -3219,9 +3360,260 @@ function enterSite(withMusic){
   if (withMusic){ Music.start(); }
   Music.show();
   render();
-  $('entry').classList.add('fade');
-  setTimeout(() => $('entry').classList.add('hidden'), 750);
+  /* Die Choreografie startet NICHT hier. Laeuft der Vorspann, wird
+     die Seite zwar schon im Hintergrund aufgebaut, aber die beiden
+     duerfen sich erst aufrichten, wenn das Video vorbei oder
+     weggeklickt ist -- sonst waere alles gelaufen, bevor man es
+     ueberhaupt sieht. Siehe figurenLos(). */
 }
+
+/* Das Aufstehen samt Sprechblase, danach blendet das Startbild ab.
+   Wird genau einmal gerufen: entweder sofort (kein Vorspann) oder
+   wenn der Vorspann endet. */
+let figurenGelaufen = false;
+function figurenLos(){
+  if (figurenGelaufen) return;
+  figurenGelaufen = true;
+  const wartet = Figuren.start() || 0;
+  setTimeout(() => {
+    $('entry').classList.add('fade');
+    setTimeout(() => $('entry').classList.add('hidden'), 750);
+  }, wartet);
+}
+
+/* ================================================================
+   9a · DIE BEIDEN FIGUREN
+
+   Die Kunst liegt nicht in der Bewegung, sondern im Startpunkt:
+   Die Figuren muessen genau dort beginnen, wo die beiden im
+   Startbild sitzen. Das Bild liegt als CSS-Hintergrund und wird je
+   nach Geraetehaltung anders beschnitten -- deshalb wird die
+   dargestellte Bildflaeche hier nachgerechnet statt geraten.
+   ================================================================ */
+
+const Figuren = (function(){
+  const f = CONFIG.figuren || {};
+  const aus = { start(){ return 0; }, neuMessen(){}, abbauen(){} };
+  if (!f.an || !f.links || !f.rechts) return aus;
+
+  const kasten = $('figuren');
+  const blase  = $('fig-blase');
+  const paare = [
+    { el: $('fig-links'),  bild: $('fig-links-bild'),  name: f.links,
+      schleier: $('fig-schleier-links'),  seite: 'links'  },
+    { el: $('fig-rechts'), bild: $('fig-rechts-bild'), name: f.rechts,
+      schleier: $('fig-schleier-rechts'), seite: 'rechts' }
+  ];
+  if (!kasten || !blase || paare.some(p => !p.el || !p.bild)) return aus;
+
+  /* WebP wo moeglich (85 statt 290 kB je Figur), sonst PNG. */
+  const ENDUNG = (function(){
+    try{
+      return document.createElement('canvas')
+               .toDataURL('image/webp').indexOf('image/webp') === 5 ? '.webp' : '.png';
+    }catch(e){ return '.png'; }
+  })();
+
+  /* Masse der beiden Startbilder. Aendern sie sich, hier nachziehen. */
+  const BILD = { quer: { b:1792, h:1008 }, hoch: { b:1327, h:1008 } };
+
+  const ruhig = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function hochkant(){
+    return window.innerHeight >= window.innerWidth && window.innerWidth < 544;
+  }
+
+  /* Wo liegt das Hintergrundbild tatsaechlich im Fenster?
+     quer  : background-size:cover, zentriert
+     hoch  : background-size:100% auto, oben zentriert */
+  function bildFlaeche(){
+    const vb = window.innerWidth, vh = window.innerHeight;
+    if (hochkant()){
+      const i = BILD.hoch, m = vb / i.b;
+      return { x:0, y:0, b:vb, h:i.h * m, satz:f.sitzHoch };
+    }
+    const i = BILD.quer, m = Math.max(vb / i.b, vh / i.h);
+    const b = i.b * m, h = i.h * m;
+    return { x:(vb - b) / 2, y:(vh - h) / 2, b, h, satz:f.sitzQuer };
+  }
+
+  /* Die drei Lagen einer Figur, alles in Fensterpixeln.
+       sitz  Ausgangsrechteck -- deckt den sitzenden Koerper
+       auf   aufgerichtet auf dem Buchstaben, Fuesse auf derselben Linie
+       eck   klein unten in der Ecke, Fuesse auf der Bildschirmkante */
+  function lagen(p){
+    const fl = bildFlaeche();
+    const vb = window.innerWidth, vh = window.innerHeight;
+    const s  = fl.satz[p.seite];
+    const verh = 0.62;                       /* Breite je Hoehe der Figurenbilder */
+
+    const sitzH = fl.h * s.h;
+    const sitzB = sitzH * verh;
+    const sitzL = fl.x + fl.b * s.x - sitzB / 2;
+    const sitzT = fl.y + fl.h * s.y;
+    const fussY = sitzT + sitzH;             /* darauf stehen sie danach */
+
+    const aufH = fl.h * (f.aufHoehe || 0.74);
+    const aufB = aufH * verh;
+    const aufL = fl.x + fl.b * s.x - aufB / 2;
+    const aufT = fussY - aufH;
+
+    const eckH = vh * (hochkant() ? f.stehHoehe.hoch : f.stehHoehe.quer);
+    const eckB = eckH * verh;
+    const rand = vb * (f.stehRand || 0.015);
+    const eckL = (p.seite === 'links') ? rand : vb - rand - eckB;
+    const eckT = vh - eckH;
+
+    return {
+      sitz: { l:sitzL, t:sitzT, b:sitzB, h:sitzH },
+      auf:  { l:aufL,  t:aufT,  h:aufH,  b:aufB  },
+      eck:  { l:eckL,  t:eckT,  h:eckH,  b:eckB  }
+    };
+  }
+
+  /* transform-origin steht auf 0 0, deshalb wird NICHT durch den
+     Massstab geteilt: erst schieben, dann schrumpfen um diesen Punkt. */
+  function fahre(el, von, nach, ms){
+    const ds = nach.h / von.h;
+    el.style.setProperty('--dauer', ms + 'ms');
+    el.style.transform = 'translate3d(' + (nach.l - von.l).toFixed(1) + 'px,' +
+                                          (nach.t - von.t).toFixed(1) + 'px,0) scale(' +
+                                          ds.toFixed(4) + ')';
+  }
+
+  let lage = 'sitz';       /* sitz -> auf -> eck */
+
+  function setzen(){
+    paare.forEach(p => {
+      const L = lagen(p);
+      p._L = L;
+      p.el.style.left   = L.sitz.l + 'px';
+      p.el.style.top    = L.sitz.t + 'px';
+      p.el.style.width  = L.sitz.b + 'px';
+      p.el.style.height = L.sitz.h + 'px';
+      const ziel = (lage === 'eck') ? L.eck : (lage === 'auf' ? L.auf : L.sitz);
+      fahre(p.el, L.sitz, ziel, 0);
+
+      /* Der Schleier deckt den sitzenden Koerper mit Rand ab. */
+      if (p.schleier){
+        const w = L.sitz.b * 1.62, hh = L.sitz.h * 1.26;
+        p.schleier.style.left   = (L.sitz.l + L.sitz.b / 2 - w / 2) + 'px';
+        p.schleier.style.top    = (L.sitz.t + L.sitz.h / 2 - hh / 2) + 'px';
+        p.schleier.style.width  = w + 'px';
+        p.schleier.style.height = hh + 'px';
+      }
+    });
+    blaseSetzen();
+  }
+
+  /* Wo die Blase steht, haengt vom Format ab:
+
+     quer   neben der gewaehlten Figur, zur Bildmitte hin. Dort ist
+            zwischen den beiden genug Platz.
+     hoch   mittig UNTER dem Bildstreifen. Am Handy stehen die beiden
+            so dicht beieinander, dass eine Blase dazwischen dem
+            anderen ins Gesicht faellt -- darunter ist ohnehin
+            dunkle Flaeche frei. */
+  function blaseSetzen(){
+    if (lage !== 'auf') return;
+    const p = paare.find(x => x.seite === (f.blase && f.blase.seite || 'links')) || paare[0];
+    const L = p._L; if (!L) return;
+    const vb = window.innerWidth, vh = window.innerHeight;
+    const luft = 14;
+
+    blase.style.left = '0px'; blase.style.top = '0px';
+    const bb = blase.getBoundingClientRect();
+    const breite = bb.width || 240, hoehe = bb.height || 60;
+
+    let x, y;
+    if (hochkant()){
+      const fl = bildFlaeche();
+      x = (vb - breite) / 2;
+      y = fl.y + fl.h + Math.min(28, vh * 0.03);
+    } else {
+      x = (p.seite === 'links') ? L.auf.l + L.auf.b - luft
+                                : L.auf.l - breite + luft;
+      y = L.auf.t + L.auf.h * 0.14;
+    }
+
+    if (x + breite > vb - luft) x = vb - luft - breite;
+    if (x < luft) x = luft;
+    if (y < luft) y = luft;
+    if (y + hoehe > vh - luft) y = vh - luft - hoehe;
+
+    blase.style.left = Math.round(x) + 'px';
+    blase.style.top  = Math.round(y) + 'px';
+  }
+
+  let gestartet = false;
+
+  return {
+    /* Wird beim Eintreten gerufen. Gibt zurueck, wie lange das
+       Startbild noch stehen bleiben soll. */
+    start(){
+      if (gestartet) return 0;
+      gestartet = true;
+
+      paare.forEach(p => { p.bild.src = p.name + ENDUNG; });
+      setzen();
+      kasten.classList.add('an');
+
+      if (f.blase && f.blase.text) blase.innerHTML = f.blase.text;
+
+      const bleibt = Math.max(1200, Number(f.bleibtMs) || 3600);
+
+      /* Ohne Bewegungswunsch: direkt in die Ecke, ohne Zwischenhalt. */
+      if (ruhig){
+        lage = 'eck';
+        setzen();
+        paare.forEach(p => p.el.classList.add('da'));
+        kasten.classList.add('eck');
+        return 400;
+      }
+
+      /* 1 · Aufrichten auf den Buchstaben */
+      requestAnimationFrame(() => {
+        lage = 'auf';
+        kasten.classList.add('auf');
+        paare.forEach((p, i) => {
+          p.el.style.transitionDelay = (i * 140) + 'ms';
+          p.el.classList.add('da');
+          fahre(p.el, p._L.sitz, p._L.auf, 1150);
+        });
+        setTimeout(blaseSetzen, 40);
+      });
+
+      /* 2 · Sprechblase */
+      setTimeout(() => { blaseSetzen(); blase.classList.add('an'); },
+                 Math.max(300, Number(f.blase && f.blase.nachMs) || 1150));
+
+      /* 3 · Ab in die Ecken, gleichzeitig mit dem Abblenden */
+      setTimeout(() => {
+        blase.classList.remove('an');
+        kasten.classList.remove('auf');
+        lage = 'eck';
+        paare.forEach((p, i) => {
+          p.el.style.transitionDelay = (i * 90) + 'ms';
+          fahre(p.el, p._L.sitz, p._L.eck, 1000);
+        });
+        setTimeout(() => kasten.classList.add('eck'), 1000);
+      }, bleibt);
+
+      /* Drehen oder Fenstergroesse aendern: neu vermessen, ohne Bewegung */
+      let t;
+      window.addEventListener('resize', () => {
+        clearTimeout(t);
+        t = setTimeout(setzen, 180);
+      }, { passive:true });
+
+      return bleibt;
+    },
+    neuMessen: setzen,
+    /* Nimmt die beiden wieder von der Seite, falls das je gebraucht wird. */
+    abbauen(){ kasten.classList.remove('an'); blase.classList.remove('an'); }
+  };
+})();
 
 /* ================================================================
    9b · TEASER
@@ -3327,9 +3719,16 @@ const Teaser = (function(){
 
 $('enter-btn').addEventListener('click', () => {
   /* Erst versuchen, den Vorspann zu starten. Laeuft er, bleibt die Musik
-     aus und die Seite wird im Hintergrund schon aufgebaut. */
-  const laeuft = Teaser.vorspann(() => { Music.show(); });
+     aus und die Seite wird im Hintergrund schon aufgebaut.
+     Die beiden Figuren richten sich erst auf, wenn das Video vorbei
+     oder weggeklickt ist -- die 500 ms warten das Ausblenden des
+     Videokastens ab, damit das Startbild wieder sichtbar ist. */
+  const laeuft = Teaser.vorspann(() => {
+    Music.show();
+    setTimeout(figurenLos, 500);
+  });
   enterSite(!laeuft);
+  if (!laeuft) figurenLos();
 });
 
 /* Geteilte Links wie .../#events sollen direkt dort landen und nicht
@@ -3340,6 +3739,7 @@ $('enter-btn').addEventListener('click', () => {
   if (key && VIEWS[key] && key !== 'home'){
     $('entry').classList.add('hidden');
     entered = true;
+    figurenGelaufen = true;      /* kein Aufstehen ohne Startbild */
     Music.show();
   }
 })();
