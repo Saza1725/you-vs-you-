@@ -243,12 +243,16 @@ body{
 
 /* ---------- Teaser auf der Startansicht ---------- */
 .teaser-box{
-  width:min(52rem,100%); margin:clamp(1.4rem,3vw,2.4rem) auto 0;
+  /* Hochkant seit 25.08.2026 -- der Teaser ist 1080x1832 (9:16).
+     Deshalb schmaler Kasten statt Kinobreite, sonst waere er auf dem
+     Rechner ueber 90rem hoch. */
+  width:min(23rem,100%); margin:clamp(1.4rem,3vw,2.4rem) auto 0;
   border:.1rem solid var(--hairline); border-top:.35rem solid var(--accent);
   background:var(--panel);
 }
 .teaser-box video{
-  display:block; width:100%; height:auto; aspect-ratio:16/9;
+  display:block; width:100%; height:auto; aspect-ratio:9/16;
+  max-height:80vh;
   background:#000; object-fit:contain;
 }
 .teaser-box .tb-fuss{
@@ -1904,10 +1908,15 @@ const CONFIG = {
      Zum Pruefen: ?teaser=1 erzwingt ihn, ?teaser=0 ueberspringt ihn.
      ============================================================== */
   teaser: {
-    /* Bild, Schnitt und Ton mit Artlist erzeugt, Lizenz 8yiMMP.
+    /* Fassung vom 25.08.2026, hochkant 1080x1832, 44 s.
+       Bild und Schnitt: eigene Aufnahmen vom Backyard-Training.
+       Musik: "Endurance Echoes", mit Artlist AI (Lyria 3 Pro) erzeugt,
+       Lizenz 8yiMMP. Der Einsatz bei Sekunde 32,2 liegt auf dem
+       ersten Bild der schnellen Schnittfolge -- beides laeuft mit
+       172,3 Schlaegen je Minute.
        Leeren String eintragen, um den Vorspann wieder abzuschalten. */
     file:  "teaser",
-    titel: "6H Ultra Werl — der Teaser",
+    titel: "You vs You — der Teaser",
     intro: true,
     tage:  14
   },
@@ -2017,6 +2026,11 @@ const CONFIG = {
     neuTage:       21,
     aufStartseite: 3,
     liste: [
+      {
+        datum: "2026-08-25",
+        titel: "Neuer Teaser — hochkant, mit eigenem Ton",
+        text:  "Der Vorspann ist ersetzt: eigene Aufnahmen vom Backyard-Training, hochkant geschnitten, mit Titelkarte am Anfang und am Ende. Die Musik heißt \u201eEndurance Echoes\u201c und ist eigens dafür erzeugt. Kein Bild und kein Ton stammt von Dritten."
+      },
       {
         datum: "2026-08-21",
         titel: "Der Vorspann ist da — und der Ton gehört mir",
