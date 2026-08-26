@@ -29,9 +29,13 @@
 
    v2, 21.08.2026 -- gesaeuberte Startbilder, Hochformat und die
    beiden Figuren aufgenommen.
+   v5, 26.08.2026 -- Menuepunkt Training mit vier Einheiten. Die
+   beiden Bildkarten kommen mit in den Vorrat, die Filme NICHT --
+   zusammen 11 MB, die soll niemand ungefragt laden. Sie haengen
+   an preload="none" und kommen erst auf Klick.
    ================================================================ */
 
-const CACHE = 'vvy-v4';
+const CACHE = 'vvy-v5';
 
 const ASSETS = [
   './',
@@ -43,6 +47,8 @@ const ASSETS = [
   './start-hoch.jpg',
   './og.jpg',
   './teaser.jpg',
+  './training-sascha-see.jpg',
+  './training-phillip-33.jpg',
   /* Die beiden Begleiter. Nur die kleinen WebP -- die PNG sind der
      Rueckfall fuer alte Browser und werden bei Bedarf nachgeladen. */
   './figur-links.webp',
