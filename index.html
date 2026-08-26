@@ -133,17 +133,61 @@ body{
 /* Titelbild direkt im CSS -- so beginnt der Browser den Download
    sofort beim Einlesen der Seite und nicht erst nach dem Skript.
    Erste Zeile = Rueckfallebene fuer aeltere Browser ohne image-set. */
-.bg-photo{
-  background:var(--ink) center/cover no-repeat;
+.bg-photo{ position:relative; background:var(--ink) }
+
+/* 🔴 Das Foto liegt auf einer eigenen Ebene, die am FENSTER haengt.
+   Vorher stand es als Hintergrund auf dem Abschnitt selbst -- und
+   "cover" rechnet gegen die Hoehe des Abschnitts. Bei 1000 x 585
+   war #view-home 2388 px hoch, das Bild wurde auf 4245 x 2388
+   aufgeblasen (Massstab 2,37) und man sah nur noch einen Streifen
+   Himmel mit zwei angeschnittenen Koepfen. Jede Inhaltsaenderung
+   verschob den Ausschnitt neu. Am Fenster verankert kann das nicht
+   mehr passieren -- der Ausschnitt haengt nur noch am Fenster. */
+.bg-photo::before,
+.bg-photo::after{ content:''; z-index:0; pointer-events:none }
+
+/* Das Foto: fest am Fenster. */
+.bg-photo::before{
+  position:fixed; inset:0;
+  background:var(--ink) center center/cover no-repeat;
   background-image:url("start.jpg");
   background-image:image-set(url("start.webp") type("image/webp"), url("start.jpg") type("image/jpeg"));
-  position:relative;
 }
-.bg-photo::before{
-  content:''; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(8,5,15,.62) 0%, rgba(8,5,15,.42) 42%, rgba(8,5,15,.92) 100%);
+/* Der Schleier: am Abschnitt, nicht am Fenster -- und die Haltepunkte
+   sind in vh angegeben. So liegt der helle Teil genau ueber dem ersten
+   Bildschirm, und alles darunter ist voll deckend. Sonst leuchtete der
+   Schriftzug durch die halbe Seite, weil das Foto ja stehen bleibt. */
+.bg-photo::after{
+  position:absolute; inset:0;
+  background:linear-gradient(180deg,
+    rgba(8,5,15,.62) 0,
+    rgba(8,5,15,.42) 42vh,
+    rgba(8,5,15,.92) 90vh,
+    var(--ink)      100vh);
 }
 .bg-photo > *{ position:relative; z-index:1 }
+
+/* ---------- Welcher Ausschnitt bei welchem Fensterformat ----------
+   Am Bild nachgemessen (1792 x 1008): die beiden Figuren stehen bei
+   x 390 bis 1380, die Koepfe beginnen bei y 110, die Schuhe enden bei
+   y 790, der Schriftzug laeuft von x 210 bis 1630 und y 490 bis 860.
+   Daraus folgt: "cover" laesst nichts Wichtiges weg, solange das
+   Fenster zwischen 1,4 und 2,4 breit zu hoch steht. Darueber kappt es
+   die Koepfe, darunter die Figuren am Rand. */
+
+/* Sehr breite Fenster: lieber das ganze Bild zeigen als koepfen. */
+@media (min-aspect-ratio: 12/5){
+  .bg-photo::before{ background-size:contain }
+}
+/* Fast quadratisch: hier traegt der engere Ausschnitt besser --
+   beim breiten Bild fielen links und rechts die Figuren weg. */
+@media (min-aspect-ratio: 1/1) and (max-aspect-ratio: 7/5){
+  .bg-photo::before{
+    background-image:url("start-hoch.jpg");
+    background-image:image-set(url("start-hoch.webp") type("image/webp"),
+                               url("start-hoch.jpg")  type("image/jpeg"));
+  }
+}
 
 /* ============================================================
    0 · EINTRITTSSEITE
@@ -1312,7 +1356,11 @@ a.news-item:hover, a.news-item:focus-visible{ border-left-color:var(--signal) }
    ============================================================ */
 
 @media (max-aspect-ratio: 1/1){
-  .bg-photo{
+  /* Am Handy bleibt alles wie gehabt: das Bild liegt oben im
+     Abschnitt und scrollt mit. Deshalb hier ausdruecklich wieder
+     absolute statt fixed. */
+  .bg-photo::before{ position:absolute }
+  .bg-photo::before{
     background-image:url("start-hoch.jpg");
     background-image:image-set(url("start-hoch.webp") type("image/webp"),
                                url("start-hoch.jpg")  type("image/jpeg"));
@@ -1321,7 +1369,7 @@ a.news-item:hover, a.news-item:focus-visible{ border-left-color:var(--signal) }
     background-repeat:no-repeat;
     background-color:var(--ink);
   }
-  .bg-photo::before{
+  .bg-photo::after{
     background:linear-gradient(180deg, rgba(8,5,15,.20) 0%, rgba(8,5,15,.12) 32%,
                                        rgba(8,5,15,.85) 50%, var(--ink) 62%);
   }
@@ -1350,7 +1398,7 @@ a.news-item:hover, a.news-item:focus-visible{ border-left-color:var(--signal) }
    ueber 70 % der Hoehe -- der Countdown faellt dann unter die Kante.
    ------------------------------------------------------------ */
 @media (max-aspect-ratio: 1/1) and (min-width: 34rem){
-  .bg-photo{
+  .bg-photo::before{
     background-image:url("start.jpg");
     background-image:image-set(url("start.webp") type("image/webp"),
                                url("start.jpg")  type("image/jpeg"));
