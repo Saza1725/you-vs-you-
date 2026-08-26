@@ -29,13 +29,13 @@
 
    v2, 21.08.2026 -- gesaeuberte Startbilder, Hochformat und die
    beiden Figuren aufgenommen.
-   v5, 26.08.2026 -- Menuepunkt Training mit vier Einheiten. Die
-   beiden Bildkarten kommen mit in den Vorrat, die Filme NICHT --
-   zusammen 11 MB, die soll niemand ungefragt laden. Sie haengen
-   an preload="none" und kommen erst auf Klick.
+   v6, 26.08.2026 -- Menuepunkt Training, zweite Anordnung: wer,
+   dann Ordner, dann Kacheln. Die beiden Bildkarten kommen mit in
+   den Vorrat, die Filme NICHT -- zusammen 20 MB, die soll niemand
+   ungefragt laden. Sie haengen an preload="none".
    ================================================================ */
 
-const CACHE = 'vvy-v5';
+const CACHE = 'vvy-v6';
 
 const ASSETS = [
   './',
