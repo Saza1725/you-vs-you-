@@ -2394,6 +2394,41 @@ const CONFIG = {
 
   events: [
     {
+      title:  "Do It Fast — 10 km",
+      /* Eigene Challenge, kein oeffentlicher Wettkampf. Deshalb keine
+         Startunterlagen, keine Verpflegung, keine Medaille.
+         ORT: Dortmund, von Sascha am 27.08. bestaetigt.
+         ▲ Ich hatte zuerst "Essen" eingetragen, weil die GPX des
+         letzten 10ers mit Weste "Essen Laufen" heisst. Falscher
+         Schluss: die alte Datei sagt, wo der ALTE Lauf war, nicht wo
+         der naechste ist. Ort immer erfragen, nie herleiten. */
+      place:  "Dortmund",
+      stream: "2026-08-30T10:00:00+02:00",
+      race:   "2026-08-30T10:00:00+02:00",
+      hours:  3,
+      raceHours: 1,
+      badge:  "10-km-Challenge",
+      image:  "event-doitfast",
+      /* 🔴 Steht hier false, verspricht die Seite waehrend des Laufs
+         KEINEN Stream -- die Kachel bleibt aus und der Countdown zeigt
+         "LAEUFT" statt "LIVE". Entscheidet ihr euch fuers Senden:
+         diese eine Zeile auf true setzen (oder ganz loeschen). */
+      uebertragung: false,
+      text:   "Zehn Kilometer, zwei verschiedene Ziele. Phillip läuft ohne Zusatzgewicht auf Zeit. Ich laufe dieselbe Strecke mit zehn Kilo auf dem Rücken und will unter einer Stunde bleiben. Wer von uns beiden gewinnt, lässt sich nicht vergleichen — und genau darum geht es.",
+      facts: [
+        { k:"Distanz",  v:"10 km" },
+        { k:"Sascha",   v:"10 kg Weste" },
+        { k:"Meine Grenze", v:"59:59" },
+        { k:"Phillip",  v:"auf Bestzeit" }
+      ],
+      info: [
+        "<strong>Zwei Ziele auf derselben Strecke:</strong> Phillip auf Schnelligkeit, ich gegen die Stunde — mit zehn Kilo Weste",
+        "Kein öffentlicher Wettkampf, sondern unsere eigene Herausforderung",
+        "Zum Vergleich: der letzte Zehner mit Weste am 09.08. — 1:09:17, das sind 6:24 pro Kilometer",
+        "Ob wir übertragen, entscheiden wir kurzfristig — die Daten und der Streckenriss kommen hinterher auf jeden Fall unter <strong>Training</strong>"
+      ]
+    },
+    {
       title:  "6H Ultra Werl",
       place:  "Stadtwald Werl",
       stream: "2026-09-12T10:00:00+02:00",
@@ -3546,11 +3581,22 @@ function tick(){
     $('cd-box').classList.add('live');
     setText($('cd-label'), 'Jetzt');
     $('cd-days').style.display = 'none';
-    setText($('cd'), 'LIVE');
     $('cd-units').classList.add('hidden');
-    $('tile-stream').classList.add('is-live');
-    setText($('tile-state-txt'), 'Läuft jetzt');
-    if ($('view-stream').classList.contains('on')) updateStreamPanel();
+
+    /* 🔴 Nicht jedes Event wird uebertragen. Steht am Eintrag
+       "uebertragung: false", laeuft zwar der Lauf, aber es wird kein
+       Stream versprochen. Vorher stand hier waehrend jedes Events
+       "Laeuft jetzt" an der Streamkachel -- auch wenn gar nicht
+       gesendet wurde. Das war eine falsche Aussage auf der Seite. */
+    const sendet = EVT.uebertragung !== false;
+    setText($('cd'), sendet ? 'LIVE' : 'LÄUFT');
+    $('tile-stream').classList.toggle('is-live', sendet);
+    setText($('tile-state-txt'), sendet ? 'Läuft jetzt' : 'Ohne Übertragung');
+    if (!sendet){
+      setText($('locked-head'), 'Diesmal ohne Übertragung');
+      setText($('locked-sub'), 'Dieser Lauf wird nicht gesendet. Die Daten und der Streckenriss kommen hinterher ins Menü unter Training.');
+    }
+    if (sendet && $('view-stream').classList.contains('on')) updateStreamPanel();
   }
   else if (p === 'after'){
     $('cd-box').classList.remove('fern');
