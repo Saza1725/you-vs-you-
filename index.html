@@ -1835,7 +1835,7 @@ a.news-item:hover, a.news-item:focus-visible{ border-left-color:var(--signal) }
         <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="8.5"/><polyline points="12,7 12,12 15.5,14"/>
         </svg></span>
-        So läuft die Übertragung
+        <span id="plan-head-txt">So läuft die Übertragung</span>
       </h3>
       <ul id="plan-list"></ul>
       <div class="foot" id="plan-foot"></div>
@@ -2366,6 +2366,9 @@ const CONFIG = {
   news: {
     neuTage:       21,
     aufStartseite: 3,
+    /* 🔴 Nach so vielen Tagen faellt ein Eintrag von der STARTSEITE.
+       Im Menue bleibt er stehen. 0 schaltet die Frist ab. */
+    startseiteTage: 14,
     liste: [
       {
         datum: "2026-08-25",
@@ -2414,6 +2417,15 @@ const CONFIG = {
          "LAEUFT" statt "LIVE". Entscheidet ihr euch fuers Senden:
          diese eine Zeile auf true setzen (oder ganz loeschen). */
       uebertragung: false,
+      /* Eigener Sendeplan. Greift nur, wenn oben "true" steht.
+         Ein Strassenlauf ueber zehn Kilometer hat keine Runden --
+         der Werl-Plan darf hier nicht erscheinen. */
+      streamPlan: [
+        "Eine Strecke, <strong>eine Stunde</strong> — durchgehend übertragen",
+        "Phillip läuft auf Zeit, ich mit <strong>zehn Kilo Weste</strong>",
+        "Die Zahlen im Bild kommen live von der Uhr"
+      ],
+      streamPlanFoot: "Kein öffentlicher Wettkampf, sondern unsere eigene Herausforderung. Die Daten und der Streckenriss kommen hinterher ins Menü unter „Training“.",
       text:   "Zehn Kilometer, zwei verschiedene Ziele. Phillip läuft ohne Zusatzgewicht auf Zeit. Ich laufe dieselbe Strecke mit zehn Kilo auf dem Rücken und will unter einer Stunde bleiben. Wer von uns beiden gewinnt, lässt sich nicht vergleichen — und genau darum geht es.",
       facts: [
         { k:"Distanz",  v:"10 km" },
@@ -2590,6 +2602,19 @@ function endOf(e){ return ms(e.stream) + (e.hours || 8) * 3600000; }
 function currentEvent(){
   const now = Date.now();
   return EVENTS.find(e => now < endOf(e)) || EVENTS[EVENTS.length - 1] || null;
+}
+
+/* 🔴 Nicht jeder Termin wird uebertragen. Die Stream-Ansicht darf
+   sich deshalb NICHT am naechsten Event orientieren, sondern nur an
+   der naechsten wirklichen Uebertragung. Sonst laeuft dort ein
+   Countdown auf einen Stream, den es nicht gibt -- genau das war am
+   27.08. der Fall. */
+function naechsteUebertragung(){
+  const liste = (CONFIG.events || [])
+    .filter(e => e && e.uebertragung !== false)
+    .sort((a, b) => ms(a.stream) - ms(b.stream));
+  const jetzt = Date.now();
+  return liste.find(e => jetzt < endOf(e)) || null;
 }
 
 function phaseOf(e){
@@ -2769,7 +2794,19 @@ function paintNews(){
   if (kasten) kasten.classList.remove('hidden');
   if (menue)  menue.classList.remove('hidden');
 
-  const kurz = alle.slice(0, wieViele);
+  /* 🔴 Frist fuer die Startseite. Was aelter ist, steht nur noch im
+     Menue -- damit das Titelblatt nicht mit Monaten alten Meldungen
+     zuwaechst. */
+  const frist = Number(n.startseiteTage);
+  const kurz = (frist > 0
+      ? alle.filter(e => (Date.now() - e._d.getTime()) / 86400000 <= frist)
+      : alle
+    ).slice(0, wieViele);
+
+  /* Nichts Frisches: der Kasten auf der Startseite geht weg, der
+     Menuepunkt bleibt -- dort ist die vollstaendige Liste. */
+  if (!kurz.length && kasten) kasten.classList.add('hidden');
+
   const hl = $('news-home-liste');
   if (hl) hl.innerHTML = kurz.map(e => newsEintrag(e, neuTage)).join('');
 
@@ -2929,10 +2966,22 @@ initTraining();
 
 /* ---- Sendeplan ---- */
 function paintPlan(){
-  const list = CONFIG.streamPlan || [];
+  /* Der Plan gehoert zu der Uebertragung, die als naechstes kommt --
+     nicht zum naechsten Termin und nicht zu einem festen Text. */
+  const sendung = naechsteUebertragung();
+  const list = (sendung && sendung.streamPlan) || CONFIG.streamPlan || [];
   if (!list.length){ $('plan').classList.add('hidden'); return; }
+  $('plan').classList.remove('hidden');
+
+  /* Ueberschrift benennt den Lauf, damit niemand den Plan auf den
+     falschen Termin bezieht. */
+  const kopf = $('plan-head-txt');
+  if (kopf) kopf.textContent = sendung
+    ? 'So läuft die Übertragung · ' + sendung.title
+    : 'So läuft die Übertragung';
+
   $('plan-list').innerHTML = list.map(t => '<li>' + t + '</li>').join('');
-  $('plan-foot').innerHTML = CONFIG.streamPlanFoot || '';
+  $('plan-foot').innerHTML = (sendung && sendung.streamPlanFoot) || CONFIG.streamPlanFoot || '';
 }
 
 /* ---- Gaestebuch ---- */
@@ -3497,6 +3546,27 @@ function removePlayer(){
 function updateStreamPanel(){
   const p = phaseOf(EVT);
 
+  /* 🔴 Laeuft das Event, wird aber nicht uebertragen, darf hier
+     weder ein Player noch die Einwilligungsfrage stehen. */
+  if (p === 'live' && EVT && EVT.uebertragung === false){
+    if (playerInserted) removePlayer();
+    $('stream-consent').classList.add('hidden');
+    $('locked').classList.remove('hidden');
+    setText($('locked-head'), 'Diesmal ohne Übertragung');
+    setText($('locked-sub'), 'Dieser Lauf wird nicht gesendet. Die Daten und der Streckenriss kommen hinterher ins Menü unter Training.');
+    const naechste = naechsteUebertragung();
+    if (naechste){
+      const t = splitTime(ms(naechste.stream) - Date.now());
+      setText($('mini-cd'), (t.d > 0 ? t.d + ' Tage · ' : '') +
+        pad(t.h) + ':' + pad(t.m) + ':' + pad(t.s));
+      setText($('stream-note'), 'Nächste Übertragung: ' + naechste.title + ' · ' + dateText(naechste.stream));
+    } else {
+      setText($('mini-cd'), '');
+      setText($('stream-note'), '');
+    }
+    return;
+  }
+
   if (p !== 'live'){
     if (playerInserted) removePlayer();
     $('stream-consent').classList.add('hidden');
@@ -3545,7 +3615,7 @@ function tick(){
 
   /* Ist ein Event vorbei und ein neues rueckt nach, wird alles neu aufgebaut */
   if (EVT !== before){
-    paintHome(); paintNews(); paintEvents();
+    paintHome(); paintNews(); paintEvents(); paintPlan();
     removePlayer();
   }
 
@@ -3570,11 +3640,34 @@ function tick(){
     setText($('cd'), fern ? (t.h + ' Std ' + pad(t.m) + ' Min') : hms);
     $('cd-units').classList.remove('hidden');
     $('cd-box').classList.remove('live');
-    setText($('mini-cd'), (t.d > 0 ? t.d + ' Tage · ' : '') + hms);
     $('tile-stream').classList.remove('is-live');
     setText($('tile-state-txt'), 'Noch nicht live');
-    setText($('locked-head'), 'Noch nicht live');
-    setText($('locked-sub'), 'Der Stream schaltet sich automatisch frei, sobald es losgeht. Diese Seite kann einfach offen bleiben.');
+
+    /* 🔴 Die Stream-Ansicht folgt der naechsten UEBERTRAGUNG.
+       Wird der naechste Lauf nicht gesendet, sagt die Seite das
+       offen und zaehlt auf den Termin danach. */
+    const sendung = naechsteUebertragung();
+
+    if (sendung && sendung === EVT){
+      setText($('mini-cd'), (t.d > 0 ? t.d + ' Tage · ' : '') + hms);
+      setText($('locked-head'), 'Noch nicht live');
+      setText($('locked-sub'), 'Der Stream schaltet sich automatisch frei, sobald es losgeht. Diese Seite kann einfach offen bleiben.');
+      setText($('stream-note'), 'Die Übertragung startet automatisch');
+    }
+    else if (sendung){
+      const ts = splitTime(ms(sendung.stream) - Date.now());
+      setText($('mini-cd'), (ts.d > 0 ? ts.d + ' Tage · ' : '') +
+        pad(ts.h) + ':' + pad(ts.m) + ':' + pad(ts.s));
+      setText($('locked-head'), EVT.title + ' läuft ohne Übertragung');
+      setText($('locked-sub'), 'Dieser Lauf wird nicht gesendet — die Daten und der Streckenriss kommen hinterher ins Menü unter Training. Der Countdown zeigt die nächste Übertragung: ' + sendung.title + '.');
+      setText($('stream-note'), 'Nächste Übertragung: ' + sendung.title + ' · ' + dateText(sendung.stream));
+    }
+    else {
+      setText($('mini-cd'), '');
+      setText($('locked-head'), 'Zurzeit keine Übertragung geplant');
+      setText($('locked-sub'), 'Sobald ein Termin gesendet wird, steht er hier.');
+      setText($('stream-note'), '');
+    }
   }
   else if (p === 'live'){
     $('cd-box').classList.remove('fern');
@@ -3596,7 +3689,7 @@ function tick(){
       setText($('locked-head'), 'Diesmal ohne Übertragung');
       setText($('locked-sub'), 'Dieser Lauf wird nicht gesendet. Die Daten und der Streckenriss kommen hinterher ins Menü unter Training.');
     }
-    if (sendet && $('view-stream').classList.contains('on')) updateStreamPanel();
+    if ($('view-stream').classList.contains('on')) updateStreamPanel();
   }
   else if (p === 'after'){
     $('cd-box').classList.remove('fern');
