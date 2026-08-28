@@ -2398,19 +2398,24 @@ const CONFIG = {
   events: [
     {
       title:  "Do It Fast — 10 km",
-      /* Eigene Challenge, kein oeffentlicher Wettkampf. Deshalb keine
-         Startunterlagen, keine Verpflegung, keine Medaille.
+      /* 🔴 ECHTER WETTKAMPF. Veranstalter: upletics.
+         Angaben von doitfast.de/infos, abgerufen 28.08.2026.
+         DLV-vermessener 2,5-km-Rundkurs, 10 km = vier Runden.
+         Wettkampfbuero ab 07:30, Zeitmessung, Finisher-Medaille.
+         ▲ ZWEI Zehner-Starts: FastRun 09:00, EasyRun 10:00.
+         Eingetragen ist 10:00 nach Saschas Angabe vom 26.08.
+         Laufen sie im FastRun, muss diese Zeit auf 09:00.
          ORT: Dortmund, von Sascha am 27.08. bestaetigt.
          ▲ Ich hatte zuerst "Essen" eingetragen, weil die GPX des
          letzten 10ers mit Weste "Essen Laufen" heisst. Falscher
          Schluss: die alte Datei sagt, wo der ALTE Lauf war, nicht wo
          der naechste ist. Ort immer erfragen, nie herleiten. */
-      place:  "Dortmund",
+      place:  "Dortmund · Phoenix-West",
       stream: "2026-08-30T10:00:00+02:00",
       race:   "2026-08-30T10:00:00+02:00",
       hours:  3,
       raceHours: 1,
-      badge:  "10-km-Challenge",
+      badge:  "Wettkampf",
       image:  "event-doitfast",
       /* 🔴 Steht hier false, verspricht die Seite waehrend des Laufs
          KEINEN Stream -- die Kachel bleibt aus und der Countdown zeigt
@@ -2421,22 +2426,26 @@ const CONFIG = {
          Ein Strassenlauf ueber zehn Kilometer hat keine Runden --
          der Werl-Plan darf hier nicht erscheinen. */
       streamPlan: [
-        "Eine Strecke, <strong>eine Stunde</strong> — durchgehend übertragen",
-        "Phillip läuft auf Zeit, ich mit <strong>zehn Kilo Weste</strong>",
+        "<strong>Vier Runden à 2,5 km</strong> — durchgehend übertragen, rund eine Stunde",
+        "Phillip läuft auf Bestzeit, ich mit <strong>zehn Kilo Weste</strong> gegen die Stunde",
         "Die Zahlen im Bild kommen live von der Uhr"
       ],
-      streamPlanFoot: "Kein öffentlicher Wettkampf, sondern unsere eigene Herausforderung. Die Daten und der Streckenriss kommen hinterher ins Menü unter „Training“.",
-      text:   "Zehn Kilometer, zwei verschiedene Ziele. Phillip läuft ohne Zusatzgewicht auf Zeit. Ich laufe dieselbe Strecke mit zehn Kilo auf dem Rücken und will unter einer Stunde bleiben. Wer von uns beiden gewinnt, lässt sich nicht vergleichen — und genau darum geht es.",
+      streamPlanFoot: "Ein Wettkampf von upletics auf Phoenix-West. Unsere Ziele setzen wir uns selbst. Die Daten und der Streckenriss kommen hinterher ins Menü unter „Training“.",
+      text:   "Ein DLV-vermessener Rundkurs über 2,5 Kilometer, viermal gelaufen, mitten im alten Hochofengelände Phoenix-West. Der Wettkampf ist der Rahmen — die Ziele setzen wir uns selbst. Phillip läuft auf Bestzeit. Ich laufe dieselben zehn Kilometer mit zehn Kilo auf dem Rücken und will unter einer Stunde bleiben. Wer von uns beiden gewinnt, lässt sich nicht vergleichen — und genau darum geht es.",
+      /* Links die Tatsachen des Wettkampfs, rechts unsere eigenen
+         Ziele. Sascha am 28.08.: "das sind Ziele von uns, das was
+         wir uns setzen." */
       facts: [
-        { k:"Distanz",  v:"10 km" },
-        { k:"Sascha",   v:"10 kg Weste" },
-        { k:"Meine Grenze", v:"59:59" },
-        { k:"Phillip",  v:"auf Bestzeit" }
+        { k:"Distanz",       v:"10 km" },
+        { k:"Rundkurs",      v:"4 × 2,5 km" },
+        { k:"Mein Ziel",     v:"10 kg Weste, unter 59:59" },
+        { k:"Phillips Ziel", v:"Bestzeit" }
       ],
       info: [
-        "<strong>Zwei Ziele auf derselben Strecke:</strong> Phillip auf Schnelligkeit, ich gegen die Stunde — mit zehn Kilo Weste",
-        "Kein öffentlicher Wettkampf, sondern unsere eigene Herausforderung",
-        "Zum Vergleich: der letzte Zehner mit Weste am 09.08. — 1:09:17, das sind 6:24 pro Kilometer",
+        "<strong>Der Wettkampf:</strong> veranstaltet von upletics auf einem DLV-vermessenen 2,5-km-Rundkurs — vier Runden, Zeitmessung, Finisher-Medaille",
+        "<strong>Unsere Ziele setzen wir uns selbst:</strong> Phillip auf Bestzeit, ich gegen die Stunde — mit zehn Kilo Weste",
+        "Zum Vergleich: mein letzter Zehner mit Weste am 09.08. — 1:09:17, das sind 6:24 pro Kilometer. Für unter einer Stunde fehlen 25 Sekunden je Kilometer",
+        "Wettkampfbüro ab 07:30 Uhr · Ergebnis und Urkunde kommen per QR-Code auf der Startnummer",
         "Ob wir übertragen, entscheiden wir kurzfristig — die Daten und der Streckenriss kommen hinterher auf jeden Fall unter <strong>Training</strong>"
       ]
     },
