@@ -112,6 +112,13 @@ body.hoch .feld{ left:50%; transform:translateX(-50%); width:56.25vh; right:auto
 body.stale .zeile:not(#z-uhr) .val,
 body.stale .zeile:not(#z-uhr) .unit{ opacity:.40; transition:opacity .6s ease }
 
+/* Sind die Werte richtig tot, wird die Einheit noch blasser --
+   damit der Strich nicht wie eine Zahl mit Einheit aussieht.
+   Die Zahl selbst wird in JavaScript durch einen Strich ersetzt;
+   ueber CSS allein ginge das nicht, ohne den Wert zu verlieren. */
+body.tot .zeile:not(#z-uhr) .unit{ opacity:.22 }
+body.tot .zeile:not(#z-uhr) .val{ opacity:.62; letter-spacing:.06em }
+
 /* ---- Signet unten rechts ---- */
 .signet{ position:absolute; right:2.4rem; bottom:2.4rem; text-align:right }
 .signet img{ display:block; height:7rem; width:auto; margin-left:auto;
@@ -403,6 +410,21 @@ const SENDET  = CONFIG.mode === 'send' && !CONFIG.demo;
 const HOLT    = CONFIG.mode === 'show' && !CONFIG.demo;
 const STALE_MS = 45000;
 
+/* ---------------------------------------------------------------
+   TOT_MS -- ab hier stehen Striche statt Zahlen. Eingebaut am
+   04.09.2026 nach dem Fehler vom 29.08.
+
+   Die Leiter, absichtlich in drei Stufen:
+     bis   45 s   alles normal
+     ab    45 s   die Zahlen werden blass (STALE_MS)
+     ab     5 min Striche statt Zahlen (TOT_MS)
+     ab    10 min der Worker liefert gar nichts mehr (VERFALL_MS)
+
+   Grundsatz: lieber gar keine Zahl als eine falsche.
+   --------------------------------------------------------------- */
+const TOT_MS   = 300000;   // 5 Minuten
+const STRICH   = '\u2013';    // Halbgeviertstrich
+
 const revealMs    = CONFIG.startAt ? new Date(CONFIG.startAt).getTime() : 0;
 let   raceStartMs = CONFIG.raceStartAt ? new Date(CONFIG.raceStartAt).getTime()
                                        : (revealMs || Date.now());
@@ -413,7 +435,49 @@ let   startFest   = false;                  /* Anker steht, nicht mehr ruecken *
 /* Der einmal gefundene Startpunkt wird im Browser hinterlegt. Startet
    die Quelle mitten im Rennen neu -- Absturz, Szenenwechsel, Netz weg --
    nimmt sie exakt denselben Anker wieder auf und springt nicht. */
-const SKEY = 'vvy-start:' + String(CONFIG.raceStartAt || 'frei');
+/* ---------------------------------------------------------------
+   Der Schluessel traegt seit 04.09.2026 den Fingerabdruck der
+   LiveTrack-Sitzung mit. Wirkung: startet Sascha eine NEUE
+   Aktivitaet, ist es ein anderer Schluessel -- der gemerkte
+   Startpunkt der alten Aktivitaet wird gar nicht erst gefunden.
+
+   Damit ist '&reset=1' kein Muss mehr, sondern nur noch der
+   Notnagel. Genau dieser Handgriff hat zweimal gefehlt.
+
+   Solange der Worker noch keine Kennung geschickt hat, gilt der
+   alte Schluessel -- sonst wuerde der Anker bei jedem Neuladen
+   verlorengehen, bevor die erste Antwort da ist.
+   --------------------------------------------------------------- */
+let SKEY = 'vvy-start:' + String(CONFIG.raceStartAt || 'frei');
+let sitzungSig = null;
+
+function schluesselSetzen(sig){
+  if (!sig || sig === sitzungSig) return;
+  const ersteMeldung = (sitzungSig === null);
+  sitzungSig = sig;
+  SKEY = 'vvy-start:' + String(CONFIG.raceStartAt || 'frei') + ':' + sig;
+
+  if (!ersteMeldung){
+    /* ---- Wirklich eine ANDERE Aktivitaet ----------------------
+       Nicht nur der Anker ist hinfaellig, sondern ALLES, was sich
+       angesammelt hat. Ohne das blieben die Kilometer der letzten
+       Aktivitaet stehen: die Strecke wird nur nach oben genommen
+       (m > state.meter), sie faellt nie von selbst zurueck.
+       Beim Test am 04.09. stand nach dem Wechsel noch 12,40 km im
+       Bild, obwohl die neue Aktivitaet bei 0,12 km war.          */
+    state.meter = 0; state.gain = 0; state.hr = null;
+    state.spur.length = 0; state.fix = 0;
+    feed.pace = null; feed.apace = null; feed.pAge = null; feed.ok = false;
+    laeuftLos = false;
+    startFest = false;
+    raceStartMs = geplantMs;
+    melde('ok', 'Neue Aktivitaet erkannt -- Anzeige zurueckgesetzt');
+  }
+
+  /* Fuer genau diese Aktivitaet schon ein Anker da? Dann den. */
+  const gemerkt = ankerLesen();
+  if (gemerkt !== null){ raceStartMs = gemerkt; startFest = true; laeuftLos = true; }
+}
 function ankerLesen(){
   try{
     const v = Number(localStorage.getItem(SKEY));
@@ -621,6 +685,9 @@ const Feed = (function(){
     try{
       const r = await fetch(url + TRENNER + 't=' + Date.now(), { cache:'no-store' });
       const j = await r.json();
+      /* Neue Aktivitaet? Dann haengt der gemerkte Start an einem
+         anderen Schluessel und wird nicht wieder aufgenommen. */
+      if (j && j.sig) schluesselSetzen(j.sig);
       const d = j && j.data;
       if (d){
         syncStart(d);
@@ -644,6 +711,18 @@ const Feed = (function(){
                     '\nBetrieb: ' + (CONFIG.training ? 'Aufnahme' : 'Rennen') +
                     ' (' + CONFIG.schalter + ')' +
                     (j.err ? '\nBruecke: '+j.err : ''));
+      } else if (j && j.veraltet){
+        /* Der Worker hat Werte, gibt sie aber nicht heraus: zu alt.
+           Das ist kein Fehler, sondern der eingebaute Schutz. */
+        feed.ok = false;
+        feed.pAge = j.pAge != null ? Number(j.pAge) : null;
+        melde('err', 'Werte zu alt, deshalb keine Zahlen\n' +
+                     (j.pAge != null
+                        ? Math.round(j.pAge/60000) + ' min alt'
+                        : 'ohne Zeitstempel') +
+                     ' · Grenze ' + Math.round((j.grenze||0)/60000) + ' min\n' +
+                     'Neuen LiveTrack-Link eintragen!' +
+                     (j.err ? '\nBruecke: ' + j.err : ''));
       } else {
         feed.ok = false;
         melde('err', 'noch keine Werte' + (j && j.err ? '\n' + j.err : ''));
@@ -762,12 +841,24 @@ function zeichne(){
   const t = new Date();
   $('t-clock').textContent = pad(t.getHours()) + ':' + pad(t.getMinutes());
 
-  const km = state.meter/1000;
-  $('t-km').textContent = komma(km, 2);
-  $('t-hm').textContent = String(Math.round(state.gain));
-  $('t-hr').textContent = state.hr ? state.hr : '--';
+  /* Sind die Werte tot, stehen ueberall Striche. Erst pruefen,
+     dann zeichnen -- sonst blitzt eine alte Zahl kurz auf. */
+  const totAlt = !HOLT ? 0
+               : (feed.pAge === null ? (feed.ok ? 0 : Infinity) : feed.pAge);
+  const TOT    = HOLT && (totAlt > TOT_MS);
+  document.body.classList.toggle('tot', TOT);
 
-  if (CONFIG.targetKm){
+  const km = state.meter/1000;
+  $('t-km').textContent = TOT ? STRICH : komma(km, 2);
+  $('t-hm').textContent = TOT ? STRICH : String(Math.round(state.gain));
+  $('t-hr').textContent = TOT ? STRICH : (state.hr ? state.hr : '--');
+
+  if (CONFIG.targetKm && TOT){
+    $('lab-rest').textContent = 'Rest-Distanz';
+    $('t-rest').textContent = STRICH;
+    $('z-rest').classList.remove('erreicht');
+  }
+  else if (CONFIG.targetKm){
     if (km >= CONFIG.targetKm){
       $('lab-rest').textContent = 'Über Ziel';
       $('t-rest').textContent = '+' + komma(km - CONFIG.targetKm, 2);
@@ -794,8 +885,8 @@ function zeichne(){
     }
     apace = km > .05 ? (el/1000)/km : 0;
   }
-  $('t-pace').textContent  = paceTxt(pace);
-  $('t-apace').textContent = paceTxt(apace);
+  $('t-pace').textContent  = TOT ? STRICH : paceTxt(pace);
+  $('t-apace').textContent = TOT ? STRICH : paceTxt(apace);
 
   if (HOLT){
     const alt = feed.pAge === null ? Infinity : feed.pAge;
