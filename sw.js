@@ -18,6 +18,14 @@
    Bilder, egal was auf GitHub liegt. Zahl erhoeht -> alter Cache
    wird beim naechsten Besuch geloescht, alles wird neu geholt.
 
+   v7, 04.09.2026 -- die vier Do-It-Fast-Karten sind unter DEMSELBEN
+   Namen ersetzt worden (erst mit alten Titeln, dann in der Ich-Form).
+   Ein ueberschriebener Name kommt aus dem alten Vorrat: auf dem
+   Bildschirm stand weiter "ZEHN KILO AUF ZEHN KILOMETERN", obwohl auf
+   GitHub laengst "MEIN ZIEL WAR DIE STUNDE" lag. Zahl erhoeht, damit
+   der alte Vorrat fliegt. Neu im Vorrat: die beiden Karten und
+   teaser-2.jpg; teaser.jpg ist raus, den Namen gibt es nicht mehr.
+
    v4, 25.08.2026 -- neuer Teaser: teaser.mp4 ist jetzt hochkant
    (1080x1832, 44 s, eigene Musik), teaser.jpg neu. Ohne erhoehte
    Zahl saehe jeder, der die Seite schon offen hatte, weiter das
@@ -35,7 +43,7 @@
    ungefragt laden. Sie haengen an preload="none".
    ================================================================ */
 
-const CACHE = 'vvy-v6';
+const CACHE = 'vvy-v7';
 
 const ASSETS = [
   './',
@@ -46,9 +54,11 @@ const ASSETS = [
   './start-hoch.webp',
   './start-hoch.jpg',
   './og.jpg',
-  './teaser.jpg',
+  './teaser-2.jpg',
   './training-sascha-see.jpg',
   './training-phillip-33.jpg',
+  './doitfast-sascha.jpg',
+  './doitfast-phillip.jpg',
   /* Die beiden Begleiter. Nur die kleinen WebP -- die PNG sind der
      Rueckfall fuer alte Browser und werden bei Bedarf nachgeladen. */
   './figur-links.webp',

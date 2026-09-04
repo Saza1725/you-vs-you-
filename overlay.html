@@ -18,7 +18,10 @@
   --weiss:   #FFFFFF;
   --dim:     rgba(255,255,255,.58);
   --alarm:   #FF3B30;
-  --platte:  linear-gradient(180deg, rgba(18,12,9,.88) 0%, rgba(8,6,6,.93) 100%);
+  /* Dichter seit 04.09.2026: bei .88/.93 stand ueber einer sonnigen
+     Baumkrone das OE von HOEHENMETER ohne seine Punkte da. Der
+     Verlauf bleibt sichtbar, die Durchsicht ist weg. */
+  --platte:  linear-gradient(180deg, rgba(18,12,9,.96) 0%, rgba(8,6,6,.98) 100%);
   --rand:    rgba(255,122,24,.50);
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -40,7 +43,7 @@ body.hoch .feld{ left:50%; transform:translateX(-50%); width:56.25vh; right:auto
   position:absolute; top:2.4rem; left:2.4rem;
   display:inline-flex; align-items:center; gap:.7rem;
   padding:.55rem 1.15rem .65rem;
-  background:rgba(8,6,6,.88); border:.15rem solid var(--rand); border-radius:.5rem;
+  background:rgba(8,6,6,.96); border:.15rem solid var(--rand); border-radius:.5rem;
   box-shadow:0 .3rem 1.2rem rgba(0,0,0,.6);
   font-family:'Oswald',sans-serif; font-weight:700; text-transform:uppercase;
   letter-spacing:.2em; font-size:1.5rem;
@@ -693,7 +696,14 @@ const Feed = (function(){
         syncStart(d);
         const m = (Number(d.km)||0) * 1000;
         if (m > state.meter) state.meter = m;
-        if (Number(d.gain) > state.gain) state.gain = Number(d.gain);
+        /* Erst ab 50 m zurueckgelegter Strecke. Der barometrische
+           Hoehenmesser schwankt im Stehen, und jede Schwankung nach
+           oben wurde bisher als Anstieg mitgenommen: am 25.08.
+           standen 33 hm auf dem Bild, bevor der erste Schritt getan
+           war. 50 m sind kurz genug, dass am Anstieg nichts
+           verlorengeht, und lang genug, dass Warten nicht zaehlt. */
+        if (Number(d.gain) > state.gain && state.meter > 50)
+          state.gain = Number(d.gain);
         if (d.hr != null) state.hr = Number(d.hr);
         feed.pace  = d.pace  != null ? Number(d.pace)  : null;
         feed.apace = d.apace != null ? Number(d.apace) : null;
