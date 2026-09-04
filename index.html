@@ -297,15 +297,15 @@ body{
 
 /* ---------- Teaser auf der Startansicht ---------- */
 .teaser-box{
-  /* Hochkant seit 25.08.2026 -- der Teaser ist 1080x1832 (9:16).
-     Deshalb schmaler Kasten statt Kinobreite, sonst waere er auf dem
-     Rechner ueber 90rem hoch. */
-  width:min(23rem,100%); margin:clamp(1.4rem,3vw,2.4rem) auto 0;
+  /* Quer seit 04.09.2026 -- der Teaser ist 1920x960, also genau 2:1.
+     Deshalb wieder Kinobreite. Die Obergrenze haelt ihn auf grossen
+     Schirmen zusammen, sonst wuerde er die Startseite erschlagen. */
+  width:min(46rem,100%); margin:clamp(1.4rem,3vw,2.4rem) auto 0;
   border:.1rem solid var(--hairline); border-top:.35rem solid var(--accent);
   background:var(--panel);
 }
 .teaser-box video{
-  display:block; width:100%; height:auto; aspect-ratio:9/16;
+  display:block; width:100%; height:auto; aspect-ratio:2/1;
   max-height:80vh;
   background:#000; object-fit:contain;
 }
@@ -777,6 +777,7 @@ body{
    Zwei Darstellungen aus derselben Liste: eine kurze auf der
    Startseite, eine vollstaendige unter #neues.
    ============================================================ */
+.tr-quelle{ font-size:.82em; color:rgba(255,255,255,.52); margin-top:.6rem }
 .news-home{ margin:clamp(1.6rem,3vw,2.6rem) 0 0 }
 .news-kopf{
   display:flex; align-items:baseline; justify-content:space-between;
@@ -1633,6 +1634,11 @@ a.news-item:hover, a.news-item:focus-visible{ border-left-color:var(--signal) }
     </a>
   </div>
 
+  <a class="menu-item hidden" id="menu-insta" href="#" target="_blank" rel="noopener noreferrer external">
+    <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1.1"/></svg></span>
+    <span class="txt"><span class="m-head">Instagram</span><span class="m-sub" id="menu-insta-sub">Bilder und kurze Beitr&auml;ge</span></span>
+  </a>
+
   <div class="menu-legal hidden" id="menu-legal">
     <a href="#impressum" id="menu-imp" class="hidden">Impressum</a>
     <a href="#datenschutz">Datenschutz</a>
@@ -1752,6 +1758,9 @@ a.news-item:hover, a.news-item:focus-visible{ border-left-color:var(--signal) }
       <span class="visits" id="visits">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.9"/></svg>
         <span class="num" id="visit-num">–</span><span>Besuche</span>
+      </span>
+      <span class="hidden" id="foot-insta">
+        <a id="foot-insta-a" href="#" target="_blank" rel="noopener noreferrer external">Instagram</a>
       </span>
       <span class="hidden" id="foot-legal">
         <span class="hidden" id="foot-imp"><a href="#impressum">Impressum</a> · </span><a href="#datenschutz">Datenschutz</a>
@@ -1919,11 +1928,11 @@ a.news-item:hover, a.news-item:focus-visible{ border-left-color:var(--signal) }
   <div class="sub-body"><div class="inner">
 
     <div class="tr-bilanz">
-      <span><b>17</b>Tage bis Werl</span>
-      <span><b>7</b>Einheiten</span>
-      <span><b>106,6</b>Kilometer</span>
-      <span><b>15:45</b>Stunden</span>
-      <span><b>692</b>H&ouml;henmeter</span>
+      <span><b>8</b>Tage bis Werl</span>
+      <span><b>9</b>Einheiten</span>
+      <span><b>127,0</b>Kilometer</span>
+      <span><b>17:39</b>Stunden</span>
+      <span><b>798</b>H&ouml;henmeter</span>
     </div>
 
     <h4 class="tr-lab">Wer</h4>
@@ -1942,7 +1951,7 @@ a.news-item:hover, a.news-item:focus-visible{ border-left-color:var(--signal) }
       </button>
       <button type="button" data-art="bild" aria-expanded="false">
         <span class="tr-sym"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15"/><path d="M2.5 15.5l5-5 4.5 4.5 3.5-3 6 6"/><circle cx="8" cy="9" r="1.4"/></svg></span>
-        <span class="tr-txt">Beitr&auml;ge Bilder<i id="tr-z-bild">2 Beitr&auml;ge</i></span>
+        <span class="tr-txt">Beitr&auml;ge Bilder<i id="tr-z-bild">4 Beitr&auml;ge</i></span>
         <span class="tr-pfeil" aria-hidden="true">&#8250;</span>
       </button>
     </div>
@@ -2003,6 +2012,39 @@ a.news-item:hover, a.news-item:focus-visible{ border-left-color:var(--signal) }
                 <summary>Alle 11 Kilometer einzeln</summary>
                 <div class="tr-sp"><span>1<b>7:55</b></span><span>2<b>8:09</b></span><span>3<b>7:43</b></span><span>4<b>7:58</b></span><span>5<b>7:01</b></span><span>6<b>8:20</b></span><span>7<b>7:54</b></span><span>8<b>60:17</b></span><span>9<b>7:51</b></span><span>10<b>8:31</b></span><span>11<b>9:41</b></span></div>
               </details>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article class="tr-kachel tr-sa" data-wer="sascha" data-art="bild">
+        <img class="tr-medium" src="doitfast-sascha.jpg" alt="Karte: Sascha nach dem Zieleinlauf, daneben die Zahlen des Laufs" loading="lazy">
+        <div class="tr-kinnen">
+          <div class="tr-kzeile"><span class="tr-wer">Sascha</span><span class="tr-datum">30.8.2026 &middot; 10:00 Uhr</span></div>
+          <h3>Zehn Kilo, zehn Kilometer, f&uuml;nf Minuten zu langsam</h3>
+          <div class="tr-kern"><span><b>10,27</b>km</span><span><b>1:04:58</b>bewegt</span><span><b>6:19</b>pace</span></div>
+          <details class="tr-mehr">
+            <summary>Zahlen und Verlauf</summary>
+            <div class="tr-minnen">
+              <div class="tr-bloecke"><div class="tr-block"><div class="tr-blab">Strecke und Zeit</div><dl><div><dt>Strecke</dt><dd>10,27 km</dd></div><div><dt>Bewegungszeit</dt><dd>1:04:58</dd></div><div><dt>Wettkampf</dt><dd>Do It Fast, 10 km</dd></div><div><dt>Rundkurs</dt><dd>4 &times; 2,5 km</dd></div></dl></div><div class="tr-block"><div class="tr-blab">Tempo</div><dl><div><dt>Pace</dt><dd>6:19 /km</dd></div><div><dt>Bestzeit &uuml;ber 10 km</dt><dd>neue Bestzeit, 3:38 schneller</dd></div><div><dt>Startnummer</dt><dd>377</dd></div></dl></div><div class="tr-block"><div class="tr-blab">K&ouml;rper und Profil</div><dl><div><dt>&Oslash; Puls</dt><dd>188 bpm</dd></div><div><dt>Kalorien</dt><dd>823 kcal</dd></div><div><dt>H&ouml;henmeter</dt><dd>71 hm</dd></div></dl></div></div>
+              <p>Das Ziel war unter einer Stunde, mit zehn Kilo auf dem R&uuml;cken. Es ist nicht aufgegangen. Was aufging: die schnellsten zehn Kilometer seiner bisherigen Laufzeit, drei Minuten achtunddrei&szlig;ig unter der alten Marke &mdash; und die alte Marke wurde ohne Weste gelaufen. Ein Puls von durchschnittlich 188 sagt, wie viel davon Wille war.</p>
+              <p class="tr-quelle">Zahlen von der Uhr. Das amtliche Ergebnis der Zeitmessung steht noch aus.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+      <article class="tr-kachel tr-ph" data-wer="phillip" data-art="bild">
+        <img class="tr-medium" src="doitfast-phillip.jpg" alt="Karte: Sascha und Phillip am Zielbogen, daneben Phillips Zahlen" loading="lazy">
+        <div class="tr-kinnen">
+          <div class="tr-kzeile"><span class="tr-wer">Phillip</span><span class="tr-datum">30.8.2026 &middot; 10:00 Uhr</span></div>
+          <h3>Vier Minuten schneller als je zuvor</h3>
+          <div class="tr-kern"><span><b>10,08</b>km</span><span><b>49:12</b>gesamt</span><span><b>4:53</b>pace</span></div>
+          <details class="tr-mehr">
+            <summary>Zahlen und Verlauf</summary>
+            <div class="tr-minnen">
+              <div class="tr-bloecke"><div class="tr-block"><div class="tr-blab">Strecke und Zeit</div><dl><div><dt>Strecke</dt><dd>10,08 km</dd></div><div><dt>Verstrichene Zeit</dt><dd>49:12</dd></div><div><dt>Wettkampf</dt><dd>Do It Fast, 10 km</dd></div><div><dt>Rundkurs</dt><dd>4 &times; 2,5 km</dd></div></dl></div><div class="tr-block"><div class="tr-blab">Tempo</div><dl><div><dt>Pace</dt><dd>4:53 /km</dd></div><div><dt>Bestzeit &uuml;ber 10 km</dt><dd>neue Bestzeit, 4:15 schneller</dd></div><div><dt>Startnummer</dt><dd>375</dd></div></dl></div><div class="tr-block"><div class="tr-blab">K&ouml;rper und Profil</div><dl><div><dt>&Oslash; Puls</dt><dd>175 bpm</dd></div><div><dt>Kalorien</dt><dd>750 kcal</dd></div><div><dt>H&ouml;henmeter</dt><dd>35 hm</dd></div></dl></div></div>
+              <p>Kein Einteilen, kein Taktieren. Vom ersten Meter an in dem Tempo, das er sich zugetraut hat &mdash; und am Ende vier Minuten f&uuml;nfzehn unter allem, was er &uuml;ber diese Distanz je gelaufen ist.</p>
+              <p class="tr-quelle">Zahlen von der Uhr. Das amtliche Ergebnis der Zeitmessung steht noch aus.</p>
             </div>
           </details>
         </div>
@@ -2220,6 +2262,10 @@ a.news-item:hover, a.news-item:focus-visible{ border-left-color:var(--signal) }
 const CONFIG = {
 
   /* --- Grundeinstellungen --- */
+  /* Nur der Kontoname, ohne @ und ohne Adresse. Leer = kein Verweis.
+     ▲ Bloss ein Verweis, kein eingebetteter Inhalt: beim Laden der
+       Seite geht nichts an Meta, erst beim Klicken. */
+  instagram:     "last_meters",
   twitchChannel: "SaPhiVs",         // NUR der Kanalname, ohne twitch.tv/  ·  leer = Hinweis statt Player
 
   /* ==============================================================
@@ -2248,17 +2294,27 @@ const CONFIG = {
      Zum Pruefen: ?teaser=1 erzwingt ihn, ?teaser=0 ueberspringt ihn.
      ============================================================== */
   teaser: {
-    /* Fassung vom 25.08.2026, hochkant 1080x1832, 44 s.
-       Bild und Schnitt: eigene Aufnahmen vom Backyard-Training.
+    /* Fassung vom 04.09.2026, quer 1920x960 (2:1), 24,5 s, 5,7 MB.
+       Bild und Schnitt: eigene Aufnahmen, Wald und Feldweg.
        Musik: "Endurance Echoes", mit Artlist AI (Lyria 3 Pro) erzeugt,
-       Lizenz 8yiMMP. Der Einsatz bei Sekunde 32,2 liegt auf dem
-       ersten Bild der schnellen Schnittfolge -- beides laeuft mit
-       172,3 Schlaegen je Minute.
+       Lizenz 8yiMMP -- dieselbe Spur wie in der Fassung vom 25.08.
+
+       🔴 Die Tonspur des Rohschnitts wurde ENTFERNT. Der Rohschnitt
+       kam aus einem ByteDance-Werkzeug (Kennung "DreaminaMetaInfo"
+       in der Datei); woher dessen Musik stammt, ist ungeklaert.
+       Ungeklaerte Herkunft geht nicht auf die Seite -- § 85 UrhG.
+
+       ▲ Der Dateiname ist NEU ("teaser-2" statt "teaser"). Damit muss
+       sw.js nicht mitgehen: einen Namen, den der Vorrat nicht kennt,
+       holt der Browser aus dem Netz. Ein ueberschriebener Name waere
+       aus dem alten Vorrat gekommen und niemand haette das neue
+       Video gesehen.
+
        Leeren String eintragen, um den Vorspann wieder abzuschalten. */
-    file:  "teaser",
+    file:  "teaser-2",
     titel: "You vs You — der Teaser",
     intro: true,
-    stand: "2026-08-25",      /* aendern -> alle sehen ihn wieder */
+    stand: "2026-09-04",      /* aendern -> alle sehen ihn wieder */
     tage:  14
   },
 
@@ -2368,8 +2424,15 @@ const CONFIG = {
     aufStartseite: 3,
     /* 🔴 Nach so vielen Tagen faellt ein Eintrag von der STARTSEITE.
        Im Menue bleibt er stehen. 0 schaltet die Frist ab. */
-    startseiteTage: 14,
+    startseiteTage: 3,
     liste: [
+      {
+        datum: "2026-09-04",
+        titel: "Do It Fast — gelaufen, und die Uhr sagt zwei Geschichten",
+        text:  "Vier Runden à 2,5 Kilometer auf dem alten Hüttengelände in Dortmund Phoenix-West. Startnummer 375 und 377, Zielbogen, zwei Medaillen — und zwei völlig verschiedene Rennen. Phillip lief 10,08 Kilometer in 49:12, ein Schnitt von 4:53 pro Kilometer und vier Minuten fünfzehn schneller als je zuvor über diese Distanz. Sascha lief mit zehn Kilo auf dem Rücken. Das Ziel war klar: unter einer Stunde. Es ist nicht aufgegangen — 1:04:58 auf der Uhr, 6:19 pro Kilometer, ein Puls von durchschnittlich 188. Fünf Minuten gefehlt. Und trotzdem steht dort etwas, das vorher nicht dastand: die schnellsten zehn Kilometer seines Lebens, drei Minuten achtunddreißig unter der alten Bestzeit — mit einer Weste, die es vorher nicht gab. Die Stunde ist ein Ziel, kein Urteil. Sie fällt beim nächsten Mal.",
+        ziel:  "#training",
+        zielText: "Bilder und Zahlen"
+      },
       {
         datum: "2026-08-25",
         titel: "Neuer Teaser — hochkant, mit eigenem Ton",
@@ -3143,6 +3206,19 @@ function paintGuestbook(){
     }
   });
 })();
+
+/* ---- Instagram: nur ein Verweis, nichts wird eingebettet ---- */
+function paintInstagram(){
+  const k = String(CONFIG.instagram || '').trim().replace(/^@/, '');
+  if (!k) return;                       // leer = alles bleibt versteckt
+  const adr = 'https://www.instagram.com/' + encodeURIComponent(k) + '/';
+  const m = $('menu-insta'), f = $('foot-insta'), fa = $('foot-insta-a');
+  if (m){ m.href = adr; m.classList.remove('hidden'); }
+  if (f && fa){ fa.href = adr; f.classList.remove('hidden'); }
+  const sub = $('menu-insta-sub');
+  if (sub) sub.textContent = '@' + k;
+}
+paintInstagram();
 
 /* ---- Impressum und Datenschutz ---- */
 function legalReady(){
